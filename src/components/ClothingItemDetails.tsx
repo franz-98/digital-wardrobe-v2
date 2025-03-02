@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { X, Calendar, Tag, Info } from "lucide-react";
+import { X, Calendar, Tag, Info, Shirt } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -149,7 +149,7 @@ const ClothingItemDetails = ({
             <div className="grid grid-cols-2 gap-2">
               {relatedOutfits.map((outfit) => (
                 <Card 
-                  key={outfit.id} 
+                  key={`outfit-${outfit.id}`} 
                   className="overflow-hidden border cursor-pointer hover:border-primary/50"
                   onClick={() => handleOutfitClick(outfit)}
                 >

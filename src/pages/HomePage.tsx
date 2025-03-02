@@ -1,6 +1,6 @@
 
 import { useState, useRef } from "react";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Image } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -82,6 +82,13 @@ const HomePage = () => {
       // Reset file input
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  };
+
+  const handleRecentItemClick = (item: RecentUpload) => {
+    toast({
+      title: "Item selected",
+      description: `You selected: ${item.name}`,
+    });
   };
 
   return (
@@ -167,7 +174,11 @@ const HomePage = () => {
             <div className="overflow-x-auto pb-4 -mx-4 px-4">
               <div className="flex space-x-4">
                 {recentUploads?.map((item) => (
-                  <RecentItemCard key={item.id} item={item} />
+                  <RecentItemCard 
+                    key={`recent-${item.id}`} 
+                    item={item} 
+                    onClick={() => handleRecentItemClick(item)}
+                  />
                 ))}
               </div>
             </div>
@@ -178,9 +189,18 @@ const HomePage = () => {
   );
 };
 
-const RecentItemCard = ({ item }: { item: RecentUpload }) => {
+const RecentItemCard = ({ 
+  item, 
+  onClick 
+}: { 
+  item: RecentUpload; 
+  onClick: () => void;
+}) => {
   return (
-    <Card className="min-w-[160px] max-w-[160px] overflow-hidden card-shadow border interactive-scale">
+    <Card 
+      className="min-w-[160px] max-w-[160px] overflow-hidden card-shadow border interactive-scale cursor-pointer"
+      onClick={onClick}
+    >
       <div className="aspect-square overflow-hidden bg-secondary/30">
         <img
           src={item.imageUrl}
