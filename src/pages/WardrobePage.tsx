@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -500,8 +499,10 @@ const WardrobePage = () => {
 
   if (isLoadingUser) {
     return (
-      <div className="flex justify-center py-10">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="space-y-8 pb-10">
+        <div className="flex justify-center py-10">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
       </div>
     );
   }
@@ -901,7 +902,7 @@ const WardrobePage = () => {
       {/* Clothing Item Modal */}
       {selectedItem && (
         <ClothingItemDetails
-          isOpen={isDetailsOpen}
+          open={isDetailsOpen}
           onClose={() => setIsDetailsOpen(false)}
           item={selectedItem}
           relatedOutfits={findRelatedOutfits(selectedItem.id)}
