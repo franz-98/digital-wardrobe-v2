@@ -19,27 +19,31 @@ interface Outfit {
 
 interface OutfitCardProps {
   outfit: Outfit;
+  onClick?: () => void;
 }
 
-const OutfitCard = ({ outfit }: OutfitCardProps) => {
+const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
   return (
-    <Card className="overflow-hidden cursor-pointer transition-all hover:shadow-md border">
-      <div className="aspect-video overflow-hidden relative">
+    <Card 
+      className="overflow-hidden cursor-pointer transition-all hover:shadow-md border"
+      onClick={onClick}
+    >
+      <div className="aspect-square overflow-hidden relative">
         <img
           src={outfit.imageUrl || outfit.items[0]?.imageUrl}
           alt={outfit.name}
           className="object-cover w-full h-full"
         />
-        <div className="absolute inset-0 bg-black/30 flex items-end p-4">
-          <h3 className="text-white font-semibold">{outfit.name}</h3>
+        <div className="absolute inset-0 bg-black/30 flex items-end p-3">
+          <h3 className="text-white font-medium text-sm">{outfit.name}</h3>
         </div>
       </div>
-      <div className="p-3">
-        <div className="flex gap-1 overflow-x-auto pb-2">
+      <div className="p-2">
+        <div className="flex gap-1 overflow-x-auto pb-1">
           {outfit.items.map((item) => (
             <div
               key={`item-thumb-${item.id}`}
-              className="h-10 w-10 rounded-md flex-shrink-0 overflow-hidden border"
+              className="h-6 w-6 rounded-md flex-shrink-0 overflow-hidden border"
             >
               <img
                 src={item.imageUrl}
