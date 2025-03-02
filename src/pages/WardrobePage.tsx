@@ -1,5 +1,4 @@
-
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
   Loader2, 
@@ -11,7 +10,8 @@ import {
   Shirt,
   Settings,
   Calendar as CalendarIcon,
-  Calendar
+  Calendar,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -113,6 +113,20 @@ const WardrobePage = () => {
     },
     staleTime: 60000, // 1 minute
   });
+
+  const popoverRef = useRef<HTMLDivElement>(null);
+  
+  // Close time filter popover when scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      if (showAdvancedDateFilter) {
+        setShowAdvancedDateFilter(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [showAdvancedDateFilter]);
 
   // Fetch clothing items
   const { data: clothingItems, isLoading: isLoadingClothes } = useQuery({
@@ -389,7 +403,24 @@ const WardrobePage = () => {
           { name: "Gray Hoodie", uses: 6, id: "5" },
           { name: "Red Sweater", uses: 4, id: "4" },
         ],
-      } as Stats;
+        outfitsByCategory: [
+          { name: "Casual", count: 8 },
+          { name: "Formal", count: 5 },
+          { name: "Sport", count: 3 },
+          { name: "Evening", count: 2 },
+        ],
+        seasonalUsage: [
+          { name: "Winter", count: 15 },
+          { name: "Spring", count: 12 },
+          { name: "Summer", count: 20 },
+          { name: "Fall", count: 10 },
+        ],
+        mostPopularOutfits: [
+          { name: "Casual Friday", uses: 8, id: "1" },
+          { name: "Weekend Hangout", uses: 6, id: "2" },
+          { name: "Office Look", uses: 5, id: "3" },
+        ]
+      };
     },
     staleTime: 60000, // 1 minute
   });
@@ -498,6 +529,7 @@ const WardrobePage = () => {
           </TabsTrigger>
         </TabsList>
 
+        {/* Items tab content */}
         <TabsContent value="items" className="space-y-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Clothing Items</h2>
@@ -520,6 +552,7 @@ const WardrobePage = () => {
           )}
         </TabsContent>
 
+        {/* Outfits tab content */}
         <TabsContent value="outfits" className="space-y-8">
           <section>
             <div className="flex items-center justify-between mb-4">
@@ -578,6 +611,7 @@ const WardrobePage = () => {
           </section>
         </TabsContent>
 
+        {/* Stats tab content - updated with more analytics */}
         <TabsContent value="stats" className="space-y-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Wardrobe Insights</h2>
@@ -596,7 +630,7 @@ const WardrobePage = () => {
                     <ChevronDown className="h-3.5 w-3.5 opacity-50" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="end">
+                <PopoverContent className="w-auto p-0" align="end" ref={popoverRef}>
                   <div className="p-3 border-b">
                     <div className="space-y-2">
                       <RadioOption 
@@ -699,6 +733,7 @@ const WardrobePage = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Color distribution chart - with fixed black outline for white */}
               <Card className="p-6 shadow-md border">
                 <div className="flex items-center mb-4">
                   <PieChartIcon className="h-5 w-5 mr-2 text-primary" />
@@ -751,6 +786,7 @@ const WardrobePage = () => {
                 </div>
               </Card>
 
+              {/* Most used items chart - interactive */}
               <Card className="p-6 shadow-md border">
                 <div className="flex items-center mb-4">
                   <BarChart className="h-5 w-5 mr-2 text-primary" />
@@ -775,174 +811,4 @@ const WardrobePage = () => {
                         dataKey="uses" 
                         fill="#9b87f5" 
                         barSize={20} 
-                        radius={[0, 4, 4, 0]} 
-                        onClick={handleBarClick}
-                        cursor="pointer"
-                      >
-                        {stats?.mostUsed.map((entry, index) => (
-                          <Cell 
-                            key={`cell-${index}`} 
-                            fill={selectedStatItem === entry.id ? '#7E69AB' : '#9b87f5'} 
-                          />
-                        ))}
-                      </Bar>
-                    </RechartsBarChart>
-                  </ResponsiveContainer>
-                </div>
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  Clicca su una barra per vedere i dettagli dell'indumento
-                </p>
-                
-                <Separator className="my-3" />
-                
-                <div className="grid grid-cols-5 gap-2">
-                  {stats?.mostUsed.slice(0, 5).map((item) => {
-                    const clothingItem = clothingItems?.find(c => c.id === item.id);
-                    return clothingItem ? (
-                      <div 
-                        key={`top-${item.id}`}
-                        className={`cursor-pointer rounded-lg overflow-hidden border ${selectedStatItem === item.id ? 'ring-2 ring-primary' : ''}`}
-                        onClick={() => {
-                          setSelectedStatItem(item.id);
-                          handleBarClick(item);
-                        }}
-                      >
-                        <img 
-                          src={clothingItem.imageUrl} 
-                          alt={clothingItem.name}
-                          className="w-full aspect-square object-cover"
-                        />
-                      </div>
-                    ) : null;
-                  })}
-                </div>
-              </Card>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
-
-      {/* Clothing Item Details Modal */}
-      <ClothingItemDetails 
-        item={selectedItem} 
-        open={isDetailsOpen}
-        onOpenChange={setIsDetailsOpen}
-        relatedOutfits={selectedItem ? findRelatedOutfits(selectedItem.id) : []}
-      />
-    </div>
-  );
-};
-
-// Radio option component for time filter
-const RadioOption = ({ 
-  value, 
-  currentValue, 
-  onChange, 
-  label 
-}: { 
-  value: string; 
-  currentValue: string; 
-  onChange: (value: string) => void; 
-  label: string;
-}) => {
-  return (
-    <div 
-      className={`flex items-center justify-between rounded-md border p-2 cursor-pointer hover:bg-secondary/30 ${currentValue === value ? 'bg-secondary/40 border-primary/50' : ''}`}
-      onClick={() => onChange(value)}
-    >
-      <span className="text-sm">{label}</span>
-      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${currentValue === value ? 'border-primary' : 'border-muted-foreground'}`}>
-        {currentValue === value && (
-          <div className="w-2 h-2 rounded-full bg-primary" />
-        )}
-      </div>
-    </div>
-  );
-};
-
-const ClothingItemCard = ({ 
-  item, 
-  onClick 
-}: { 
-  item: ClothingItem; 
-  onClick: () => void;
-}) => {
-  return (
-    <Card 
-      className="overflow-hidden interactive-scale card-shadow border cursor-pointer"
-      onClick={onClick}
-    >
-      <div className="aspect-square overflow-hidden bg-secondary/30">
-        <img
-          src={item.imageUrl}
-          alt={item.name}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          loading="lazy"
-        />
-      </div>
-      <div className="p-3">
-        <p className="font-medium text-sm truncate">{item.name}</p>
-        <div className="flex items-center justify-between mt-1">
-          <span className="text-xs text-muted-foreground">{item.category}</span>
-          <div 
-            className="w-3 h-3 rounded-full" 
-            style={{ 
-              backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
-              border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
-            }}
-          />
-        </div>
-      </div>
-    </Card>
-  );
-};
-
-const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
-  return (
-    <Card className="overflow-hidden card-shadow border interactive-scale">
-      <div className="relative aspect-[4/3] overflow-hidden bg-secondary/30">
-        <img
-          src={outfit.imageUrl || outfit.items[0]?.imageUrl}
-          alt={outfit.name}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-          loading="lazy"
-        />
-      </div>
-      <div className="p-4">
-        <h3 className="font-medium mb-2">{outfit.name}</h3>
-        <div className="flex space-x-2 mb-3">
-          {outfit.items.map((item) => (
-            <div 
-              key={`${outfit.id}-item-${item.id}`}
-              className="w-8 h-8 rounded-full overflow-hidden border border-border"
-            >
-              <img 
-                src={item.imageUrl} 
-                alt={item.name} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          {outfit.items.map((item) => (
-            <div 
-              key={`${outfit.id}-grid-${item.id}`} 
-              className="aspect-square overflow-hidden rounded-lg bg-secondary/30"
-            >
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </Card>
-  );
-};
-
-export default WardrobePage;
+                        radius={[0, 4,

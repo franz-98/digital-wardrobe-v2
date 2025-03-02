@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { X, Calendar, Tag, Info, Shirt, ChevronLeft } from "lucide-react";
 import { 
@@ -53,6 +53,18 @@ const ClothingItemDetails = ({
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   
+  // Close dropdown when scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      if (open) {
+        onOpenChange(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [open, onOpenChange]);
+  
   // Return null early if no item is provided
   if (!item) return null;
 
@@ -83,7 +95,7 @@ const ClothingItemDetails = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-auto">
         {viewMode === "outfit" && selectedOutfit ? (
-          // Outfit View
+          // Outfit View - Redesigned for better clarity
           <>
             <DialogHeader className="pb-2">
               <div className="flex items-center mb-2">
@@ -104,7 +116,7 @@ const ClothingItemDetails = ({
               </DialogDescription>
             </DialogHeader>
             
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md mb-4 bg-secondary/20">
+            <div className="relative aspect-square w-full overflow-hidden rounded-md mb-4 bg-secondary/10">
               <img 
                 src={selectedOutfit.imageUrl || selectedOutfit.items[0]?.imageUrl} 
                 alt={selectedOutfit.name} 
@@ -121,9 +133,9 @@ const ClothingItemDetails = ({
               {selectedOutfit.items.map((outfitItem) => (
                 <Card 
                   key={`outfit-item-${outfitItem.id}`}
-                  className="overflow-hidden border p-3"
+                  className="overflow-hidden border shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 p-3">
                     <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20">
                       <img 
                         src={outfitItem.imageUrl} 
@@ -132,14 +144,14 @@ const ClothingItemDetails = ({
                       />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-medium text-sm">{outfitItem.name}</h4>
-                      <div className="flex items-center gap-2 mt-1">
+                      <h4 className="font-medium">{outfitItem.name}</h4>
+                      <div className="flex items-center gap-2 mt-1 mb-2">
                         <Badge variant="outline" className="text-xs bg-secondary/10">
                           {outfitItem.category}
                         </Badge>
                         <div className="flex items-center gap-1">
                           <div 
-                            className="w-2.5 h-2.5 rounded-full" 
+                            className="w-3 h-3 rounded-full" 
                             style={{ 
                               backgroundColor: outfitItem.color.toLowerCase() === "white" ? "#EEEEEE" : outfitItem.color,
                               border: outfitItem.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
@@ -150,17 +162,23 @@ const ClothingItemDetails = ({
                       </div>
                       
                       {outfitItem.metadata && (
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-2 text-xs">
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
                           {outfitItem.metadata.brand && (
                             <>
                               <span className="text-muted-foreground">Brand:</span>
-                              <span>{outfitItem.metadata.brand}</span>
+                              <span className="font-medium">{outfitItem.metadata.brand}</span>
                             </>
                           )}
                           {outfitItem.metadata.material && (
                             <>
                               <span className="text-muted-foreground">Materiale:</span>
-                              <span>{outfitItem.metadata.material}</span>
+                              <span className="font-medium">{outfitItem.metadata.material}</span>
+                            </>
+                          )}
+                          {outfitItem.metadata.season && (
+                            <>
+                              <span className="text-muted-foreground">Stagione:</span>
+                              <span className="font-medium">{outfitItem.metadata.season}</span>
                             </>
                           )}
                         </div>
@@ -172,96 +190,105 @@ const ClothingItemDetails = ({
             </div>
           </>
         ) : (
-          // Item View
+          // Item View - Redesigned with prominent image and clearer layout
           <>
             <DialogHeader className="pb-2">
               <DialogTitle className="text-xl font-bold">{item.name}</DialogTitle>
-              <DialogDescription className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-primary/10 text-primary">
-                  {item.category}
-                </Badge>
-                <div 
-                  className="w-3 h-3 rounded-full inline-block" 
-                  style={{ 
-                    backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
-                    border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
-                  }}
-                />
-                <span className="text-sm text-muted-foreground">{item.color}</span>
-              </DialogDescription>
             </DialogHeader>
             
-            <div className="aspect-square w-full overflow-hidden rounded-md mb-4 bg-secondary/20">
+            {/* Prominent image display */}
+            <div className="aspect-square w-full overflow-hidden rounded-md mb-4">
               <img 
                 src={item.imageUrl} 
                 alt={item.name} 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover shadow-sm"
                 loading="lazy"
               />
             </div>
             
-            {item.metadata && (
-              <div className="space-y-3 mb-4 bg-secondary/10 p-3 rounded-md">
-                <h3 className="text-sm font-medium flex items-center gap-1">
-                  <Info className="h-4 w-4" /> Dettagli dell'indumento
-                </h3>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  {item.metadata.dateTaken && (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-muted-foreground">Data:</span>
-                      </div>
-                      <div>{formatDate(item.metadata.dateTaken)}</div>
-                    </>
-                  )}
-                  
-                  {item.metadata.brand && (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-muted-foreground">Brand:</span>
-                      </div>
-                      <div>{item.metadata.brand}</div>
-                    </>
-                  )}
-                  
-                  {item.metadata.material && (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <span className="text-muted-foreground">Materiale:</span>
-                      </div>
-                      <div>{item.metadata.material}</div>
-                    </>
-                  )}
-                  
-                  {item.metadata.season && (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <span className="text-muted-foreground">Stagione:</span>
-                      </div>
-                      <div>{item.metadata.season}</div>
-                    </>
-                  )}
+            {/* Item details section */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="bg-primary/10 text-primary">
+                  {item.category}
+                </Badge>
+                <div className="flex items-center gap-1 ml-auto">
+                  <div 
+                    className="w-4 h-4 rounded-full" 
+                    style={{ 
+                      backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
+                      border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
+                    }}
+                  />
+                  <span className="text-sm">{item.color}</span>
                 </div>
               </div>
-            )}
+              
+              {/* Metadata with improved layout */}
+              {item.metadata && (
+                <Card className="shadow-sm border p-4">
+                  <h3 className="text-sm font-medium flex items-center gap-1 mb-3">
+                    <Info className="h-4 w-4" /> Dettagli dell'indumento
+                  </h3>
+                  <div className="grid grid-cols-2 gap-y-3 text-sm">
+                    {item.metadata.dateTaken && (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span className="text-muted-foreground">Data:</span>
+                        </div>
+                        <div className="font-medium">{formatDate(item.metadata.dateTaken)}</div>
+                      </>
+                    )}
+                    
+                    {item.metadata.brand && (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span className="text-muted-foreground">Brand:</span>
+                        </div>
+                        <div className="font-medium">{item.metadata.brand}</div>
+                      </>
+                    )}
+                    
+                    {item.metadata.material && (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">Materiale:</span>
+                        </div>
+                        <div className="font-medium">{item.metadata.material}</div>
+                      </>
+                    )}
+                    
+                    {item.metadata.season && (
+                      <>
+                        <div className="flex items-center gap-1">
+                          <span className="text-muted-foreground">Stagione:</span>
+                        </div>
+                        <div className="font-medium">{item.metadata.season}</div>
+                      </>
+                    )}
+                  </div>
+                </Card>
+              )}
+            </div>
             
+            {/* Related outfits section */}
             {relatedOutfits && relatedOutfits.length > 0 && (
-              <div className="space-y-3">
+              <div className="mt-6 space-y-3">
                 <Separator />
-                <h3 className="text-sm font-medium flex items-center gap-1">
+                <h3 className="text-sm font-medium flex items-center gap-1 mt-2">
                   <Shirt className="h-4 w-4" />
                   Outfit con questo indumento
                 </h3>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {relatedOutfits.map((outfit) => (
                     <Card 
                       key={`outfit-${outfit.id}`}
-                      className="overflow-hidden border cursor-pointer hover:border-primary/50 transition-all"
+                      className="overflow-hidden border shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                       onClick={() => handleOutfitClick(outfit)}
                     >
-                      <div className="aspect-square overflow-hidden bg-secondary/20">
+                      <div className="aspect-square overflow-hidden bg-secondary/10">
                         <img 
                           src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
                           alt={outfit.name} 
@@ -270,7 +297,7 @@ const ClothingItemDetails = ({
                         />
                       </div>
                       <div className="p-2">
-                        <p className="text-xs font-medium truncate">{outfit.name}</p>
+                        <p className="text-sm font-medium truncate">{outfit.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {outfit.items.length} items
                         </p>
@@ -287,7 +314,7 @@ const ClothingItemDetails = ({
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 right-2 hover:bg-destructive/10"
+            className="absolute top-2 right-2 rounded-full hover:bg-destructive/10"
           >
             <X className="h-4 w-4" />
           </Button>
