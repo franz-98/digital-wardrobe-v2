@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
   Loader2, 
@@ -9,7 +9,9 @@ import {
   PieChart as PieChartIcon,
   Package,
   Shirt,
-  Settings
+  Settings,
+  Calendar as CalendarIcon,
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Card } from "@/components/ui/card";
 import { 
   Tabs, 
@@ -37,10 +44,14 @@ import {
   YAxis, 
   Tooltip, 
   Legend, 
-  ResponsiveContainer 
+  ResponsiveContainer,
+  Sector
 } from "recharts";
+import { format } from "date-fns";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import { toast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
 
 // Move interfaces outside component to avoid recreation on each render
 interface ClothingItem {
@@ -66,7 +77,7 @@ interface Outfit {
 
 interface Stats {
   colors: { name: string; value: number; color: string }[];
-  mostUsed: { name: string; uses: number }[];
+  mostUsed: { name: string; uses: number; id: string }[];
 }
 
 interface UserStatus {
@@ -81,13 +92,20 @@ const WardrobePage = () => {
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("items");
+  const [showAdvancedDateFilter, setShowAdvancedDateFilter] = useState(false);
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: undefined,
+    to: undefined
+  });
+  const [activeColorIndex, setActiveColorIndex] = useState<number | undefined>(undefined);
+  const [selectedStatItem, setSelectedStatItem] = useState<string | null>(null);
 
   // Fetch user status
   const { data: userStatus, isLoading: isLoadingUser } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 300)); // Add a small delay to prevent too frequent rerenders
+      await new Promise(resolve => setTimeout(resolve, 300));
       return {
         isPremium: true, // Set to true to see premium features
         name: "John Doe",
@@ -351,9 +369,9 @@ const WardrobePage = () => {
 
   // Fetch stats with time filter with memoization
   const { data: stats, isLoading: isLoadingStats } = useQuery({
-    queryKey: ["stats", timeFilter],
+    queryKey: ["stats", timeFilter, customDateRange.from, customDateRange.to],
     queryFn: async () => {
-      // Simulating API call
+      // Simulating API call with time filter and custom date range
       await new Promise(resolve => setTimeout(resolve, 300));
       return {
         colors: [
@@ -365,31 +383,85 @@ const WardrobePage = () => {
           { name: "Brown", value: 10, color: "#A52A2A" },
         ],
         mostUsed: [
-          { name: "Blue T-Shirt", uses: 12 },
-          { name: "Black Jeans", uses: 10 },
-          { name: "White Sneakers", uses: 8 },
-          { name: "Gray Hoodie", uses: 6 },
-          { name: "Red Sweater", uses: 4 },
+          { name: "Blue T-Shirt", uses: 12, id: "1" },
+          { name: "Black Jeans", uses: 10, id: "2" },
+          { name: "White Sneakers", uses: 8, id: "3" },
+          { name: "Gray Hoodie", uses: 6, id: "5" },
+          { name: "Red Sweater", uses: 4, id: "4" },
         ],
       } as Stats;
     },
     staleTime: 60000, // 1 minute
   });
 
+  // Active PieChart Cell Renderer
+  const renderActiveShape = (props: any) => {
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+  
+    return (
+      <g>
+        <text x={cx} y={cy} dy={-20} textAnchor="middle" fill="#333" className="text-sm font-medium">
+          {payload.name}
+        </text>
+        <text x={cx} y={cy} textAnchor="middle" fill="#333" className="text-xs">
+          {`${value} items`}
+        </text>
+        <text x={cx} y={cy} dy={20} textAnchor="middle" fill="#999" className="text-xs">
+          {`(${(percent * 100).toFixed(0)}%)`}
+        </text>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius + 6}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+          stroke={payload.name.toLowerCase() === "white" ? "#000000" : fill}
+          strokeWidth={payload.name.toLowerCase() === "white" ? 1 : 0}
+        />
+      </g>
+    );
+  };
+
   // Memoize the related outfits calculation to prevent rerenders
-  const findRelatedOutfits = useMemo(() => {
-    return (itemId: string) => {
-      const allOutfits = [...(myOutfits || []), ...(suggestedOutfits || [])];
-      return allOutfits.filter(outfit => 
-        outfit.items.some(item => item.id === itemId)
-      );
-    };
+  const findRelatedOutfits = useCallback((itemId: string) => {
+    const allOutfits = [...(myOutfits || []), ...(suggestedOutfits || [])];
+    return allOutfits.filter(outfit => 
+      outfit.items.some(item => item.id === itemId)
+    );
   }, [myOutfits, suggestedOutfits]);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
     setIsDetailsOpen(true);
   };
+
+  const handleBarClick = (data: any) => {
+    // Find the item by name from the most used stats
+    if (!clothingItems) return;
+    
+    const itemId = data.id;
+    const item = clothingItems.find(i => i.id === itemId);
+    
+    if (item) {
+      setSelectedItem(item);
+      setIsDetailsOpen(true);
+      setSelectedStatItem(itemId);
+    }
+  };
+
+  const handlePieClick = (_: any, index: number) => {
+    setActiveColorIndex(index === activeColorIndex ? undefined : index);
+  };
+
+  // Format date range for display
+  const formatDateRange = useMemo(() => {
+    if (customDateRange.from && customDateRange.to) {
+      return `${format(customDateRange.from, 'PP')} - ${format(customDateRange.to, 'PP')}`;
+    }
+    return timeFilter === "custom" ? "Seleziona intervallo" : timeFilter;
+  }, [customDateRange, timeFilter]);
 
   if (isLoadingUser) {
     return (
@@ -509,21 +581,115 @@ const WardrobePage = () => {
         <TabsContent value="stats" className="space-y-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">Wardrobe Insights</h2>
-            <div className="flex items-center">
-              <span className="text-sm text-muted-foreground mr-2">Time Period:</span>
-              <Select
-                value={timeFilter}
-                onValueChange={(value) => setTimeFilter(value)}
-              >
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue placeholder="Select" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="week">Week</SelectItem>
-                  <SelectItem value="month">Month</SelectItem>
-                  <SelectItem value="year">Year</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground mr-1">Periodo:</span>
+              
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="flex items-center gap-1 h-8 px-3"
+                  >
+                    <CalendarIcon className="h-3.5 w-3.5 mr-1" />
+                    <span className="capitalize">{formatDateRange}</span>
+                    <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <div className="p-3 border-b">
+                    <div className="space-y-2">
+                      <RadioOption 
+                        value="week" 
+                        currentValue={timeFilter}
+                        onChange={(value) => {
+                          setTimeFilter(value);
+                          setShowAdvancedDateFilter(false);
+                        }}
+                        label="Questa settimana" 
+                      />
+                      <RadioOption 
+                        value="month" 
+                        currentValue={timeFilter}
+                        onChange={(value) => {
+                          setTimeFilter(value);
+                          setShowAdvancedDateFilter(false);
+                        }}
+                        label="Questo mese" 
+                      />
+                      <RadioOption 
+                        value="year" 
+                        currentValue={timeFilter}
+                        onChange={(value) => {
+                          setTimeFilter(value);
+                          setShowAdvancedDateFilter(false);
+                        }}
+                        label="Quest'anno" 
+                      />
+                      <div className="pt-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full justify-start"
+                          onClick={() => setShowAdvancedDateFilter(!showAdvancedDateFilter)}
+                        >
+                          Avanzate
+                          <ChevronDown className={`ml-auto h-4 w-4 transition-transform ${showAdvancedDateFilter ? 'rotate-180' : ''}`} />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {showAdvancedDateFilter && (
+                    <div className="p-3 border-t">
+                      <div className="space-y-3">
+                        <p className="text-sm font-medium">Intervallo personalizzato</p>
+                        <div className="flex gap-2">
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">Da</p>
+                            <CalendarComponent
+                              mode="single"
+                              selected={customDateRange.from}
+                              onSelect={(date) => setCustomDateRange(prev => ({ ...prev, from: date }))}
+                              disabled={(date) => 
+                                date > new Date() || 
+                                (customDateRange.to ? date > customDateRange.to : false)
+                              }
+                              initialFocus
+                            />
+                          </div>
+                          <div>
+                            <p className="text-xs text-muted-foreground mb-1">A</p>
+                            <CalendarComponent
+                              mode="single"
+                              selected={customDateRange.to}
+                              onSelect={(date) => setCustomDateRange(prev => ({ ...prev, to: date }))}
+                              disabled={(date) => 
+                                date > new Date() || 
+                                (customDateRange.from ? date < customDateRange.from : false)
+                              }
+                              initialFocus
+                            />
+                          </div>
+                        </div>
+                        <Button 
+                          className="w-full"
+                          disabled={!customDateRange.from || !customDateRange.to}
+                          onClick={() => {
+                            setTimeFilter("custom");
+                            toast({
+                              title: "Intervallo personalizzato applicato",
+                              description: `Dal ${customDateRange.from ? format(customDateRange.from, 'PP') : ''} al ${customDateRange.to ? format(customDateRange.to, 'PP') : ''}`,
+                            });
+                          }}
+                        >
+                          Applica intervallo
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 
@@ -536,7 +702,7 @@ const WardrobePage = () => {
               <Card className="p-6 shadow-md border">
                 <div className="flex items-center mb-4">
                   <PieChartIcon className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-medium">Colors in Your Wardrobe</h3>
+                  <h3 className="text-lg font-medium">Colori nel tuo guardaroba</h3>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -549,8 +715,9 @@ const WardrobePage = () => {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        labelLine={false}
+                        activeIndex={activeColorIndex}
+                        activeShape={renderActiveShape}
+                        onClick={handlePieClick}
                       >
                         {stats?.colors.map((entry, index) => (
                           <Cell 
@@ -575,7 +742,8 @@ const WardrobePage = () => {
                         color: color.name.toLowerCase() === "white" ? "#333" : "white",
                         border: color.name.toLowerCase() === "white" ? "1px solid #000000" : "none"
                       }}
-                      className="shadow-sm"
+                      className={`shadow-sm cursor-pointer ${activeColorIndex === index ? 'ring-2 ring-primary' : ''}`}
+                      onClick={() => handlePieClick(null, index)}
                     >
                       {color.name}: {color.value} items
                     </Badge>
@@ -586,7 +754,7 @@ const WardrobePage = () => {
               <Card className="p-6 shadow-md border">
                 <div className="flex items-center mb-4">
                   <BarChart className="h-5 w-5 mr-2 text-primary" />
-                  <h3 className="text-lg font-medium">Most Worn Items</h3>
+                  <h3 className="text-lg font-medium">Indumenti più utilizzati</h3>
                 </div>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -602,14 +770,52 @@ const WardrobePage = () => {
                         width={100}
                         tick={{ fontSize: 12 }}
                       />
-                      <Tooltip formatter={(value) => [`${value} times worn`, 'Usage']} />
-                      <Bar dataKey="uses" fill="#9b87f5" barSize={20} radius={[0, 4, 4, 0]} />
+                      <Tooltip formatter={(value) => [`${value} volte utilizzato`, 'Utilizzo']} />
+                      <Bar 
+                        dataKey="uses" 
+                        fill="#9b87f5" 
+                        barSize={20} 
+                        radius={[0, 4, 4, 0]} 
+                        onClick={handleBarClick}
+                        cursor="pointer"
+                      >
+                        {stats?.mostUsed.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={selectedStatItem === entry.id ? '#7E69AB' : '#9b87f5'} 
+                          />
+                        ))}
+                      </Bar>
                     </RechartsBarChart>
                   </ResponsiveContainer>
                 </div>
                 <p className="text-xs text-muted-foreground text-center mt-2">
-                  Your most frequently worn items based on your outfit history
+                  Clicca su una barra per vedere i dettagli dell'indumento
                 </p>
+                
+                <Separator className="my-3" />
+                
+                <div className="grid grid-cols-5 gap-2">
+                  {stats?.mostUsed.slice(0, 5).map((item) => {
+                    const clothingItem = clothingItems?.find(c => c.id === item.id);
+                    return clothingItem ? (
+                      <div 
+                        key={`top-${item.id}`}
+                        className={`cursor-pointer rounded-lg overflow-hidden border ${selectedStatItem === item.id ? 'ring-2 ring-primary' : ''}`}
+                        onClick={() => {
+                          setSelectedStatItem(item.id);
+                          handleBarClick(item);
+                        }}
+                      >
+                        <img 
+                          src={clothingItem.imageUrl} 
+                          alt={clothingItem.name}
+                          className="w-full aspect-square object-cover"
+                        />
+                      </div>
+                    ) : null;
+                  })}
+                </div>
               </Card>
             </div>
           )}
@@ -623,6 +829,33 @@ const WardrobePage = () => {
         onOpenChange={setIsDetailsOpen}
         relatedOutfits={selectedItem ? findRelatedOutfits(selectedItem.id) : []}
       />
+    </div>
+  );
+};
+
+// Radio option component for time filter
+const RadioOption = ({ 
+  value, 
+  currentValue, 
+  onChange, 
+  label 
+}: { 
+  value: string; 
+  currentValue: string; 
+  onChange: (value: string) => void; 
+  label: string;
+}) => {
+  return (
+    <div 
+      className={`flex items-center justify-between rounded-md border p-2 cursor-pointer hover:bg-secondary/30 ${currentValue === value ? 'bg-secondary/40 border-primary/50' : ''}`}
+      onClick={() => onChange(value)}
+    >
+      <span className="text-sm">{label}</span>
+      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${currentValue === value ? 'border-primary' : 'border-muted-foreground'}`}>
+        {currentValue === value && (
+          <div className="w-2 h-2 rounded-full bg-primary" />
+        )}
+      </div>
     </div>
   );
 };
