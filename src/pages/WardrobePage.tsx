@@ -153,6 +153,9 @@ const WardrobePage = () => {
 
   const minSwipeDistance = 50;
 
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const categories = ["All", "Tops", "Bottoms", "Dresses", "Shoes", "Accessories"];
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get("newItem") === "true") {
@@ -170,6 +173,7 @@ const WardrobePage = () => {
   };
 
   const filteredClothingItems = clothingItems.filter((item) =>
+    (activeCategory === "All" || item.category === activeCategory) &&
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -201,7 +205,15 @@ const WardrobePage = () => {
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart) return;
     setTouchEnd(e.targetTouches[0].clientX);
+    
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    const bottomReached = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 5;
+    
+    if (bottomReached) {
+      e.preventDefault();
+    }
   };
 
   const onTouchEnd = () => {
@@ -267,7 +279,7 @@ const WardrobePage = () => {
 
   return (
     <div 
-      className="space-y-6 pb-10"
+      className="space-y-6 pb-20"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -317,7 +329,7 @@ const WardrobePage = () => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="h-8 px-3 text-xs font-normal border-muted"
+                className="h-7 px-2 text-xs font-normal border-muted"
                 onClick={() => document.getElementById('time-range-menu')?.classList.toggle('hidden')}
               >
                 <Clock className="h-3 w-3 mr-1 opacity-70" />
@@ -373,6 +385,22 @@ const WardrobePage = () => {
           )}
         </div>
         <TabsContent value="clothing" className="mt-4">
+          <div className="mb-4 overflow-x-auto pb-2">
+            <div className="flex space-x-2">
+              {categories.map((category) => (
+                <Button
+                  key={category}
+                  size="sm"
+                  variant={activeCategory === category ? "default" : "outline"}
+                  className="text-xs px-3 py-1 h-7"
+                  onClick={() => setActiveCategory(category)}
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+          </div>
+          
           {isCreatingOutfit && (
             <div className="mb-4 p-3 bg-muted/40 rounded-lg">
               <div className="flex justify-between items-center mb-2">
@@ -394,18 +422,18 @@ const WardrobePage = () => {
             </div>
           )}
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {filteredClothingItems.map((item) => (
               <div key={item.id} className="relative">
                 {isCreatingOutfit && (
                   <button 
-                    className="absolute top-2 left-2 z-10 rounded-full bg-white/90 p-1 shadow-sm"
+                    className="absolute top-1 left-1 z-10 rounded-full bg-white/90 p-0.5 shadow-sm"
                     onClick={() => toggleItemSelection(item)}
                   >
                     {selectedItemsForOutfit.some(i => i.id === item.id) ? (
-                      <CheckCircle2 className="h-5 w-5 text-primary" />
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
                     ) : (
-                      <div className="h-5 w-5 rounded-full border-2" />
+                      <div className="h-4 w-4 rounded-full border-2" />
                     )}
                   </button>
                 )}
@@ -477,7 +505,7 @@ const WardrobePage = () => {
             </div>
           )}
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
             {filteredOutfits.map((outfit) => (
               <OutfitCard key={outfit.id} outfit={outfit} />
             ))}
@@ -491,7 +519,7 @@ const WardrobePage = () => {
                   <span className="text-primary mr-1">Premium</span>
                 </Badge>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
                 {suggestedOutfits.map((outfit) => (
                   <OutfitCard key={outfit.id} outfit={outfit} />
                 ))}

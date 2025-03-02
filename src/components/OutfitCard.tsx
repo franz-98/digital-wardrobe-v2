@@ -34,16 +34,16 @@ const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
           alt={outfit.name}
           className="object-cover w-full h-full"
         />
-        <div className="absolute inset-0 bg-black/30 flex items-end p-3">
-          <h3 className="text-white font-medium text-sm">{outfit.name}</h3>
+        <div className="absolute inset-0 bg-black/30 flex items-end p-2">
+          <h3 className="text-white font-medium text-xs">{outfit.name}</h3>
         </div>
       </div>
-      <div className="p-2">
-        <div className="flex gap-1 overflow-x-auto pb-1">
+      <div className="p-1.5">
+        <div className="flex gap-0.5 overflow-x-auto pb-1">
           {outfit.items.map((item) => (
             <div
               key={`item-thumb-${item.id}`}
-              className="h-6 w-6 rounded-md flex-shrink-0 overflow-hidden border"
+              className="h-4 w-4 rounded-md flex-shrink-0 overflow-hidden border"
             >
               <img
                 src={item.imageUrl}
@@ -53,7 +53,7 @@ const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
             </div>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className="text-xs text-muted-foreground mt-0.5">
           {outfit.items.length} items
         </p>
       </div>
