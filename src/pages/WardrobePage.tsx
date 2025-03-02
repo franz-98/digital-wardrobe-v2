@@ -142,7 +142,9 @@ const WardrobePage = () => {
   const [newOutfitName, setNewOutfitName] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("clothing");
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("activeWardrobeTab") || "clothing";
+  });
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [timeRange, setTimeRange] = useState("month");
@@ -154,7 +156,10 @@ const WardrobePage = () => {
   const minSwipeDistance = 50;
 
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const categories = ["All", "Tops", "Bottoms", "Dresses", "Shoes", "Accessories"];
+
+  useEffect(() => {
+    localStorage.setItem("activeWardrobeTab", activeTab);
+  }, [activeTab]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -173,7 +178,6 @@ const WardrobePage = () => {
   };
 
   const filteredClothingItems = clothingItems.filter((item) =>
-    (activeCategory === "All" || item.category === activeCategory) &&
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -342,40 +346,40 @@ const WardrobePage = () => {
               </Button>
               <div 
                 id="time-range-menu" 
-                className="absolute right-8 mt-32 z-50 hidden bg-white rounded-md shadow-md border py-1 text-xs w-32"
+                className="z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
               >
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "week" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "week" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("week"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last week
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "month" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "month" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("month"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last month
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "3months" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "3months" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("3months"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last 3 months
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "6months" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "6months" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("6months"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last 6 months
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "year" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "year" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("year"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last year
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${timeRange === "all" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "all" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("all"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   All time
@@ -385,22 +389,6 @@ const WardrobePage = () => {
           )}
         </div>
         <TabsContent value="clothing" className="mt-4">
-          <div className="mb-4 overflow-x-auto pb-2">
-            <div className="flex space-x-2">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  size="sm"
-                  variant={activeCategory === category ? "default" : "outline"}
-                  className="text-xs px-3 py-1 h-7"
-                  onClick={() => setActiveCategory(category)}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
           {isCreatingOutfit && (
             <div className="mb-4 p-3 bg-muted/40 rounded-lg">
               <div className="flex justify-between items-center mb-2">
@@ -422,7 +410,7 @@ const WardrobePage = () => {
             </div>
           )}
           
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
             {filteredClothingItems.map((item) => (
               <div key={item.id} className="relative">
                 {isCreatingOutfit && (
@@ -505,7 +493,7 @@ const WardrobePage = () => {
             </div>
           )}
           
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
             {filteredOutfits.map((outfit) => (
               <OutfitCard key={outfit.id} outfit={outfit} />
             ))}
@@ -519,7 +507,7 @@ const WardrobePage = () => {
                   <span className="text-primary mr-1">Premium</span>
                 </Badge>
               </div>
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
                 {suggestedOutfits.map((outfit) => (
                   <OutfitCard key={outfit.id} outfit={outfit} />
                 ))}
