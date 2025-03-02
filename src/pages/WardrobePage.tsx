@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
@@ -52,6 +53,9 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import { toast } from "@/components/ui/use-toast";
 import { Separator } from "@/components/ui/separator";
+import ClothingItemCard from "@/components/ClothingItemCard";
+import OutfitCard from "@/components/OutfitCard";
+import RadioOption from "@/components/RadioOption";
 
 // Move interfaces outside component to avoid recreation on each render
 interface ClothingItem {
@@ -811,4 +815,100 @@ const WardrobePage = () => {
                         dataKey="uses" 
                         fill="#9b87f5" 
                         barSize={20} 
-                        radius={[0, 4,
+                        radius={[0, 4, 0, 0]}
+                        onClick={handleBarClick}
+                      />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              {/* Additional stats: Outfits by category */}
+              <Card className="p-6 shadow-md border">
+                <div className="flex items-center mb-4">
+                  <Shirt className="h-5 w-5 mr-2 text-primary" />
+                  <h3 className="text-lg font-medium">Outfit per categoria</h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart
+                      data={stats?.outfitsByCategory}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => [`${value} outfits`, 'Quantità']} />
+                      <Bar dataKey="count" fill="#33C3F0" barSize={40} radius={[4, 4, 0, 0]} />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              {/* Additional stats: Seasonal usage */}
+              <Card className="p-6 shadow-md border">
+                <div className="flex items-center mb-4">
+                  <Calendar className="h-5 w-5 mr-2 text-primary" />
+                  <h3 className="text-lg font-medium">Utilizzo stagionale</h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart
+                      data={stats?.seasonalUsage}
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip formatter={(value) => [`${value} utilizzi`, 'Utilizzo']} />
+                      <Bar dataKey="count" fill="#7E69AB" barSize={40} radius={[4, 4, 0, 0]} />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              {/* Additional stats: Most popular outfits */}
+              <Card className="p-6 shadow-md border">
+                <div className="flex items-center mb-4">
+                  <Settings className="h-5 w-5 mr-2 text-primary" />
+                  <h3 className="text-lg font-medium">Outfit più popolari</h3>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart
+                      data={stats?.mostPopularOutfits}
+                      layout="vertical"
+                      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <XAxis type="number" />
+                      <YAxis 
+                        type="category" 
+                        dataKey="name" 
+                        width={100}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <Tooltip formatter={(value) => [`${value} utilizzi`, 'Utilizzo']} />
+                      <Bar dataKey="uses" fill="#D6BCFA" barSize={20} radius={[0, 4, 0, 0]} />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              {/* We could add more charts here if needed */}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Clothing Item Modal */}
+      {selectedItem && (
+        <ClothingItemDetails
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+          item={selectedItem}
+          relatedOutfits={findRelatedOutfits(selectedItem.id)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default WardrobePage;
