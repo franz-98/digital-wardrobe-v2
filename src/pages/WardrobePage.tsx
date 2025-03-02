@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { 
   Loader2, 
@@ -87,14 +87,13 @@ const WardrobePage = () => {
     queryKey: ["user"],
     queryFn: async () => {
       // Simulating API call
-      const response = await fetch("/api/user");
-      if (!response.ok) throw new Error("Failed to fetch user status");
-      return response.json() as Promise<UserStatus>;
+      await new Promise(resolve => setTimeout(resolve, 300)); // Add a small delay to prevent too frequent rerenders
+      return {
+        isPremium: true, // Set to true to see premium features
+        name: "John Doe",
+      } as UserStatus;
     },
-    placeholderData: {
-      isPremium: true, // Set to true to see premium features
-      name: "John Doe",
-    },
+    staleTime: 60000, // 1 minute
   });
 
   // Fetch clothing items
@@ -102,292 +101,290 @@ const WardrobePage = () => {
     queryKey: ["clothes"],
     queryFn: async () => {
       // Simulating API call
-      const response = await fetch("/api/clothes");
-      if (!response.ok) throw new Error("Failed to fetch clothes");
-      return response.json() as Promise<ClothingItem[]>;
+      await new Promise(resolve => setTimeout(resolve, 300)); 
+      return [
+        {
+          id: "1",
+          name: "Blue T-Shirt",
+          category: "Tops",
+          color: "Blue",
+          imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-05-15T10:30:00Z",
+            brand: "Nike",
+            material: "Cotton",
+            season: "Summer",
+          }
+        },
+        {
+          id: "2",
+          name: "Black Jeans",
+          category: "Bottoms",
+          color: "Black",
+          imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-06-20T14:15:00Z",
+            brand: "Levi's",
+            material: "Denim",
+            season: "All Season",
+          }
+        },
+        {
+          id: "3",
+          name: "White Sneakers",
+          category: "Footwear",
+          color: "White",
+          imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-04-10T09:45:00Z",
+            brand: "Adidas",
+            material: "Leather",
+            season: "All Season",
+          }
+        },
+        {
+          id: "4",
+          name: "Red Sweater",
+          category: "Tops",
+          color: "Red",
+          imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-02-05T11:20:00Z",
+            brand: "H&M",
+            material: "Wool",
+            season: "Winter",
+          }
+        },
+        {
+          id: "5",
+          name: "Gray Hoodie",
+          category: "Tops",
+          color: "Gray",
+          imageUrl: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-03-18T15:30:00Z",
+            brand: "GAP",
+            material: "Cotton Blend",
+            season: "Fall",
+          }
+        },
+        {
+          id: "6",
+          name: "Brown Boots",
+          category: "Footwear",
+          color: "Brown",
+          imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
+          metadata: {
+            dateTaken: "2023-01-25T13:40:00Z",
+            brand: "Timberland",
+            material: "Leather",
+            season: "Winter",
+          }
+        },
+      ] as ClothingItem[];
     },
-    placeholderData: [
-      {
-        id: "1",
-        name: "Blue T-Shirt",
-        category: "Tops",
-        color: "Blue",
-        imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-05-15T10:30:00Z",
-          brand: "Nike",
-          material: "Cotton",
-          season: "Summer",
-        }
-      },
-      {
-        id: "2",
-        name: "Black Jeans",
-        category: "Bottoms",
-        color: "Black",
-        imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-06-20T14:15:00Z",
-          brand: "Levi's",
-          material: "Denim",
-          season: "All Season",
-        }
-      },
-      {
-        id: "3",
-        name: "White Sneakers",
-        category: "Footwear",
-        color: "White",
-        imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-04-10T09:45:00Z",
-          brand: "Adidas",
-          material: "Leather",
-          season: "All Season",
-        }
-      },
-      {
-        id: "4",
-        name: "Red Sweater",
-        category: "Tops",
-        color: "Red",
-        imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-02-05T11:20:00Z",
-          brand: "H&M",
-          material: "Wool",
-          season: "Winter",
-        }
-      },
-      {
-        id: "5",
-        name: "Gray Hoodie",
-        category: "Tops",
-        color: "Gray",
-        imageUrl: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-03-18T15:30:00Z",
-          brand: "GAP",
-          material: "Cotton Blend",
-          season: "Fall",
-        }
-      },
-      {
-        id: "6",
-        name: "Brown Boots",
-        category: "Footwear",
-        color: "Brown",
-        imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
-        metadata: {
-          dateTaken: "2023-01-25T13:40:00Z",
-          brand: "Timberland",
-          material: "Leather",
-          season: "Winter",
-        }
-      },
-    ],
+    staleTime: 60000, // 1 minute
   });
 
-  // Fetch my outfits
+  // Fetch my outfits with memoization to prevent unnecessary rerenders
   const { data: myOutfits, isLoading: isLoadingMyOutfits } = useQuery({
     queryKey: ["my-outfits"],
     queryFn: async () => {
       // Simulating API call
-      const response = await fetch("/api/my-outfits");
-      if (!response.ok) throw new Error("Failed to fetch my outfits");
-      return response.json() as Promise<Outfit[]>;
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return [
+        {
+          id: "1",
+          name: "Casual Friday",
+          imageUrl: "https://images.unsplash.com/photo-1501854140801-50d01698950b",
+          items: [
+            {
+              id: "1",
+              name: "Blue T-Shirt",
+              category: "Tops",
+              color: "Blue",
+              imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+            },
+            {
+              id: "2",
+              name: "Black Jeans",
+              category: "Bottoms",
+              color: "Black",
+              imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+            },
+            {
+              id: "6",
+              name: "Brown Boots",
+              category: "Footwear",
+              color: "Brown",
+              imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
+            },
+          ],
+        },
+        {
+          id: "2",
+          name: "Weekend Hangout",
+          imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+          items: [
+            {
+              id: "5",
+              name: "Gray Hoodie",
+              category: "Tops",
+              color: "Gray",
+              imageUrl: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3",
+            },
+            {
+              id: "2",
+              name: "Black Jeans",
+              category: "Bottoms",
+              color: "Black",
+              imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+            },
+            {
+              id: "3",
+              name: "White Sneakers",
+              category: "Footwear",
+              color: "White",
+              imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
+            },
+          ],
+        },
+        {
+          id: "3",
+          name: "Office Look",
+          imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+          items: [
+            {
+              id: "4",
+              name: "Red Sweater",
+              category: "Tops",
+              color: "Red",
+              imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?ixlib=rb-4.0.3",
+            },
+            {
+              id: "2",
+              name: "Black Jeans",
+              category: "Bottoms",
+              color: "Black",
+              imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+            },
+            {
+              id: "6",
+              name: "Brown Boots",
+              category: "Footwear",
+              color: "Brown",
+              imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
+            },
+          ],
+        },
+      ] as Outfit[];
     },
-    placeholderData: [
-      {
-        id: "1",
-        name: "Casual Friday",
-        imageUrl: "https://images.unsplash.com/photo-1501854140801-50d01698950b",
-        items: [
-          {
-            id: "1",
-            name: "Blue T-Shirt",
-            category: "Tops",
-            color: "Blue",
-            imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
-          },
-          {
-            id: "2",
-            name: "Black Jeans",
-            category: "Bottoms",
-            color: "Black",
-            imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-          },
-          {
-            id: "6",
-            name: "Brown Boots",
-            category: "Footwear",
-            color: "Brown",
-            imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
-          },
-        ],
-      },
-      {
-        id: "2",
-        name: "Weekend Hangout",
-        imageUrl: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-        items: [
-          {
-            id: "5",
-            name: "Gray Hoodie",
-            category: "Tops",
-            color: "Gray",
-            imageUrl: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3",
-          },
-          {
-            id: "2",
-            name: "Black Jeans",
-            category: "Bottoms",
-            color: "Black",
-            imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-          },
-          {
-            id: "3",
-            name: "White Sneakers",
-            category: "Footwear",
-            color: "White",
-            imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
-          },
-        ],
-      },
-      {
-        id: "3",
-        name: "Office Look",
-        imageUrl: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-        items: [
-          {
-            id: "4",
-            name: "Red Sweater",
-            category: "Tops",
-            color: "Red",
-            imageUrl: "https://images.unsplash.com/photo-1578587018452-892bacefd3f2?ixlib=rb-4.0.3",
-          },
-          {
-            id: "2",
-            name: "Black Jeans",
-            category: "Bottoms",
-            color: "Black",
-            imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-          },
-          {
-            id: "6",
-            name: "Brown Boots",
-            category: "Footwear",
-            color: "Brown",
-            imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
-          },
-        ],
-      },
-    ],
+    staleTime: 60000, // 1 minute
   });
 
-  // Fetch suggested outfits (premium only)
+  // Fetch suggested outfits with conditional fetching
   const { data: suggestedOutfits, isLoading: isLoadingSuggestedOutfits } = useQuery({
     queryKey: ["suggested-outfits"],
     queryFn: async () => {
       // Simulating API call
-      const response = await fetch("/api/suggested-outfits");
-      if (!response.ok) throw new Error("Failed to fetch suggested outfits");
-      return response.json() as Promise<Outfit[]>;
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return [
+        {
+          id: "1",
+          name: "Business Casual",
+          items: [
+            {
+              id: "1",
+              name: "Blue T-Shirt",
+              category: "Tops",
+              color: "Blue",
+              imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+            },
+            {
+              id: "2",
+              name: "Black Jeans",
+              category: "Bottoms",
+              color: "Black",
+              imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+            },
+            {
+              id: "6",
+              name: "Brown Boots",
+              category: "Footwear",
+              color: "Brown",
+              imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
+            },
+          ],
+        },
+        {
+          id: "2",
+          name: "Summer Look",
+          items: [
+            {
+              id: "1",
+              name: "Blue T-Shirt",
+              category: "Tops",
+              color: "Blue",
+              imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+            },
+            {
+              id: "2",
+              name: "Black Jeans",
+              category: "Bottoms",
+              color: "Black",
+              imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+            },
+            {
+              id: "3",
+              name: "White Sneakers",
+              category: "Footwear",
+              color: "White",
+              imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
+            },
+          ],
+        },
+      ] as Outfit[];
     },
-    placeholderData: [
-      {
-        id: "1",
-        name: "Business Casual",
-        items: [
-          {
-            id: "1",
-            name: "Blue T-Shirt",
-            category: "Tops",
-            color: "Blue",
-            imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
-          },
-          {
-            id: "2",
-            name: "Black Jeans",
-            category: "Bottoms",
-            color: "Black",
-            imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-          },
-          {
-            id: "6",
-            name: "Brown Boots",
-            category: "Footwear",
-            color: "Brown",
-            imageUrl: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?ixlib=rb-4.0.3",
-          },
-        ],
-      },
-      {
-        id: "2",
-        name: "Summer Look",
-        items: [
-          {
-            id: "1",
-            name: "Blue T-Shirt",
-            category: "Tops",
-            color: "Blue",
-            imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
-          },
-          {
-            id: "2",
-            name: "Black Jeans",
-            category: "Bottoms",
-            color: "Black",
-            imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-          },
-          {
-            id: "3",
-            name: "White Sneakers",
-            category: "Footwear",
-            color: "White",
-            imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
-          },
-        ],
-      },
-    ],
-    enabled: userStatus?.isPremium || false,
+    enabled: !!userStatus?.isPremium,
+    staleTime: 60000, // 1 minute
   });
 
-  // Fetch stats with time filter
+  // Fetch stats with time filter with memoization
   const { data: stats, isLoading: isLoadingStats } = useQuery({
     queryKey: ["stats", timeFilter],
     queryFn: async () => {
       // Simulating API call
-      const response = await fetch(`/api/stats?time=${timeFilter}`);
-      if (!response.ok) throw new Error("Failed to fetch stats");
-      return response.json() as Promise<Stats>;
+      await new Promise(resolve => setTimeout(resolve, 300));
+      return {
+        colors: [
+          { name: "Blue", value: 30, color: "#0EA5E9" },
+          { name: "Black", value: 25, color: "#1e1e1e" },
+          { name: "White", value: 15, color: "#f5f5f5" },
+          { name: "Red", value: 10, color: "#f43f5e" },
+          { name: "Gray", value: 10, color: "#8E9196" },
+          { name: "Brown", value: 10, color: "#A52A2A" },
+        ],
+        mostUsed: [
+          { name: "Blue T-Shirt", uses: 12 },
+          { name: "Black Jeans", uses: 10 },
+          { name: "White Sneakers", uses: 8 },
+          { name: "Gray Hoodie", uses: 6 },
+          { name: "Red Sweater", uses: 4 },
+        ],
+      } as Stats;
     },
-    placeholderData: {
-      colors: [
-        { name: "Blue", value: 30, color: "#0EA5E9" },
-        { name: "Black", value: 25, color: "#1e1e1e" },
-        { name: "White", value: 15, color: "#f5f5f5" },
-        { name: "Red", value: 10, color: "#f43f5e" },
-        { name: "Gray", value: 10, color: "#8E9196" },
-        { name: "Brown", value: 10, color: "#A52A2A" },
-      ],
-      mostUsed: [
-        { name: "Blue T-Shirt", uses: 12 },
-        { name: "Black Jeans", uses: 10 },
-        { name: "White Sneakers", uses: 8 },
-        { name: "Gray Hoodie", uses: 6 },
-        { name: "Red Sweater", uses: 4 },
-      ],
-    },
+    staleTime: 60000, // 1 minute
   });
 
-  // Find related outfits for a clothing item
-  const findRelatedOutfits = (itemId: string) => {
-    const allOutfits = [...(myOutfits || []), ...(suggestedOutfits || [])];
-    return allOutfits.filter(outfit => 
-      outfit.items.some(item => item.id === itemId)
-    );
-  };
+  // Memoize the related outfits calculation to prevent rerenders
+  const findRelatedOutfits = useMemo(() => {
+    return (itemId: string) => {
+      const allOutfits = [...(myOutfits || []), ...(suggestedOutfits || [])];
+      return allOutfits.filter(outfit => 
+        outfit.items.some(item => item.id === itemId)
+      );
+    };
+  }, [myOutfits, suggestedOutfits]);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -403,7 +400,7 @@ const WardrobePage = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in pb-10">
+    <div className="space-y-8 pb-10">
       <header className="flex items-center justify-between mb-6">
         <div>
           <div className="inline-block mb-2 px-3 py-1 bg-primary/10 rounded-full text-primary text-xs font-medium">
@@ -681,7 +678,7 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
       <div className="p-4">
         <h3 className="font-medium mb-2">{outfit.name}</h3>
         <div className="flex space-x-2 mb-3">
-          {outfit.items.map((item, index) => (
+          {outfit.items.map((item) => (
             <div 
               key={`${outfit.id}-item-${item.id}`}
               className="w-8 h-8 rounded-full overflow-hidden border border-border"
@@ -690,12 +687,13 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
                 src={item.imageUrl} 
                 alt={item.name} 
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </div>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2">
-          {outfit.items.map((item, index) => (
+          {outfit.items.map((item) => (
             <div 
               key={`${outfit.id}-grid-${item.id}`} 
               className="aspect-square overflow-hidden rounded-lg bg-secondary/30"

@@ -71,8 +71,8 @@ const ClothingItemDetails = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-auto">
+        <DialogHeader className="pb-2">
           <DialogTitle className="text-xl font-bold">{item.name}</DialogTitle>
           <DialogDescription className="flex items-center gap-2">
             <Badge variant="outline" className="bg-primary/10 text-primary">
@@ -89,16 +89,17 @@ const ClothingItemDetails = ({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="aspect-square w-full overflow-hidden rounded-md mb-4">
+        <div className="aspect-square w-full overflow-hidden rounded-md mb-4 bg-secondary/20">
           <img 
             src={item.imageUrl} 
             alt={item.name} 
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
         
         {item.metadata && (
-          <div className="space-y-2 mb-4">
+          <div className="space-y-3 mb-4 bg-secondary/10 p-3 rounded-md">
             <h3 className="text-sm font-medium flex items-center gap-1">
               <Info className="h-4 w-4" /> Dettagli dell'indumento
             </h3>
@@ -147,19 +148,23 @@ const ClothingItemDetails = ({
         {relatedOutfits && relatedOutfits.length > 0 && (
           <div className="space-y-3">
             <Separator />
-            <h3 className="text-sm font-medium">Outfit con questo indumento</h3>
+            <h3 className="text-sm font-medium flex items-center gap-1">
+              <Shirt className="h-4 w-4" />
+              Outfit con questo indumento
+            </h3>
             <div className="grid grid-cols-2 gap-2">
               {relatedOutfits.map((outfit) => (
                 <Card 
                   key={`outfit-${outfit.id}`}
-                  className="overflow-hidden border cursor-pointer hover:border-primary/50"
+                  className="overflow-hidden border cursor-pointer hover:border-primary/50 transition-all"
                   onClick={() => handleOutfitClick(outfit)}
                 >
-                  <div className="aspect-square overflow-hidden">
+                  <div className="aspect-square overflow-hidden bg-secondary/20">
                     <img 
                       src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
                       alt={outfit.name} 
                       className="w-full h-full object-cover"
+                      loading="lazy"
                     />
                   </div>
                   <div className="p-2">
@@ -178,7 +183,7 @@ const ClothingItemDetails = ({
           <Button 
             variant="ghost" 
             size="icon" 
-            className="absolute top-2 right-2"
+            className="absolute top-2 right-2 hover:bg-destructive/10"
           >
             <X className="h-4 w-4" />
           </Button>
