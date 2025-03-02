@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search } from "lucide-react";
+import { Plus, Grip, Shirt, BarChart, Search, Clock } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -130,11 +129,9 @@ const WardrobePage = () => {
   const [timeRange, setTimeRange] = useState("month");
   const [showSearchBar, setShowSearchBar] = useState(false);
   
-  // Touch start position for swipe functionality
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
 
   useEffect(() => {
@@ -170,18 +167,15 @@ const WardrobePage = () => {
   const toggleSearchBar = () => {
     setShowSearchBar(!showSearchBar);
     if (!showSearchBar) {
-      // Focus the search input when it appears
       setTimeout(() => {
         const searchInput = document.getElementById('search');
         if (searchInput) searchInput.focus();
       }, 100);
     } else {
-      // Clear search when hiding
       setSearchTerm("");
     }
   };
 
-  // Handle swipe on touch devices
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -198,21 +192,17 @@ const WardrobePage = () => {
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     
-    // Determine tab index to navigate to
     const tabValues = ["clothing", "outfits", "stats"];
     const currentIndex = tabValues.indexOf(activeTab);
     
     if (isLeftSwipe && currentIndex < tabValues.length - 1) {
-      // Navigate to next tab
       setActiveTab(tabValues[currentIndex + 1]);
     }
     
     if (isRightSwipe && currentIndex > 0) {
-      // Navigate to previous tab
       setActiveTab(tabValues[currentIndex - 1]);
     }
     
-    // Reset
     setTouchStart(null);
     setTouchEnd(null);
   };
@@ -247,25 +237,40 @@ const WardrobePage = () => {
             Stats
           </TabsTrigger>
         </TabsList>
-        <div className="mt-4 flex items-center space-x-2">
-          {showSearchBar ? (
-            <>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" onClick={toggleSearchBar}>
+              <Search className="h-5 w-5" />
+            </Button>
+            {showSearchBar && (
               <Input
                 type="search"
                 id="search"
                 placeholder={`Search ${activeTab}`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full animate-fade-in"
+                className="w-full ml-2 animate-fade-in"
               />
-              <Button variant="ghost" size="icon" onClick={toggleSearchBar}>
-                <Search className="h-4 w-4" />
-              </Button>
-            </>
-          ) : (
-            <Button variant="ghost" size="icon" onClick={toggleSearchBar} className="ml-auto">
-              <Search className="h-5 w-5" />
-            </Button>
+            )}
+          </div>
+          
+          {activeTab === "stats" && (
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-2" />
+              <Select value={timeRange} onValueChange={setTimeRange}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Select time period" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="week">Last week</SelectItem>
+                  <SelectItem value="month">Last month</SelectItem>
+                  <SelectItem value="3months">Last 3 months</SelectItem>
+                  <SelectItem value="6months">Last 6 months</SelectItem>
+                  <SelectItem value="year">Last year</SelectItem>
+                  <SelectItem value="all">All time</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         </div>
         <TabsContent value="clothing" className="mt-6">
@@ -287,22 +292,6 @@ const WardrobePage = () => {
           </div>
         </TabsContent>
         <TabsContent value="stats" className="mt-6">
-          <div className="mb-6">
-            <Label className="mb-2 block">Time Range:</Label>
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Select time period" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="week">Last week</SelectItem>
-                <SelectItem value="month">Last month</SelectItem>
-                <SelectItem value="3months">Last 3 months</SelectItem>
-                <SelectItem value="6months">Last 6 months</SelectItem>
-                <SelectItem value="year">Last year</SelectItem>
-                <SelectItem value="all">All time</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="p-6">
               <h3 className="text-lg font-medium mb-4">Wardrobe Composition</h3>
