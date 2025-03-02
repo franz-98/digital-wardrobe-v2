@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, ListChecks } from "lucide-react";
+import { Plus, Grip, ListChecks, BarChart } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -120,6 +120,7 @@ const WardrobePage = () => {
       imageUrl: "/images/outfits/summer-dress.png",
     },
   ]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("clothing");
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
@@ -175,6 +176,10 @@ const WardrobePage = () => {
             <ListChecks className="mr-2 h-4 w-4" />
             Outfits
           </TabsTrigger>
+          <TabsTrigger value="stats">
+            <BarChart className="mr-2 h-4 w-4" />
+            Stats
+          </TabsTrigger>
         </TabsList>
         <div className="mt-4 flex items-center space-x-2">
           <Label htmlFor="search">Search:</Label>
@@ -202,6 +207,88 @@ const WardrobePage = () => {
             {filteredOutfits.map((outfit) => (
               <OutfitCard key={outfit.id} outfit={outfit} />
             ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="stats" className="mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6">
+              <h3 className="text-lg font-medium mb-4">Wardrobe Composition</h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>Tops</span>
+                  <span className="font-medium">40%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '40%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span>Bottoms</span>
+                  <span className="font-medium">20%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span>Dresses</span>
+                  <span className="font-medium">20%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span>Shoes</span>
+                  <span className="font-medium">10%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span>Accessories</span>
+                  <span className="font-medium">10%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-6">
+              <h3 className="text-lg font-medium mb-4">Most Worn Items</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
+                    <span>Blue T-shirt</span>
+                  </div>
+                  <span className="font-medium">12 times</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
+                    <span>Black Jeans</span>
+                  </div>
+                  <span className="font-medium">8 times</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
+                    <span>White Sneakers</span>
+                  </div>
+                  <span className="font-medium">6 times</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
+                    <span>Red Dress</span>
+                  </div>
+                  <span className="font-medium">4 times</span>
+                </div>
+              </div>
+            </Card>
           </div>
         </TabsContent>
       </Tabs>
