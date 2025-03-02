@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart } from "lucide-react";
+import { Plus, Grip, Shirt, BarChart, Search } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -127,7 +127,8 @@ const WardrobePage = () => {
   const [activeTab, setActiveTab] = useState("clothing");
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [timeRange, setTimeRange] = useState("30days");
+  const [timeRange, setTimeRange] = useState("month");
+  const [showSearchBar, setShowSearchBar] = useState(false);
   
   // Touch start position for swipe functionality
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -164,6 +165,20 @@ const WardrobePage = () => {
     return outfits.filter((outfit) =>
       outfit.items.some((item) => item.id === itemId)
     );
+  };
+
+  const toggleSearchBar = () => {
+    setShowSearchBar(!showSearchBar);
+    if (!showSearchBar) {
+      // Focus the search input when it appears
+      setTimeout(() => {
+        const searchInput = document.getElementById('search');
+        if (searchInput) searchInput.focus();
+      }, 100);
+    } else {
+      // Clear search when hiding
+      setSearchTerm("");
+    }
   };
 
   // Handle swipe on touch devices
@@ -233,14 +248,25 @@ const WardrobePage = () => {
           </TabsTrigger>
         </TabsList>
         <div className="mt-4 flex items-center space-x-2">
-          <Label htmlFor="search">Search:</Label>
-          <Input
-            type="search"
-            id="search"
-            placeholder={`Search ${activeTab}`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          {showSearchBar ? (
+            <>
+              <Input
+                type="search"
+                id="search"
+                placeholder={`Search ${activeTab}`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full animate-fade-in"
+              />
+              <Button variant="ghost" size="icon" onClick={toggleSearchBar}>
+                <Search className="h-4 w-4" />
+              </Button>
+            </>
+          ) : (
+            <Button variant="ghost" size="icon" onClick={toggleSearchBar} className="ml-auto">
+              <Search className="h-5 w-5" />
+            </Button>
+          )}
         </div>
         <TabsContent value="clothing" className="mt-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -268,11 +294,11 @@ const WardrobePage = () => {
                 <SelectValue placeholder="Select time period" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="7days">Last 7 days</SelectItem>
-                <SelectItem value="30days">Last 30 days</SelectItem>
-                <SelectItem value="90days">Last 3 months</SelectItem>
+                <SelectItem value="week">Last week</SelectItem>
+                <SelectItem value="month">Last month</SelectItem>
+                <SelectItem value="3months">Last 3 months</SelectItem>
                 <SelectItem value="6months">Last 6 months</SelectItem>
-                <SelectItem value="1year">Last year</SelectItem>
+                <SelectItem value="year">Last year</SelectItem>
                 <SelectItem value="all">All time</SelectItem>
               </SelectContent>
             </Select>
@@ -353,6 +379,66 @@ const WardrobePage = () => {
                     <span>Red Dress</span>
                   </div>
                   <span className="font-medium">4 times</span>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-6">
+              <h3 className="text-lg font-medium mb-4">Most Worn Colors</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-500"></div>
+                    <span>Blue</span>
+                  </div>
+                  <span className="font-medium">32%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-blue-500 h-full rounded-full" style={{ width: '32%' }}></div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-black border border-gray-300"></div>
+                    <span>Black</span>
+                  </div>
+                  <span className="font-medium">28%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-black h-full rounded-full" style={{ width: '28%' }}></div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-white border border-gray-300"></div>
+                    <span>White</span>
+                  </div>
+                  <span className="font-medium">20%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-gray-100 h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-red-500"></div>
+                    <span>Red</span>
+                  </div>
+                  <span className="font-medium">12%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-red-500 h-full rounded-full" style={{ width: '12%' }}></div>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-green-500"></div>
+                    <span>Green</span>
+                  </div>
+                  <span className="font-medium">8%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-green-500 h-full rounded-full" style={{ width: '8%' }}></div>
                 </div>
               </div>
             </Card>

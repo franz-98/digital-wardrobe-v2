@@ -93,9 +93,9 @@ const ClothingItemDetails = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-auto">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-auto bg-background">
         {viewMode === "outfit" && selectedOutfit ? (
-          // Outfit View - Redesigned for better clarity
+          // Outfit View
           <>
             <DialogHeader className="pb-2">
               <div className="flex items-center mb-2">
@@ -190,14 +190,14 @@ const ClothingItemDetails = ({
             </div>
           </>
         ) : (
-          // Item View - Redesigned with image on top and details below
+          // Item View - Image prominently displayed at the top
           <>
             <DialogHeader className="pb-2">
               <DialogTitle className="text-xl font-bold">{item.name}</DialogTitle>
             </DialogHeader>
             
             {/* Full width image at the top */}
-            <div className="w-full aspect-square overflow-hidden rounded-md mb-4">
+            <div className="w-full aspect-square overflow-hidden rounded-md mb-4 border-2 border-primary/20">
               <img 
                 src={item.imageUrl} 
                 alt={item.name} 
@@ -273,7 +273,7 @@ const ClothingItemDetails = ({
               )}
             </div>
             
-            {/* Related outfits section - moved below description */}
+            {/* Related outfits section */}
             {relatedOutfits && relatedOutfits.length > 0 && (
               <div className="mt-6 space-y-3">
                 <Separator className="my-4" />
@@ -312,11 +312,11 @@ const ClothingItemDetails = ({
         
         <DialogClose asChild>
           <Button 
-            variant="ghost" 
+            variant="destructive" 
             size="icon" 
-            className="absolute top-2 right-2 rounded-full hover:bg-destructive/10"
+            className="absolute top-3 right-3 rounded-full z-10 shadow-md"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </DialogClose>
       </DialogContent>
