@@ -42,6 +42,7 @@ import {
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import { toast } from "@/components/ui/use-toast";
 
+// Move interfaces outside component to avoid recreation on each render
 interface ClothingItem {
   id: string;
   name: string;
@@ -558,6 +559,8 @@ const WardrobePage = () => {
                           <Cell 
                             key={`cell-${index}`} 
                             fill={entry.color} 
+                            stroke={entry.name.toLowerCase() === "white" ? "#000000" : entry.color}
+                            strokeWidth={entry.name.toLowerCase() === "white" ? 1 : 0}
                           />
                         ))}
                       </Pie>
@@ -573,7 +576,7 @@ const WardrobePage = () => {
                       style={{ 
                         backgroundColor: color.color, 
                         color: color.name.toLowerCase() === "white" ? "#333" : "white",
-                        border: color.name.toLowerCase() === "white" ? "1px solid #333" : "none"
+                        border: color.name.toLowerCase() === "white" ? "1px solid #000000" : "none"
                       }}
                       className="shadow-sm"
                     >
@@ -653,7 +656,10 @@ const ClothingItemCard = ({
           <span className="text-xs text-muted-foreground">{item.category}</span>
           <div 
             className="w-3 h-3 rounded-full" 
-            style={{ backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color }}
+            style={{ 
+              backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
+              border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
+            }}
           />
         </div>
       </div>
@@ -677,7 +683,7 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
         <div className="flex space-x-2 mb-3">
           {outfit.items.map((item, index) => (
             <div 
-              key={`${outfit.id}-item-${item.id}-${index}`}
+              key={`${outfit.id}-item-${item.id}`}
               className="w-8 h-8 rounded-full overflow-hidden border border-border"
             >
               <img 
@@ -691,7 +697,7 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
         <div className="grid grid-cols-3 gap-2">
           {outfit.items.map((item, index) => (
             <div 
-              key={`${outfit.id}-grid-${item.id}-${index}`} 
+              key={`${outfit.id}-grid-${item.id}`} 
               className="aspect-square overflow-hidden rounded-lg bg-secondary/30"
             >
               <img

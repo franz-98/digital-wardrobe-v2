@@ -50,6 +50,7 @@ const ClothingItemDetails = ({
   onOpenChange,
   relatedOutfits = []
 }: ClothingItemDetailsProps) => {
+  // Return null early if no item is provided
   if (!item) return null;
 
   const formatDate = (dateString?: string) => {
@@ -80,7 +81,8 @@ const ClothingItemDetails = ({
             <div 
               className="w-3 h-3 rounded-full inline-block" 
               style={{ 
-                backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color 
+                backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
+                border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
               }}
             />
             <span className="text-sm text-muted-foreground">{item.color}</span>
@@ -147,9 +149,9 @@ const ClothingItemDetails = ({
             <Separator />
             <h3 className="text-sm font-medium">Outfit con questo indumento</h3>
             <div className="grid grid-cols-2 gap-2">
-              {relatedOutfits.map((outfit, index) => (
+              {relatedOutfits.map((outfit) => (
                 <Card 
-                  key={`outfit-${outfit.id}-${index}`}
+                  key={`outfit-${outfit.id}`}
                   className="overflow-hidden border cursor-pointer hover:border-primary/50"
                   onClick={() => handleOutfitClick(outfit)}
                 >
