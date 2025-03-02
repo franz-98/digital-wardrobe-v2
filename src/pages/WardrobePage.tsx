@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import ClothingItemCard from "@/components/ClothingItemCard";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
@@ -126,6 +127,14 @@ const WardrobePage = () => {
   const [activeTab, setActiveTab] = useState("clothing");
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [timeRange, setTimeRange] = useState("30days");
+  
+  // Touch start position for swipe functionality
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -157,8 +166,49 @@ const WardrobePage = () => {
     );
   };
 
+  // Handle swipe on touch devices
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    // Determine tab index to navigate to
+    const tabValues = ["clothing", "outfits", "stats"];
+    const currentIndex = tabValues.indexOf(activeTab);
+    
+    if (isLeftSwipe && currentIndex < tabValues.length - 1) {
+      // Navigate to next tab
+      setActiveTab(tabValues[currentIndex + 1]);
+    }
+    
+    if (isRightSwipe && currentIndex > 0) {
+      // Navigate to previous tab
+      setActiveTab(tabValues[currentIndex - 1]);
+    }
+    
+    // Reset
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+
   return (
-    <div className="space-y-8 pb-10">
+    <div 
+      className="space-y-8 pb-10"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Wardrobe</h1>
         <Button onClick={() => navigate("/add-item")}>
@@ -167,7 +217,7 @@ const WardrobePage = () => {
         </Button>
       </div>
 
-      <Tabs defaultValue="clothing" className="w-full" onValueChange={setActiveTab}>
+      <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
         <TabsList className="w-full">
           <TabsTrigger value="clothing" className="flex-1">
             <Grip className="mr-2 h-4 w-4" />
@@ -211,6 +261,22 @@ const WardrobePage = () => {
           </div>
         </TabsContent>
         <TabsContent value="stats" className="mt-6">
+          <div className="mb-6">
+            <Label className="mb-2 block">Time Range:</Label>
+            <Select value={timeRange} onValueChange={setTimeRange}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Select time period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7days">Last 7 days</SelectItem>
+                <SelectItem value="30days">Last 30 days</SelectItem>
+                <SelectItem value="90days">Last 3 months</SelectItem>
+                <SelectItem value="6months">Last 6 months</SelectItem>
+                <SelectItem value="1year">Last year</SelectItem>
+                <SelectItem value="all">All time</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="p-6">
               <h3 className="text-lg font-medium mb-4">Wardrobe Composition</h3>
