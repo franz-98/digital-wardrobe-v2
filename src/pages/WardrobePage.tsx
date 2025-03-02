@@ -6,8 +6,9 @@ import {
   ChevronDown, 
   Lock, 
   BarChart, 
-  PieChart as PieChartIcon, 
-  Shapes 
+  PieChart as PieChartIcon,
+  Package,
+  Shirt
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,7 @@ import {
   ResponsiveContainer 
 } from "recharts";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
+import { toast } from "@/components/ui/use-toast";
 
 interface ClothingItem {
   id: string;
@@ -412,11 +414,11 @@ const WardrobePage = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="w-full bg-background border">
           <TabsTrigger value="items" className="flex-1">
-            <Shapes className="mr-2 h-4 w-4" />
+            <Package className="mr-2 h-4 w-4" />
             Items
           </TabsTrigger>
           <TabsTrigger value="outfits" className="flex-1">
-            <Shapes className="mr-2 h-4 w-4" />
+            <Shirt className="mr-2 h-4 w-4" />
             Outfits
           </TabsTrigger>
           <TabsTrigger value="stats" className="flex-1">
@@ -565,7 +567,7 @@ const WardrobePage = () => {
                 <div className="flex flex-wrap justify-center gap-2 mt-2">
                   {stats?.colors.map((color, index) => (
                     <Badge 
-                      key={index} 
+                      key={`badge-${index}`}
                       variant="outline" 
                       style={{ backgroundColor: color.color, color: color.color === "#f5f5f5" ? "#333" : "white" }}
                       className="shadow-sm"
@@ -668,9 +670,9 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
       <div className="p-4">
         <h3 className="font-medium mb-2">{outfit.name}</h3>
         <div className="flex space-x-2 mb-3">
-          {outfit.items.map((item) => (
+          {outfit.items.map((item, index) => (
             <div 
-              key={item.id} 
+              key={`${outfit.id}-item-${item.id}-${index}`}
               className="w-8 h-8 rounded-full overflow-hidden border border-border"
             >
               <img 
@@ -682,8 +684,11 @@ const OutfitCard = ({ outfit }: { outfit: Outfit }) => {
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2">
-          {outfit.items.map((item) => (
-            <div key={item.id} className="aspect-square overflow-hidden rounded-lg bg-secondary/30">
+          {outfit.items.map((item, index) => (
+            <div 
+              key={`${outfit.id}-grid-${item.id}-${index}`} 
+              className="aspect-square overflow-hidden rounded-lg bg-secondary/30"
+            >
               <img
                 src={item.imageUrl}
                 alt={item.name}

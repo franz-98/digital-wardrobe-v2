@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
 
 interface ClothingItem {
   id: string;
@@ -60,6 +61,13 @@ const ClothingItemDetails = ({
     }
   };
 
+  const handleOutfitClick = (outfit: Outfit) => {
+    toast({
+      title: "Outfit selezionato",
+      description: `Hai selezionato l'outfit: ${outfit.name}`,
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
@@ -90,45 +98,45 @@ const ClothingItemDetails = ({
         {item.metadata && (
           <div className="space-y-2 mb-4">
             <h3 className="text-sm font-medium flex items-center gap-1">
-              <Info className="h-4 w-4" /> Item Details
+              <Info className="h-4 w-4" /> Dettagli dell'indumento
             </h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
               {item.metadata.dateTaken && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-muted-foreground">Date:</span>
-                </div>
-              )}
-              {item.metadata.dateTaken && (
-                <div>{formatDate(item.metadata.dateTaken)}</div>
+                <>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-muted-foreground">Data:</span>
+                  </div>
+                  <div>{formatDate(item.metadata.dateTaken)}</div>
+                </>
               )}
               
               {item.metadata.brand && (
-                <div className="flex items-center gap-1">
-                  <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-muted-foreground">Brand:</span>
-                </div>
-              )}
-              {item.metadata.brand && (
-                <div>{item.metadata.brand}</div>
+                <>
+                  <div className="flex items-center gap-1">
+                    <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-muted-foreground">Brand:</span>
+                  </div>
+                  <div>{item.metadata.brand}</div>
+                </>
               )}
               
               {item.metadata.material && (
-                <div className="flex items-center gap-1">
-                  <span className="text-muted-foreground">Material:</span>
-                </div>
-              )}
-              {item.metadata.material && (
-                <div>{item.metadata.material}</div>
+                <>
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Materiale:</span>
+                  </div>
+                  <div>{item.metadata.material}</div>
+                </>
               )}
               
               {item.metadata.season && (
-                <div className="flex items-center gap-1">
-                  <span className="text-muted-foreground">Season:</span>
-                </div>
-              )}
-              {item.metadata.season && (
-                <div>{item.metadata.season}</div>
+                <>
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Stagione:</span>
+                  </div>
+                  <div>{item.metadata.season}</div>
+                </>
               )}
             </div>
           </div>
@@ -137,10 +145,14 @@ const ClothingItemDetails = ({
         {relatedOutfits && relatedOutfits.length > 0 && (
           <div className="space-y-3">
             <Separator />
-            <h3 className="text-sm font-medium">Outfits with this item</h3>
+            <h3 className="text-sm font-medium">Outfit con questo indumento</h3>
             <div className="grid grid-cols-2 gap-2">
               {relatedOutfits.map((outfit) => (
-                <Card key={outfit.id} className="overflow-hidden border">
+                <Card 
+                  key={outfit.id} 
+                  className="overflow-hidden border cursor-pointer hover:border-primary/50"
+                  onClick={() => handleOutfitClick(outfit)}
+                >
                   <div className="aspect-square overflow-hidden">
                     <img 
                       src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
