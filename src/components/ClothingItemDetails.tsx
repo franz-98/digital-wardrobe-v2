@@ -190,18 +190,18 @@ const ClothingItemDetails = ({
             </div>
           </>
         ) : (
-          // Item View - Redesigned with prominent image and clearer layout
+          // Item View - Redesigned with image on top and details below
           <>
             <DialogHeader className="pb-2">
               <DialogTitle className="text-xl font-bold">{item.name}</DialogTitle>
             </DialogHeader>
             
-            {/* Prominent image display */}
-            <div className="aspect-square w-full overflow-hidden rounded-md mb-4">
+            {/* Full width image at the top */}
+            <div className="w-full aspect-square overflow-hidden rounded-md mb-4">
               <img 
                 src={item.imageUrl} 
                 alt={item.name} 
-                className="w-full h-full object-cover shadow-sm"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
             </div>
@@ -224,7 +224,7 @@ const ClothingItemDetails = ({
                 </div>
               </div>
               
-              {/* Metadata with improved layout */}
+              {/* Detailed metadata */}
               {item.metadata && (
                 <Card className="shadow-sm border p-4">
                   <h3 className="text-sm font-medium flex items-center gap-1 mb-3">
@@ -273,11 +273,11 @@ const ClothingItemDetails = ({
               )}
             </div>
             
-            {/* Related outfits section */}
+            {/* Related outfits section - moved below description */}
             {relatedOutfits && relatedOutfits.length > 0 && (
               <div className="mt-6 space-y-3">
-                <Separator />
-                <h3 className="text-sm font-medium flex items-center gap-1 mt-2">
+                <Separator className="my-4" />
+                <h3 className="text-sm font-medium flex items-center gap-1">
                   <Shirt className="h-4 w-4" />
                   Outfit con questo indumento
                 </h3>
