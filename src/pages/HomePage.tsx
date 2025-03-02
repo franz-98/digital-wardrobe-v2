@@ -1,10 +1,22 @@
 
 import { useState, useRef } from "react";
-import { Plus, Loader2, Image } from "lucide-react";
+import { Plus, Loader2, Image, Check, X as XIcon } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
+import { 
+  Dialog, 
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface RecentUpload {
   id: string;
@@ -14,9 +26,40 @@ interface RecentUpload {
   createdAt: string;
 }
 
+interface ItemInference {
+  id: string;
+  name: string;
+  category: string;
+  color: string;
+  imageUrl: string;
+  confidence: number;
+}
+
 const HomePage = () => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedItem, setSelectedItem] = useState<RecentUpload | null>(null);
+  const [inferenceDialogOpen, setInferenceDialogOpen] = useState(false);
+  
+  // Mock data for inferred items
+  const [inferredItems, setInferredItems] = useState<ItemInference[]>([
+    {
+      id: "inferred-1",
+      name: "Blue T-Shirt",
+      category: "Tops",
+      color: "Blue",
+      imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+      confidence: 0.92
+    },
+    {
+      id: "inferred-2",
+      name: "Black Jeans",
+      category: "Bottoms",
+      color: "Black",
+      imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+      confidence: 0.88
+    }
+  ]);
 
   // Fetch recent uploads
   const { data: recentUploads, isLoading } = useQuery({
@@ -67,10 +110,9 @@ const HomePage = () => {
       // In real implementation, send to /api/upload
       await new Promise(resolve => setTimeout(resolve, 1500)); // simulate upload delay
       
-      toast({
-        title: "Upload successful",
-        description: "Your item has been added to your wardrobe.",
-      });
+      // Simulate receiving inference results and open dialog
+      setInferenceDialogOpen(true);
+      
     } catch (error) {
       toast({
         title: "Upload failed",
@@ -85,10 +127,29 @@ const HomePage = () => {
   };
 
   const handleRecentItemClick = (item: RecentUpload) => {
+    setSelectedItem(item);
+    // Simulate receiving inference results and show dialog
+    setInferenceDialogOpen(true);
+  };
+
+  const confirmInferences = () => {
     toast({
-      title: "Item selected",
-      description: `You selected: ${item.name}`,
+      title: "Inferenze confermate",
+      description: "Gli indumenti sono stati aggiunti al tuo guardaroba.",
     });
+    setInferenceDialogOpen(false);
+  };
+
+  const handleInferenceEdit = (id: string, field: keyof ItemInference, value: string) => {
+    setInferredItems(prev => 
+      prev.map(item => 
+        item.id === id ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const handleRemoveInference = (id: string) => {
+    setInferredItems(prev => prev.filter(item => item.id !== id));
   };
 
   return (
@@ -185,6 +246,106 @@ const HomePage = () => {
           )}
         </div>
       </div>
+
+      {/* Dialog for confirming AI inferences */}
+      <Dialog open={inferenceDialogOpen} onOpenChange={setInferenceDialogOpen}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Conferma Riconoscimento</DialogTitle>
+            <DialogDescription>
+              Abbiamo riconosciuto questi indumenti nell'immagine. Conferma o modifica le informazioni.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            {selectedItem && (
+              <div className="mb-4">
+                <div className="aspect-video w-full overflow-hidden rounded-md mb-2">
+                  <img 
+                    src={selectedItem.imageUrl} 
+                    alt="Uploaded image" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+            
+            <Separator />
+            
+            {inferredItems.map((item, index) => (
+              <div key={`inferred-${item.id}`} className="space-y-2 bg-secondary/10 p-3 rounded-md">
+                <div className="flex justify-between items-center">
+                  <h4 className="font-medium">Indumento {index + 1}</h4>
+                  <div className="flex items-center gap-2">
+                    <Badge 
+                      variant={item.confidence > 0.9 ? "default" : "outline"}
+                      className={item.confidence > 0.9 ? "bg-green-600" : ""}
+                    >
+                      {(item.confidence * 100).toFixed(0)}% sicurezza
+                    </Badge>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-6 w-6" 
+                      onClick={() => handleRemoveInference(item.id)}
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="aspect-square overflow-hidden rounded-md">
+                    <img 
+                      src={item.imageUrl} 
+                      alt={item.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div>
+                      <Label htmlFor={`name-${item.id}`}>Nome</Label>
+                      <Input 
+                        id={`name-${item.id}`}
+                        defaultValue={item.name}
+                        onChange={(e) => handleInferenceEdit(item.id, 'name', e.target.value)}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor={`category-${item.id}`}>Categoria</Label>
+                      <Input 
+                        id={`category-${item.id}`}
+                        defaultValue={item.category}
+                        onChange={(e) => handleInferenceEdit(item.id, 'category', e.target.value)}
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor={`color-${item.id}`}>Colore</Label>
+                      <Input 
+                        id={`color-${item.id}`}
+                        defaultValue={item.color}
+                        onChange={(e) => handleInferenceEdit(item.id, 'color', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setInferenceDialogOpen(false)}>
+              Annulla
+            </Button>
+            <Button onClick={confirmInferences} className="gap-1">
+              <Check className="h-4 w-4" /> Conferma
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

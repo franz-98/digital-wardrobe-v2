@@ -147,9 +147,9 @@ const ClothingItemDetails = ({
             <Separator />
             <h3 className="text-sm font-medium">Outfit con questo indumento</h3>
             <div className="grid grid-cols-2 gap-2">
-              {relatedOutfits.map((outfit) => (
+              {relatedOutfits.map((outfit, index) => (
                 <Card 
-                  key={`outfit-${outfit.id}`} 
+                  key={`outfit-${outfit.id}-${index}`}
                   className="overflow-hidden border cursor-pointer hover:border-primary/50"
                   onClick={() => handleOutfitClick(outfit)}
                 >

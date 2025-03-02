@@ -8,7 +8,8 @@ import {
   BarChart, 
   PieChart as PieChartIcon,
   Package,
-  Shirt
+  Shirt,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -440,7 +441,7 @@ const WardrobePage = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {clothingItems?.map((item) => (
                 <ClothingItemCard 
-                  key={item.id} 
+                  key={`item-${item.id}`}
                   item={item} 
                   onClick={() => handleItemClick(item)}
                 />
@@ -465,7 +466,7 @@ const WardrobePage = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {myOutfits?.map((outfit) => (
-                  <OutfitCard key={outfit.id} outfit={outfit} />
+                  <OutfitCard key={`my-outfit-${outfit.id}`} outfit={outfit} />
                 ))}
               </div>
             )}
@@ -500,7 +501,7 @@ const WardrobePage = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {suggestedOutfits?.map((outfit) => (
-                  <OutfitCard key={outfit.id} outfit={outfit} />
+                  <OutfitCard key={`suggested-outfit-${outfit.id}`} outfit={outfit} />
                 ))}
               </div>
             )}
@@ -569,7 +570,11 @@ const WardrobePage = () => {
                     <Badge 
                       key={`badge-${index}`}
                       variant="outline" 
-                      style={{ backgroundColor: color.color, color: color.color === "#f5f5f5" ? "#333" : "white" }}
+                      style={{ 
+                        backgroundColor: color.color, 
+                        color: color.name.toLowerCase() === "white" ? "#333" : "white",
+                        border: color.name.toLowerCase() === "white" ? "1px solid #333" : "none"
+                      }}
                       className="shadow-sm"
                     >
                       {color.name}: {color.value} items
