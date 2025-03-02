@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, ListChecks } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
@@ -35,7 +35,8 @@ interface Outfit {
 }
 
 const WardrobePage = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const [clothingItems, setClothingItems] = useState<ClothingItem[]>([
@@ -125,14 +126,15 @@ const WardrobePage = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   useEffect(() => {
-    if (router.query.newItem === "true") {
+    const params = new URLSearchParams(location.search);
+    if (params.get("newItem") === "true") {
       toast({
         title: "New item added!",
         description: "Your new clothing item has been successfully added.",
       });
-      router.replace("/wardrobe", undefined, { shallow: true });
+      navigate("/wardrobe", { replace: true });
     }
-  }, [router, toast]);
+  }, [location, toast, navigate]);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -157,7 +159,7 @@ const WardrobePage = () => {
     <div className="space-y-8 pb-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Wardrobe</h1>
-        <Button onClick={() => router.push("/add-item")}>
+        <Button onClick={() => navigate("/add-item")}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
         </Button>
