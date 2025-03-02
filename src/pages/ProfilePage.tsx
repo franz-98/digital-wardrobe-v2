@@ -1,11 +1,12 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Moon, Sun } from "lucide-react";
+import { Loader2, Moon, Sun, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/ThemeProvider";
+import { toast } from "@/components/ui/use-toast";
 
 interface UserProfile {
   id: string;
@@ -14,6 +15,7 @@ interface UserProfile {
   avatarUrl: string;
   isPremium: boolean;
   premiumUntil: string | null;
+  referralCode?: string;
 }
 
 const ProfilePage = () => {
@@ -35,11 +37,31 @@ const ProfilePage = () => {
       avatarUrl: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3",
       isPremium: false,
       premiumUntil: null,
+      referralCode: "FRIEND2024",
     },
   });
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const copyReferralCode = () => {
+    if (user?.referralCode) {
+      navigator.clipboard.writeText(user.referralCode)
+        .then(() => {
+          toast({
+            title: "Codice di referral copiato!",
+            description: "Condividilo con i tuoi amici per ottenere vantaggi.",
+          });
+        })
+        .catch(() => {
+          toast({
+            title: "Impossibile copiare il codice",
+            description: "Prova a copiarlo manualmente.",
+            variant: "destructive",
+          });
+        });
+    }
   };
 
   if (isLoading) {
@@ -87,10 +109,37 @@ const ProfilePage = () => {
               </div>
               
               {!user?.isPremium && (
-                <Button className="w-full h-12 rounded-xl shadow-sm interactive-scale">
+                <Button className="w-full h-12 rounded-xl shadow-sm interactive-scale mb-4">
                   Upgrade to Premium
                 </Button>
               )}
+
+              {/* Referral Button */}
+              <Card className="w-full p-4 border border-primary/20 bg-primary/5 rounded-xl mb-2">
+                <div className="text-center mb-3">
+                  <h3 className="font-medium text-sm">Il tuo codice referral</h3>
+                  <p className="text-2xl font-bold text-primary my-1">{user?.referralCode}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Invita amici e ricevi un mese premium + 3€ Amazon per ogni amico
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Button 
+                    onClick={copyReferralCode} 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                  >
+                    Copia Codice
+                  </Button>
+                  
+                  <Button 
+                    className="w-full flex items-center justify-center gap-2"
+                  >
+                    <UserPlus className="h-4 w-4" /> Invita Amici
+                  </Button>
+                </div>
+              </Card>
             </div>
           </div>
         </Card>
