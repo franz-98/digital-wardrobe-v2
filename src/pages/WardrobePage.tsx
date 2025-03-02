@@ -155,8 +155,6 @@ const WardrobePage = () => {
 
   const minSwipeDistance = 50;
 
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-
   useEffect(() => {
     localStorage.setItem("activeWardrobeTab", activeTab);
   }, [activeTab]);
@@ -339,50 +337,29 @@ const WardrobePage = () => {
                 <Clock className="h-3 w-3 mr-1 opacity-70" />
                 {timeRange === "week" && "Last week"}
                 {timeRange === "month" && "Last month"}
-                {timeRange === "3months" && "Last 3 months"}
-                {timeRange === "6months" && "Last 6 months"}
-                {timeRange === "year" && "Last year"}
-                {timeRange === "all" && "All time"}
+                {timeRange === "custom" && "Custom range"}
               </Button>
               <div 
                 id="time-range-menu" 
-                className="z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
+                className="absolute left-0 mt-20 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
               >
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "week" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "week" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("week"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last week
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "month" ? "font-medium" : ""}`}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "month" ? "font-medium" : ""}`}
                   onClick={() => { setTimeRange("month"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
                   Last month
                 </button>
                 <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "3months" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("3months"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
+                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "custom" ? "font-medium" : ""}`}
+                  onClick={() => { setTimeRange("custom"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
                 >
-                  Last 3 months
-                </button>
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "6months" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("6months"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
-                >
-                  Last 6 months
-                </button>
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "year" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("year"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
-                >
-                  Last year
-                </button>
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent ${timeRange === "all" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("all"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
-                >
-                  All time
+                  Advanced...
                 </button>
               </div>
             </div>

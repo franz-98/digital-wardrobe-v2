@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 interface ClothingItem {
   id: string;
@@ -34,25 +33,6 @@ const ClothingItemCard = ({ item, onClick }: ClothingItemCardProps) => {
           alt={item.name}
           className="object-cover w-full h-full"
         />
-        <Badge
-          className="absolute top-2 right-2"
-          style={{
-            backgroundColor: 
-              item.color.toLowerCase() === "white" 
-                ? "#f5f5f5" 
-                : undefined,
-            color: 
-              item.color.toLowerCase() === "white" 
-                ? "#333" 
-                : undefined,
-            border: 
-              item.color.toLowerCase() === "white" 
-                ? "1px solid #000000" 
-                : undefined
-          }}
-        >
-          {item.color}
-        </Badge>
       </div>
       <div className="p-3">
         <h3 className="font-medium text-sm mb-1">{item.name}</h3>
