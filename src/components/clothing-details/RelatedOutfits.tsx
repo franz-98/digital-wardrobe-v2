@@ -21,7 +21,10 @@ const RelatedOutfits = ({ relatedOutfits, onOutfitClick }: RelatedOutfitsProps) 
           <Card 
             key={`outfit-${outfit.id}`}
             className="overflow-hidden border cursor-pointer hover:shadow-sm transition-shadow"
-            onClick={() => onOutfitClick(outfit)}
+            onClick={() => {
+              console.log("Outfit clicked:", outfit.id);
+              onOutfitClick(outfit);
+            }}
           >
             <div className="aspect-square overflow-hidden bg-secondary/10">
               <img 

@@ -31,6 +31,21 @@ const WardrobeDialogs = ({
   handleOutfitItemClick
 }: WardrobeDialogsProps) => {
   
+  const handleOutfitClick = (outfit: Outfit) => {
+    // Close the item dialog and open the outfit dialog
+    setIsDetailsOpen(false);
+    setTimeout(() => {
+      handleOutfitClick(outfit);
+    }, 100);
+  };
+  
+  const handleOutfitClickInternal = (outfit: Outfit) => {
+    setIsDetailsOpen(false);
+    setTimeout(() => {
+      setIsOutfitDetailsOpen(true);
+    }, 100);
+  };
+  
   return (
     <>
       {selectedItem && (
@@ -43,12 +58,7 @@ const WardrobeDialogs = ({
               relatedOutfits={findRelatedOutfits(selectedItem.id)}
               onDelete={handleDeleteItem}
               onOutfitDelete={handleDeleteOutfit}
-              onOutfitClick={(outfit) => {
-                setIsDetailsOpen(false);
-                setTimeout(() => {
-                  setIsOutfitDetailsOpen(true);
-                }, 100);
-              }}
+              onOutfitClick={handleOutfitClickInternal}
             />
           </DialogContent>
         </Dialog>

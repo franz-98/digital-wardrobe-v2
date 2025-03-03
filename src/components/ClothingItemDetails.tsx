@@ -48,12 +48,15 @@ const ClothingItemDetails = ({
   if (!item) return null;
 
   const handleOutfitClick = (outfit: Outfit) => {
+    // Always use the prop-based navigation if available
     if (onOutfitClick) {
       onOutfitClick(outfit);
-    } else {
-      setSelectedOutfit(outfit);
-      setViewMode("outfit");
+      return;
     }
+    
+    // Fallback to local state navigation
+    setSelectedOutfit(outfit);
+    setViewMode("outfit");
   };
 
   const handleBackToItem = () => {

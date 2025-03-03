@@ -65,29 +65,28 @@ const OutfitTab = ({
     <>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">My Outfits</h2>
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="h-10 ml-auto"
-          onClick={() => {
-            setIsCreatingOutfit(!isCreatingOutfit);
-            setActiveTab("clothing");
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Create Outfit
-        </Button>
-      </div>
-      
-      <div className="mb-4 flex justify-end">
-        <Button 
-          variant="ghost"
-          size="icon"
-          onClick={toggleSearchBar}
-          className="h-10 w-10"
-        >
-          <Search className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={toggleSearchBar}
+            className="h-10 w-10"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="h-10"
+            onClick={() => {
+              setIsCreatingOutfit(!isCreatingOutfit);
+              setActiveTab("clothing");
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Create Outfit
+          </Button>
+        </div>
       </div>
       
       {showSearchBar && (
@@ -137,7 +136,7 @@ const OutfitTab = ({
         </div>
       )}
       
-      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {filteredOutfits.map((outfit) => (
           <OutfitCard 
             key={outfit.id} 
@@ -155,7 +154,7 @@ const OutfitTab = ({
               <span className="text-primary mr-1">Premium</span>
             </Badge>
           </div>
-          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {suggestedOutfits.map((outfit) => (
               <OutfitCard 
                 key={outfit.id} 
