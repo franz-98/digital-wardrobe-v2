@@ -341,7 +341,7 @@ const WardrobePage = () => {
               </Button>
               <div 
                 id="time-range-menu" 
-                className="absolute right-0 top-full mt-1 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
+                className="absolute left-0 bottom-full mb-1 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
               >
                 <button 
                   className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "week" ? "font-medium" : ""}`}
@@ -424,13 +424,6 @@ const WardrobePage = () => {
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Create Outfit
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={togglePremium}
-              >
-                {isPremium ? "Disable Premium" : "Enable Premium"}
               </Button>
             </div>
           </div>
