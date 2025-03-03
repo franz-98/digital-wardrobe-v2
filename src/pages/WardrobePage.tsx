@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
-import { format } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -342,12 +342,13 @@ const WardrobePage = () => {
 
   const handleStartDateSelect = (date: Date | undefined) => {
     setStartDate(date);
+    
     setTimeout(() => {
       const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
       popoverElements.forEach(element => {
         const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton && 'click' in closeButton) {
-          (closeButton as HTMLButtonElement).click();
+        if (closeButton && closeButton instanceof HTMLButtonElement) {
+          closeButton.click();
         }
       });
     }, 10);
@@ -355,12 +356,13 @@ const WardrobePage = () => {
 
   const handleEndDateSelect = (date: Date | undefined) => {
     setEndDate(date);
+    
     setTimeout(() => {
       const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
       popoverElements.forEach(element => {
         const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton && 'click' in closeButton) {
-          (closeButton as HTMLButtonElement).click();
+        if (closeButton && closeButton instanceof HTMLButtonElement) {
+          closeButton.click();
         }
       });
     }, 10);
@@ -368,6 +370,14 @@ const WardrobePage = () => {
 
   const confirmCustomRange = () => {
     if (startDate && endDate) {
+      if (isBefore(endDate, startDate)) {
+        toast({
+          title: "Invalid date range",
+          description: "End date cannot be before start date",
+        });
+        return;
+      }
+      
       setTimeRange(`${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`);
       setShowCustomRange(false);
       setShowTimeRangeMenu(false);
@@ -573,25 +583,23 @@ const WardrobePage = () => {
                   Cancel
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mb-2">
+              <div>
+                <Input
+                  placeholder="Outfit name"
+                  value={newOutfitName}
+                  onChange={(e) => setNewOutfitName(e.target.value)}
+                  className="text-sm mb-2"
+                />
+                <Button 
+                  onClick={createNewOutfit}
+                  disabled={!newOutfitName.trim() || selectedItemsForOutfit.length === 0}
+                >
+                  Save Outfit
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2 mb-2">
                 Select items for your outfit ({selectedItemsForOutfit.length} selected)
               </p>
-              {selectedItemsForOutfit.length > 0 && (
-                <div className="mt-2">
-                  <Input
-                    placeholder="Outfit name"
-                    value={newOutfitName}
-                    onChange={(e) => setNewOutfitName(e.target.value)}
-                    className="text-sm mb-2"
-                  />
-                  <Button 
-                    onClick={createNewOutfit}
-                    disabled={!newOutfitName.trim()}
-                  >
-                    Save Outfit
-                  </Button>
-                </div>
-              )}
             </div>
           )}
           

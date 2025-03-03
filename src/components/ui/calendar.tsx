@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
@@ -13,10 +14,14 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  // Use ref to maintain stable positioning
+  const calendarRef = React.useRef<HTMLDivElement>(null);
+
   return (
     <DayPicker
+      ref={calendarRef}
       showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
+      className={cn("p-3 transition-none", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
