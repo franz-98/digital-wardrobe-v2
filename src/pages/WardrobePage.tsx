@@ -396,32 +396,6 @@ const WardrobePage = () => {
             toggleSearchBar={toggleSearchBar}
             activeTab={activeTab}
           />
-          
-          {activeTab === "stats" && (
-            <div className="flex items-center justify-end">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => {
-                    const newRange = timeRange === "week" ? "month" : "week";
-                    setTimeRange(newRange);
-                    updateStatsForTimeRange(newRange);
-                  }}
-                >
-                  {timeRange === "week" ? (
-                    <ChevronRight className="h-5 w-5" />
-                  ) : (
-                    <ChevronLeft className="h-5 w-5" />
-                  )}
-                </Button>
-                <span className="text-sm font-medium">
-                  {timeRange === "week" ? "Last Week" : 
-                   timeRange === "month" ? "Last Month" : timeRange}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
         <TabsContent value="clothing" className="mt-4">
           <OutfitCreation 
