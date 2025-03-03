@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { X, Calendar, Tag, Info, Shirt, ChevronLeft } from "lucide-react";
@@ -75,11 +76,19 @@ const ClothingItemDetails = ({
     }
   };
 
+  // Check if the current item is part of an outfit (not a single clothing item)
+  const isPartOfOutfit = () => {
+    return relatedOutfits && relatedOutfits.some(outfit => 
+      outfit.items.some(outfitItem => outfitItem.id === item.id)
+    );
+  }
+
   const handleOutfitClick = (outfit: Outfit) => {
     setSelectedOutfit(outfit);
     setViewMode("outfit");
     toast("Outfit selezionato", {
       description: `Hai selezionato l'outfit: ${outfit.name}`,
+      duration: 1500,
     });
   };
 

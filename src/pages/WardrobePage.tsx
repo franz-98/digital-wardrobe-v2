@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
@@ -463,6 +462,16 @@ const WardrobePage = () => {
     console.log(`Updating stats for custom range: ${format(start, 'yyyy-MM-dd')} to ${format(end, 'yyyy-MM-dd')}`);
   };
 
+  // Add a new function to handle outfit clicks
+  const handleOutfitClick = (outfit: Outfit) => {
+    // Find the first item in the outfit to use as a placeholder
+    // We'll pass the outfit to the ClothingItemDetails component
+    if (outfit.items.length > 0) {
+      setSelectedItem(outfit.items[0]);
+      setIsDetailsOpen(true);
+    }
+  };
+
   return (
     <div 
       className="space-y-6 pb-20"
@@ -741,7 +750,11 @@ const WardrobePage = () => {
           
           <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
             {filteredOutfits.map((outfit) => (
-              <OutfitCard key={outfit.id} outfit={outfit} />
+              <OutfitCard 
+                key={outfit.id} 
+                outfit={outfit} 
+                onClick={() => handleOutfitClick(outfit)}
+              />
             ))}
           </div>
           
@@ -755,7 +768,11 @@ const WardrobePage = () => {
               </div>
               <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
                 {suggestedOutfits.map((outfit) => (
-                  <OutfitCard key={outfit.id} outfit={outfit} />
+                  <OutfitCard 
+                    key={outfit.id} 
+                    outfit={outfit} 
+                    onClick={() => handleOutfitClick(outfit)}
+                  />
                 ))}
               </div>
             </>
@@ -801,103 +818,4 @@ const WardrobePage = () => {
                   <span className="text-sm">Dresses</span>
                   <span className="font-medium text-sm">20%</span>
                 </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Shoes</span>
-                  <span className="font-medium text-sm">10%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Accessories</span>
-                  <span className="font-medium text-sm">10%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
-                </div>
-              </div>
-            </Card>
-            
-            <Card className="p-4">
-              <h3 className="text-base font-medium mb-4">Most Worn Items</h3>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                    <img 
-                      src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop" 
-                      alt="Black Jeans"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <p className="text-sm font-medium">Black Jeans</p>
-                      <span className="text-xs text-muted-foreground">15 wears</span>
-                    </div>
-                    <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden mt-1">
-                      <div className="bg-primary h-full rounded-full" style={{ width: '75%' }}></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                    <img 
-                      src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&h=400&fit=crop" 
-                      alt="Blue T-shirt"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <p className="text-sm font-medium">Blue T-shirt</p>
-                      <span className="text-xs text-muted-foreground">12 wears</span>
-                    </div>
-                    <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden mt-1">
-                      <div className="bg-primary h-full rounded-full" style={{ width: '60%' }}></div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                    <img 
-                      src="https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop" 
-                      alt="White Sneakers"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between">
-                      <p className="text-sm font-medium">White Sneakers</p>
-                      <span className="text-xs text-muted-foreground">10 wears</span>
-                    </div>
-                    <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden mt-1">
-                      <div className="bg-primary h-full rounded-full" style={{ width: '50%' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-          
-          {selectedItem && isDetailsOpen && (
-            <ClothingItemDetails 
-              item={selectedItem}
-              isOpen={isDetailsOpen}
-              onClose={() => setIsDetailsOpen(false)}
-              relatedOutfits={findRelatedOutfits(selectedItem.id)}
-            />
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default WardrobePage;
+                <div className="w-full bg-secondary h-2 rounded-full
