@@ -1,9 +1,10 @@
+<lov-code>
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
 import { format, isAfter, isBefore } from "date-fns";
 
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -462,10 +463,7 @@ const WardrobePage = () => {
     console.log(`Updating stats for custom range: ${format(start, 'yyyy-MM-dd')} to ${format(end, 'yyyy-MM-dd')}`);
   };
 
-  // Add a new function to handle outfit clicks
   const handleOutfitClick = (outfit: Outfit) => {
-    // Find the first item in the outfit to use as a placeholder
-    // We'll pass the outfit to the ClothingItemDetails component
     if (outfit.items.length > 0) {
       setSelectedItem(outfit.items[0]);
       setIsDetailsOpen(true);
@@ -818,4 +816,8 @@ const WardrobePage = () => {
                   <span className="text-sm">Dresses</span>
                   <span className="font-medium text-sm">20%</span>
                 </div>
-                <div className="w-full bg-secondary h-2 rounded-full
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className
