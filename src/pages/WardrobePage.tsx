@@ -343,14 +343,26 @@ const WardrobePage = () => {
   const handleStartDateSelect = (date: Date | undefined) => {
     setStartDate(date);
     setTimeout(() => {
-      document.body.click();
+      const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
+      popoverElements.forEach(element => {
+        const closeButton = element.querySelector('button[type="button"]');
+        if (closeButton) {
+          closeButton.click();
+        }
+      });
     }, 10);
   };
 
   const handleEndDateSelect = (date: Date | undefined) => {
     setEndDate(date);
     setTimeout(() => {
-      document.body.click();
+      const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
+      popoverElements.forEach(element => {
+        const closeButton = element.querySelector('button[type="button"]');
+        if (closeButton) {
+          closeButton.click();
+        }
+      });
     }, 10);
   };
 
