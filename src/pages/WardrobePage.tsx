@@ -327,7 +327,7 @@ const WardrobePage = () => {
           </div>
           
           {activeTab === "stats" && (
-            <div className="flex items-center">
+            <div className="flex items-center relative">
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -341,7 +341,7 @@ const WardrobePage = () => {
               </Button>
               <div 
                 id="time-range-menu" 
-                className="absolute left-0 mt-20 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
+                className="absolute right-0 top-full mt-1 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
               >
                 <button 
                   className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "week" ? "font-medium" : ""}`}
