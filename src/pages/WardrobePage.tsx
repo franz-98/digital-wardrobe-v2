@@ -160,7 +160,6 @@ const WardrobePage = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Custom date range states
   const [startDate, setStartDate] = useState<Date | undefined>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [showCustomRange, setShowCustomRange] = useState(false);
@@ -337,7 +336,6 @@ const WardrobePage = () => {
       setTimeRange(range);
       setShowTimeRangeMenu(false);
       
-      // Apply actual filtering based on time range
       updateStatsForTimeRange(range);
     }
   };
@@ -348,7 +346,6 @@ const WardrobePage = () => {
       setShowCustomRange(false);
       setShowTimeRangeMenu(false);
       
-      // Apply filtering with custom date range
       updateStatsForCustomRange(startDate, endDate);
       
       toast({
@@ -358,11 +355,8 @@ const WardrobePage = () => {
     }
   };
 
-  // Sample function to update stats (to be implemented with real data)
   const updateStatsForTimeRange = (range: string) => {
     console.log(`Updating stats for time range: ${range}`);
-    // Here you would fetch or filter the actual data based on the time range
-    
     toast({
       title: "Time range updated",
       description: `Stats now showing for ${range === "week" ? "the last week" : "the last month"}`,
@@ -371,7 +365,6 @@ const WardrobePage = () => {
 
   const updateStatsForCustomRange = (start: Date, end: Date) => {
     console.log(`Updating stats for custom range: ${format(start, 'yyyy-MM-dd')} to ${format(end, 'yyyy-MM-dd')}`);
-    // Here you would fetch or filter the actual data based on the custom date range
   };
 
   return (
@@ -453,7 +446,8 @@ const WardrobePage = () => {
                 {showCustomRange && (
                   <div
                     ref={timeRangeMenuRef}
-                    className="absolute top-full left-0 mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
+                    className="absolute top-full right-0 sm:left-0 sm:right-auto mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
+                    style={{ maxWidth: "calc(100vw - 2rem)" }}
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-medium">Select date range</h3>
