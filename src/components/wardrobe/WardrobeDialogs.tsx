@@ -28,6 +28,22 @@ const WardrobeDialogs = ({
   handleDeleteItem,
   handleDeleteOutfit
 }: WardrobeDialogsProps) => {
+  
+  const handleOutfitItemClick = (item: ClothingItem) => {
+    // Switch from outfit view to item view
+    setSelectedItem(item);
+    setIsDetailsOpen(true);
+    setIsOutfitDetailsOpen(false);
+  };
+  
+  const setSelectedItem = (item: ClothingItem | null) => {
+    // This is a local function to help with state management
+    // The actual state is managed in the parent component
+    if (item) {
+      setIsDetailsOpen(true);
+    }
+  };
+  
   return (
     <>
       {selectedItem && (
@@ -51,6 +67,7 @@ const WardrobeDialogs = ({
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}
+              onItemClick={handleOutfitItemClick}
             />
           </DialogContent>
         </Dialog>

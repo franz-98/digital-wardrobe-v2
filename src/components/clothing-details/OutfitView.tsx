@@ -64,7 +64,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitV
             {outfit.items.map((outfitItem) => (
               <Card 
                 key={`outfit-item-${outfitItem.id}`}
-                className="overflow-hidden border shadow-sm"
+                className="overflow-hidden border shadow-sm cursor-pointer"
                 onClick={() => onItemClick && onItemClick(outfitItem.id)}
               >
                 <div className="flex gap-3 p-3">

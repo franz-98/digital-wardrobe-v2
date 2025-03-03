@@ -9,7 +9,6 @@ import {
   DialogClose
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import DeleteConfirmationDialog from "./clothing-details/DeleteConfirmationDialog";
@@ -45,10 +44,7 @@ const ClothingItemDetails = ({
   const handleOutfitClick = (outfit: Outfit) => {
     setSelectedOutfit(outfit);
     setViewMode("outfit");
-    toast("Outfit selezionato", {
-      description: `Hai selezionato l'outfit: ${outfit.name}`,
-      duration: 1500,
-    });
+    // Removed toast notification
   };
 
   const handleBackToItem = () => {
@@ -75,6 +71,10 @@ const ClothingItemDetails = ({
               outfit={selectedOutfit}
               onBackClick={handleBackToItem}
               onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
+              onItemClick={item => {
+                setViewMode("item");
+                setSelectedOutfit(null);
+              }}
             />
           ) : (
             <div className="flex flex-col h-full">
