@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 import ClothingItemCard from "@/components/ClothingItemCard";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
@@ -273,9 +274,14 @@ const WardrobePage = () => {
     };
   }, [showTimeRangeMenu, showCustomRange]);
 
+  const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
+  const [isOutfitDetailsOpen, setIsOutfitDetailsOpen] = useState(false);
+
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
+    setSelectedOutfit(null);
     setIsDetailsOpen(true);
+    setIsOutfitDetailsOpen(false);
   };
 
   const filteredClothingItems = clothingItems.filter((item) =>
@@ -464,10 +470,15 @@ const WardrobePage = () => {
   };
 
   const handleOutfitClick = (outfit: Outfit) => {
-    if (outfit.items.length > 0) {
-      setSelectedItem(outfit.items[0]);
-      setIsDetailsOpen(true);
-    }
+    setSelectedOutfit(outfit);
+    setSelectedItem(null);
+    setIsOutfitDetailsOpen(true);
+    setIsDetailsOpen(false);
+  };
+
+  // Helper function to extract color palette from outfit
+  const getOutfitColorPalette = (outfit: Outfit) => {
+    return outfit.items.map(item => item.color);
   };
 
   return (
@@ -809,15 +820,4 @@ const WardrobePage = () => {
                   <span className="font-medium text-sm">20%</span>
                 </div>
                 <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Dresses</span>
-                  <span className="font-medium text-sm">20%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className
+                  <div className="bg-primary h-full rounded-full" style={{
