@@ -11,9 +11,10 @@ interface ItemDetailsProps {
   item: ClothingItem;
   onDeleteClick: () => void;
   onDelete?: (id: string) => void;
+  onImageClick?: (imageUrl: string) => void;
 }
 
-const ItemDetails = ({ item, onDeleteClick, onDelete }: ItemDetailsProps) => {
+const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetailsProps) => {
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Unknown";
     try {
@@ -26,7 +27,10 @@ const ItemDetails = ({ item, onDeleteClick, onDelete }: ItemDetailsProps) => {
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="aspect-square rounded-lg overflow-hidden border">
+        <div 
+          className="aspect-square rounded-lg overflow-hidden border cursor-pointer"
+          onClick={() => onImageClick && onImageClick(item.imageUrl)}
+        >
           <img 
             src={item.imageUrl} 
             alt={item.name} 

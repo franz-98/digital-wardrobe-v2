@@ -59,7 +59,7 @@ const SearchBar = ({
           variant="ghost"
           size="icon"
           onClick={toggleSearchBar}
-          className="h-10 w-10 ml-auto"
+          className="h-10 w-10"
         >
           <Search className="h-5 w-5" />
         </Button>

@@ -281,10 +281,6 @@ const WardrobePage = () => {
 
   const updateStatsForTimeRange = (range: string) => {
     console.log(`Updating stats for time range: ${range}`);
-    toast({
-      title: "Time range updated",
-      description: `Stats now showing for ${range === "week" ? "the last week" : "the last month"}`,
-    });
   };
 
   const updateStatsForCustomRange = (start: Date, end: Date) => {
@@ -298,11 +294,20 @@ const WardrobePage = () => {
     setIsDetailsOpen(false);
   };
   
-  const handleOutfitItemClick = (item: ClothingItem) => {
-    setSelectedOutfit(null);
-    setSelectedItem(item);
-    setIsOutfitDetailsOpen(false);
-    setIsDetailsOpen(true);
+  const handleOutfitItemClick = (itemId: string) => {
+    // Find the item by id from the outfit's items
+    let itemToShow: ClothingItem | undefined;
+    
+    if (selectedOutfit) {
+      itemToShow = selectedOutfit.items.find(item => item.id === itemId);
+    }
+    
+    if (itemToShow) {
+      setSelectedItem(itemToShow);
+      setSelectedOutfit(null);
+      setIsOutfitDetailsOpen(false);
+      setIsDetailsOpen(true);
+    }
   };
   
   const handleDeleteItem = (itemId: string) => {
@@ -392,6 +397,7 @@ const WardrobePage = () => {
         findRelatedOutfits={findRelatedOutfits}
         handleDeleteItem={handleDeleteItem}
         handleDeleteOutfit={handleDeleteOutfit}
+        handleOutfitItemClick={handleOutfitItemClick}
       />
     </SwipeHandler>
   );

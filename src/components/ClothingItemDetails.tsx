@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X } from "lucide-react";
 import { 
   Dialog, 
@@ -38,7 +38,6 @@ const ClothingItemDetails = ({
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
-  const [expandedImage, setExpandedImage] = useState<string | null>(null);
   
   if (!item) return null;
 
@@ -71,11 +70,11 @@ const ClothingItemDetails = ({
               outfit={selectedOutfit}
               onBackClick={handleBackToItem}
               onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
-              onItemClick={item => {
+              onItemClick={itemId => {
+                // This ensures we go to the item view while staying in the dialog
                 setViewMode("item");
                 setSelectedOutfit(null);
               }}
-              onImageClick={(imageUrl) => setExpandedImage(imageUrl)}
             />
           ) : (
             <div className="flex flex-col h-full">
@@ -95,7 +94,6 @@ const ClothingItemDetails = ({
                   item={item}
                   onDeleteClick={handleDeleteItem}
                   onDelete={onDelete}
-                  onImageClick={(imageUrl) => setExpandedImage(imageUrl)}
                 />
                 
                 <div className="px-4 pb-4">
@@ -122,29 +120,6 @@ const ClothingItemDetails = ({
           )}
         </DialogContent>
       </Dialog>
-
-      {expandedImage && (
-        <div 
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-          onClick={() => setExpandedImage(null)}
-        >
-          <div className="relative max-w-4xl max-h-[90vh] w-full">
-            <img 
-              src={expandedImage} 
-              alt="Expanded view" 
-              className="w-full h-full object-contain" 
-            />
-            <Button 
-              variant="ghost" 
-              size="icon"
-              className="absolute top-2 right-2 bg-black/40 text-white hover:bg-black/60"
-              onClick={() => setExpandedImage(null)}
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      )}
 
       {onDelete && (
         <DeleteConfirmationDialog

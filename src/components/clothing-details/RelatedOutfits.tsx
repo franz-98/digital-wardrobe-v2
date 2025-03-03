@@ -12,7 +12,7 @@ const RelatedOutfits = ({ relatedOutfits, onOutfitClick }: RelatedOutfitsProps) 
   if (relatedOutfits.length === 0) return null;
   
   return (
-    <div>
+    <div className="overflow-y-auto overscroll-bounce">
       <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
         <Shirt className="h-3.5 w-3.5" /> Related Outfits
       </h3>

@@ -47,10 +47,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
       </DialogHeader>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce">
-        <div 
-          className="aspect-square w-full overflow-hidden mb-2 cursor-pointer"
-          onClick={() => onImageClick && onImageClick(outfit.imageUrl || outfit.items[0]?.imageUrl)}
-        >
+        <div className="aspect-square w-full overflow-hidden mb-2">
           <img 
             src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
             alt={outfit.name} 
@@ -73,11 +70,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
               >
                 <div className="flex gap-3 p-3">
                   <div 
-                    className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onImageClick && onImageClick(outfitItem.imageUrl);
-                    }}
+                    className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20"
                   >
                     <img 
                       src={outfitItem.imageUrl} 

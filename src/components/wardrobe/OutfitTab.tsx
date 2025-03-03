@@ -65,6 +65,7 @@ const OutfitTab = ({
           <Button 
             variant="outline" 
             size="sm"
+            className="h-10"
             onClick={() => {
               setIsCreatingOutfit(!isCreatingOutfit);
               setActiveTab("clothing");

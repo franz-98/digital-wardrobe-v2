@@ -90,16 +90,11 @@ const TimeRangeSelector = ({
       setShowTimeRangeMenu(false);
       
       updateStatsForCustomRange(startDate, endDate);
-      
-      toast({
-        title: "Custom range applied",
-        description: `Date range set to ${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`,
-      });
     }
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center">
       <div className="relative">
         {showTimeRangeMenu && !showCustomRange && (
           <div 
@@ -205,7 +200,7 @@ const TimeRangeSelector = ({
         ref={timeRangeButtonRef}
         variant="outline" 
         size="sm" 
-        className="h-8 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
+        className="h-10 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
         onClick={toggleTimeRangeMenu}
       >
         <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
