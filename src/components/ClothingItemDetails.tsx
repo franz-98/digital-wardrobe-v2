@@ -76,10 +76,9 @@ const ClothingItemDetails = ({
               outfit={selectedOutfit}
               onBackClick={handleBackToItem}
               onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
-              onItemClick={itemId => {
-                // This ensures we go to the item view while staying in the dialog
-                setViewMode("item");
-                setSelectedOutfit(null);
+              onItemClick={(itemId) => {
+                // Non facciamo nulla qui, lasciamo che sia gestito esternamente
+                console.log("Item clicked in outfit view:", itemId);
               }}
             />
           ) : (

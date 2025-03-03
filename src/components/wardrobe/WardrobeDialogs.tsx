@@ -60,7 +60,7 @@ const WardrobeDialogs = ({
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}
-              onItemClick={handleOutfitItemClick}
+              onItemClick={(item) => handleOutfitItemClick(item.id)}
             />
           </DialogContent>
         </Dialog>

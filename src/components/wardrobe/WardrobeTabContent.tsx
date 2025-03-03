@@ -31,6 +31,8 @@ interface WardrobeTabContentProps {
   handleDeleteItem: (id: string) => void;
   updateStatsForTimeRange: (range: string) => void;
   updateStatsForCustomRange: (start: Date, end: Date) => void;
+  showSearchBar: boolean;
+  toggleSearchBar: () => void;
 }
 
 const WardrobeTabContent = ({
@@ -56,7 +58,9 @@ const WardrobeTabContent = ({
   togglePremium,
   handleDeleteItem,
   updateStatsForTimeRange,
-  updateStatsForCustomRange
+  updateStatsForCustomRange,
+  showSearchBar,
+  toggleSearchBar
 }: WardrobeTabContentProps) => {
   return (
     <>
@@ -97,6 +101,8 @@ const WardrobeTabContent = ({
           createNewOutfit={createNewOutfit}
           handleOutfitClick={handleOutfitClick}
           togglePremium={togglePremium}
+          showSearchBar={showSearchBar}
+          toggleSearchBar={toggleSearchBar}
         />
       </TabsContent>
       

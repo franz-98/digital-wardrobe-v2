@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs } from "@/components/ui/tabs";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { useToast } from "@/hooks/use-toast";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
@@ -343,13 +345,28 @@ const WardrobePage = () => {
         <WardrobeTabsNav activeTab={activeTab} />
         
         <div className="mt-4 flex items-center justify-between h-10">
-          <SearchBar
-            showSearchBar={showSearchBar}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            toggleSearchBar={toggleSearchBar}
-            activeTab={activeTab}
-          />
+          {activeTab === "outfits" && (
+            <div className="flex justify-between w-full">
+              <h2 className="text-xl font-semibold">My Outfits</h2>
+              <Button 
+                variant="ghost"
+                size="icon"
+                className="ml-auto"
+                onClick={toggleSearchBar}
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+            </div>
+          )}
+          {activeTab !== "outfits" && (
+            <SearchBar
+              showSearchBar={showSearchBar}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              toggleSearchBar={toggleSearchBar}
+              activeTab={activeTab}
+            />
+          )}
         </div>
         
         <WardrobeTabContent
@@ -376,6 +393,8 @@ const WardrobePage = () => {
           handleDeleteItem={handleDeleteItem}
           updateStatsForTimeRange={updateStatsForTimeRange}
           updateStatsForCustomRange={updateStatsForCustomRange}
+          showSearchBar={showSearchBar}
+          toggleSearchBar={toggleSearchBar}
         />
       </Tabs>
       
