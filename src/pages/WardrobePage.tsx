@@ -1,20 +1,16 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Tabs } from "@/components/ui/tabs";
 
 import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-
-import ClothingItemDetails from "@/components/ClothingItemDetails";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
-import ClothingTab from "@/components/wardrobe/ClothingTab";
-import OutfitTab from "@/components/wardrobe/OutfitTab";
-import StatsTab from "@/components/wardrobe/StatsTab";
-import OutfitCreation from "@/components/wardrobe/OutfitCreation";
 import SearchBar from "@/components/wardrobe/SearchBar";
-import OutfitDetails from "@/components/wardrobe/OutfitDetails";
+import WardrobeHeader from "@/components/wardrobe/WardrobeHeader";
+import WardrobeTabsNav from "@/components/wardrobe/WardrobeTabsNav";
+import WardrobeTabContent from "@/components/wardrobe/WardrobeTabContent";
+import WardrobeDialogs from "@/components/wardrobe/WardrobeDialogs";
+import SwipeHandler from "@/components/wardrobe/SwipeHandler";
 
 const WardrobePage = () => {
   const navigate = useNavigate();
@@ -115,67 +111,76 @@ const WardrobePage = () => {
     },
   ]);
   
-  const [outfits, setOutfits] = useState<Outfit[]>([
-    {
-      id: "o1",
-      name: "Casual Look",
-      items: [
-        clothingItems.find(item => item.id === "1") || clothingItems[0],
-        clothingItems.find(item => item.id === "2") || clothingItems[1]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=400&fit=crop",
-    },
-    {
-      id: "o2",
-      name: "Summer Dress",
-      items: [
-        clothingItems.find(item => item.id === "3") || clothingItems[2],
-        clothingItems.find(item => item.id === "4") || clothingItems[3]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop",
-    },
-    {
-      id: "o3",
-      name: "Winter Style",
-      items: [
-        clothingItems.find(item => item.id === "5") || clothingItems[4],
-        clothingItems.find(item => item.id === "6") || clothingItems[5]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
-    }
-  ]);
+  // Define the initial outfits
+  const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [suggestedOutfits, setSuggestedOutfits] = useState<Outfit[]>([]);
 
-  const [suggestedOutfits, setSuggestedOutfits] = useState<Outfit[]>([
-    {
-      id: "so1",
-      name: "Spring Look",
-      items: [
-        clothingItems.find(item => item.id === "1") || clothingItems[0],
-        clothingItems.find(item => item.id === "4") || clothingItems[3],
-        clothingItems.find(item => item.id === "5") || clothingItems[4]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?w=400&h=400&fit=crop",
-    },
-    {
-      id: "so2",
-      name: "Party Outfit",
-      items: [
-        clothingItems.find(item => item.id === "3") || clothingItems[2],
-        clothingItems.find(item => item.id === "4") || clothingItems[3]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1568252542512-9fe8fe6a8d75?w=400&h=400&fit=crop",
-    },
-    {
-      id: "so3",
-      name: "Autumn Style",
-      items: [
-        clothingItems.find(item => item.id === "6") || clothingItems[5],
-        clothingItems.find(item => item.id === "2") || clothingItems[1],
-        clothingItems.find(item => item.id === "7") || clothingItems[6]
-      ],
-      imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+  // Initialize outfits after clothingItems are loaded
+  useEffect(() => {
+    if (clothingItems.length > 0) {
+      setOutfits([
+        {
+          id: "o1",
+          name: "Casual Look",
+          items: [
+            clothingItems.find(item => item.id === "1") || clothingItems[0],
+            clothingItems.find(item => item.id === "2") || clothingItems[1]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=400&fit=crop",
+        },
+        {
+          id: "o2",
+          name: "Summer Dress",
+          items: [
+            clothingItems.find(item => item.id === "3") || clothingItems[2],
+            clothingItems.find(item => item.id === "4") || clothingItems[3]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop",
+        },
+        {
+          id: "o3",
+          name: "Winter Style",
+          items: [
+            clothingItems.find(item => item.id === "5") || clothingItems[4],
+            clothingItems.find(item => item.id === "6") || clothingItems[5]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+        }
+      ]);
+
+      setSuggestedOutfits([
+        {
+          id: "so1",
+          name: "Spring Look",
+          items: [
+            clothingItems.find(item => item.id === "1") || clothingItems[0],
+            clothingItems.find(item => item.id === "4") || clothingItems[3],
+            clothingItems.find(item => item.id === "5") || clothingItems[4]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?w=400&h=400&fit=crop",
+        },
+        {
+          id: "so2",
+          name: "Party Outfit",
+          items: [
+            clothingItems.find(item => item.id === "3") || clothingItems[2],
+            clothingItems.find(item => item.id === "4") || clothingItems[3]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1568252542512-9fe8fe6a8d75?w=400&h=400&fit=crop",
+        },
+        {
+          id: "so3",
+          name: "Autumn Style",
+          items: [
+            clothingItems.find(item => item.id === "6") || clothingItems[5],
+            clothingItems.find(item => item.id === "2") || clothingItems[1],
+            clothingItems.find(item => item.id === "7") || clothingItems[6]
+          ],
+          imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+        }
+      ]);
     }
-  ]);
+  }, [clothingItems]);
   
   const [isPremium, setIsPremium] = useState(false);
   const [selectedItemsForOutfit, setSelectedItemsForOutfit] = useState<ClothingItem[]>([]);
@@ -192,13 +197,8 @@ const WardrobePage = () => {
   const [timeRange, setTimeRange] = useState("month");
   const [showSearchBar, setShowSearchBar] = useState(false);
   
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [isOutfitDetailsOpen, setIsOutfitDetailsOpen] = useState(false);
-
-  const minSwipeDistance = 50;
 
   useEffect(() => {
     localStorage.setItem("activeWardrobeTab", activeTab);
@@ -238,45 +238,6 @@ const WardrobePage = () => {
     } else {
       setSearchTerm("");
     }
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart) return;
-    setTouchEnd(e.targetTouches[0].clientX);
-    
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    const bottomReached = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 5;
-    
-    if (bottomReached) {
-      e.preventDefault();
-    }
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    const tabValues = ["clothing", "outfits", "stats"];
-    const currentIndex = tabValues.indexOf(activeTab);
-    
-    if (isLeftSwipe && currentIndex < tabValues.length - 1) {
-      setActiveTab(tabValues[currentIndex + 1]);
-    }
-    
-    if (isRightSwipe && currentIndex > 0) {
-      setActiveTab(tabValues[currentIndex - 1]);
-    }
-    
-    setTouchStart(null);
-    setTouchEnd(null);
   };
 
   const togglePremium = () => {
@@ -359,35 +320,12 @@ const WardrobePage = () => {
   };
 
   return (
-    <div 
-      className="space-y-6 pb-20"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">My Wardrobe</h1>
-        <Button onClick={() => navigate("/add-item")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Item
-        </Button>
-      </div>
+    <SwipeHandler activeTab={activeTab} setActiveTab={setActiveTab}>
+      <WardrobeHeader />
 
       <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
-        <TabsList className="w-full">
-          <TabsTrigger value="clothing" className="flex-1">
-            <Grip className="mr-2 h-4 w-4" />
-            Clothing
-          </TabsTrigger>
-          <TabsTrigger value="outfits" className="flex-1">
-            <Shirt className="mr-2 h-4 w-4" />
-            Outfits
-          </TabsTrigger>
-          <TabsTrigger value="stats" className="flex-1">
-            <BarChart className="mr-2 h-4 w-4" />
-            Stats
-          </TabsTrigger>
-        </TabsList>
+        <WardrobeTabsNav activeTab={activeTab} />
+        
         <div className="mt-4 flex items-center justify-between">
           <SearchBar
             showSearchBar={showSearchBar}
@@ -397,76 +335,45 @@ const WardrobePage = () => {
             activeTab={activeTab}
           />
         </div>
-        <TabsContent value="clothing" className="mt-4">
-          <OutfitCreation 
-            isCreatingOutfit={isCreatingOutfit}
-            selectedItemsForOutfit={selectedItemsForOutfit}
-            newOutfitName={newOutfitName}
-            setNewOutfitName={setNewOutfitName}
-            setSelectedItemsForOutfit={setSelectedItemsForOutfit}
-            setIsCreatingOutfit={setIsCreatingOutfit}
-            createNewOutfit={createNewOutfit}
-          />
-          
-          <ClothingTab 
-            clothingItems={clothingItems}
-            searchTerm={searchTerm}
-            isCreatingOutfit={isCreatingOutfit}
-            selectedItemsForOutfit={selectedItemsForOutfit}
-            toggleItemSelection={toggleItemSelection}
-            handleItemClick={handleItemClick}
-            handleDeleteItem={handleDeleteItem}
-          />
-        </TabsContent>
-        <TabsContent value="outfits" className="mt-4">
-          <OutfitTab
-            outfits={outfits}
-            suggestedOutfits={suggestedOutfits}
-            searchTerm={searchTerm}
-            isPremium={isPremium}
-            isCreatingOutfit={isCreatingOutfit}
-            selectedItemsForOutfit={selectedItemsForOutfit}
-            newOutfitName={newOutfitName}
-            setNewOutfitName={setNewOutfitName}
-            setIsCreatingOutfit={setIsCreatingOutfit}
-            setActiveTab={setActiveTab}
-            createNewOutfit={createNewOutfit}
-            handleOutfitClick={handleOutfitClick}
-            togglePremium={togglePremium}
-          />
-        </TabsContent>
-        <TabsContent value="stats" className="mt-4">
-          <StatsTab 
-            timeRange={timeRange}
-            setTimeRange={setTimeRange}
-            updateStatsForTimeRange={updateStatsForTimeRange}
-            updateStatsForCustomRange={updateStatsForCustomRange}
-          />
-        </TabsContent>
+        
+        <WardrobeTabContent
+          activeTab={activeTab}
+          clothingItems={clothingItems}
+          outfits={outfits}
+          suggestedOutfits={suggestedOutfits}
+          searchTerm={searchTerm}
+          isCreatingOutfit={isCreatingOutfit}
+          selectedItemsForOutfit={selectedItemsForOutfit}
+          newOutfitName={newOutfitName}
+          isPremium={isPremium}
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
+          setNewOutfitName={setNewOutfitName}
+          setSelectedItemsForOutfit={setSelectedItemsForOutfit}
+          setIsCreatingOutfit={setIsCreatingOutfit}
+          setActiveTab={setActiveTab}
+          createNewOutfit={createNewOutfit}
+          toggleItemSelection={toggleItemSelection}
+          handleItemClick={handleItemClick}
+          handleOutfitClick={handleOutfitClick}
+          togglePremium={togglePremium}
+          handleDeleteItem={handleDeleteItem}
+          updateStatsForTimeRange={updateStatsForTimeRange}
+          updateStatsForCustomRange={updateStatsForCustomRange}
+        />
       </Tabs>
       
-      {selectedItem && (
-        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="max-w-md">
-            <ClothingItemDetails
-              item={selectedItem}
-              open={isDetailsOpen}
-              onOpenChange={setIsDetailsOpen}
-              relatedOutfits={findRelatedOutfits(selectedItem.id)}
-              onDelete={handleDeleteItem}
-            />
-          </DialogContent>
-        </Dialog>
-      )}
-      
-      {selectedOutfit && (
-        <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
-          <DialogContent className="max-w-md">
-            <OutfitDetails outfit={selectedOutfit} />
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+      <WardrobeDialogs
+        selectedItem={selectedItem}
+        selectedOutfit={selectedOutfit}
+        isDetailsOpen={isDetailsOpen}
+        isOutfitDetailsOpen={isOutfitDetailsOpen}
+        setIsDetailsOpen={setIsDetailsOpen}
+        setIsOutfitDetailsOpen={setIsOutfitDetailsOpen}
+        findRelatedOutfits={findRelatedOutfits}
+        handleDeleteItem={handleDeleteItem}
+      />
+    </SwipeHandler>
   );
 };
 
