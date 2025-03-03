@@ -342,12 +342,16 @@ const WardrobePage = () => {
 
   const handleStartDateSelect = (date: Date | undefined) => {
     setStartDate(date);
-    document.body.click();
+    setTimeout(() => {
+      document.body.click();
+    }, 10);
   };
 
   const handleEndDateSelect = (date: Date | undefined) => {
     setEndDate(date);
-    document.body.click();
+    setTimeout(() => {
+      document.body.click();
+    }, 10);
   };
 
   const confirmCustomRange = () => {
