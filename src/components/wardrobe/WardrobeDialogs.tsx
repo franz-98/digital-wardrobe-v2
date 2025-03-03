@@ -44,7 +44,6 @@ const WardrobeDialogs = ({
               onDelete={handleDeleteItem}
               onOutfitDelete={handleDeleteOutfit}
               onOutfitClick={(outfit) => {
-                // Navigate to the outfit view
                 setIsDetailsOpen(false);
                 setIsOutfitDetailsOpen(true);
                 // This will be handled by WardrobePage
@@ -60,7 +59,10 @@ const WardrobeDialogs = ({
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}
-              onItemClick={(item) => handleOutfitItemClick(item.id)}
+              onItemClick={(item) => {
+                setIsOutfitDetailsOpen(false);
+                handleOutfitItemClick(item.id);
+              }}
             />
           </DialogContent>
         </Dialog>

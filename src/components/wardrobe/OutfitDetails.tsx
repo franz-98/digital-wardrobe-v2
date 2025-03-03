@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Shirt, X, Trash2, ZoomIn } from "lucide-react";
+import { Shirt, X, Trash2 } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Outfit, ClothingItem } from './types';
@@ -25,6 +25,10 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
     setShowDeleteConfirmation(true);
   };
 
+  const handleImageClick = () => {
+    setIsImageZoomOpen(true);
+  };
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-6 pt-6 pb-0">
@@ -45,19 +49,14 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
         <div className="space-y-4">
           <div 
             className="aspect-square overflow-hidden rounded-lg relative cursor-pointer"
-            onClick={() => setIsImageZoomOpen(true)}
+            onClick={handleImageClick}
           >
             {outfit.imageUrl ? (
-              <>
-                <img 
-                  src={outfit.imageUrl} 
-                  alt={outfit.name} 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute bottom-2 right-2 p-1.5 bg-black/40 rounded-full">
-                  <ZoomIn className="h-4 w-4 text-white" />
-                </div>
-              </>
+              <img 
+                src={outfit.imageUrl} 
+                alt={outfit.name} 
+                className="w-full h-full object-cover"
+              />
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
                 <Shirt className="h-12 w-12 text-muted-foreground" />

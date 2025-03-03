@@ -1,8 +1,7 @@
 
-import React from "react";
-import { X, ZoomIn, ZoomOut } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import React, { useRef, useEffect } from "react";
+import { X } from "lucide-react";
+import { DialogContent, DialogOverlay } from "@/components/ui/dialog";
 
 interface ImageZoomProps {
   imageUrl: string;
@@ -12,50 +11,67 @@ interface ImageZoomProps {
 }
 
 const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
-  const [scale, setScale] = React.useState(1);
-
-  const handleZoomIn = () => {
-    setScale((prev) => Math.min(prev + 0.5, 3));
-  };
-
-  const handleZoomOut = () => {
-    setScale((prev) => Math.max(prev - 0.5, 0.5));
-  };
-
-  const handleReset = () => {
-    setScale(1);
-  };
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const handleScroll = (e: WheelEvent) => {
+      if (e.deltaY > 30) {
+        onClose();
+      }
+    };
+    
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    
+    const containerElement = containerRef.current;
+    if (containerElement && isOpen) {
+      containerElement.addEventListener("wheel", handleScroll);
+      window.addEventListener("keydown", handleEscape);
+    }
+    
+    return () => {
+      if (containerElement) {
+        containerElement.removeEventListener("wheel", handleScroll);
+      }
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, onClose]);
+  
+  if (!isOpen) return null;
+  
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 sm:max-w-[90vw] max-h-[90vh] w-auto h-auto bg-background/95 flex flex-col">
-        <div className="p-4 flex justify-between items-center border-b">
-          <div className="flex gap-2">
-            <Button variant="outline" size="icon" onClick={handleZoomIn}>
-              <ZoomIn className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleZoomOut}>
-              <ZoomOut className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleReset}>
-              Reset
-            </Button>
-          </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-        <div className="flex-1 overflow-auto p-4 flex items-center justify-center">
-          <div style={{ transform: `scale(${scale})`, transition: "transform 0.2s ease" }}>
-            <img 
-              src={imageUrl} 
-              alt={alt} 
-              className="max-w-full max-h-[70vh] object-contain"
-            />
-          </div>
+    <>
+      <DialogOverlay className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm" />
+      <DialogContent 
+        ref={containerRef}
+        className="fixed inset-0 z-50 flex items-center justify-center p-0 border-none bg-transparent shadow-none max-w-none max-h-screen"
+        onClick={onClose}
+      >
+        <button 
+          className="absolute top-4 right-4 p-2 rounded-full bg-black/40 text-white hover:bg-black/60 transition-colors"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+        >
+          <X className="h-6 w-6" />
+        </button>
+        
+        <div 
+          className="p-4 max-w-screen-lg max-h-screen" 
+          onClick={(e) => e.stopPropagation()}
+        >
+          <img 
+            src={imageUrl} 
+            alt={alt} 
+            className="max-w-full max-h-[90vh] object-contain shadow-xl"
+          />
         </div>
       </DialogContent>
-    </Dialog>
+    </>
   );
 };
 

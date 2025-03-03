@@ -43,6 +43,7 @@ const ClothingItemDetails = ({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  const [zoomImageUrl, setZoomImageUrl] = useState("");
   
   if (!item) return null;
 
@@ -71,6 +72,7 @@ const ClothingItemDetails = ({
   };
   
   const handleImageClick = (imageUrl: string) => {
+    setZoomImageUrl(imageUrl);
     setIsImageZoomOpen(true);
   };
 
@@ -159,7 +161,7 @@ const ClothingItemDetails = ({
       )}
       
       <ImageZoom 
-        imageUrl={item.imageUrl}
+        imageUrl={zoomImageUrl || item.imageUrl}
         alt={item.name}
         isOpen={isImageZoomOpen}
         onClose={() => setIsImageZoomOpen(false)}
