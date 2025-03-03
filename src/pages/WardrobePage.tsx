@@ -1,4 +1,3 @@
-<lov-code>
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
@@ -225,6 +224,9 @@ const WardrobePage = () => {
   const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [showCustomRange, setShowCustomRange] = useState(false);
 
+  const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
+  const [isOutfitDetailsOpen, setIsOutfitDetailsOpen] = useState(false);
+
   const minSwipeDistance = 50;
 
   useEffect(() => {
@@ -273,9 +275,6 @@ const WardrobePage = () => {
       window.removeEventListener("wheel", handleScroll);
     };
   }, [showTimeRangeMenu, showCustomRange]);
-
-  const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
-  const [isOutfitDetailsOpen, setIsOutfitDetailsOpen] = useState(false);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -820,4 +819,4 @@ const WardrobePage = () => {
                   <span className="font-medium text-sm">20%</span>
                 </div>
                 <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{
+                  <div className="bg-primary h-full rounded-full" style={{ width: '
