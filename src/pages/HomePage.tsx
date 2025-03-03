@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Plus, Loader2, Image, Check, X as XIcon } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -43,7 +42,6 @@ interface ItemInference {
   confidence: number;
 }
 
-// Available clothing categories
 const CLOTHING_CATEGORIES = [
   "Tops",
   "Bottoms",
@@ -66,7 +64,6 @@ const HomePage = () => {
   const [selectedItem, setSelectedItem] = useState<ItemInference | null>(null);
   const [inferenceDialogOpen, setInferenceDialogOpen] = useState(false);
   
-  // State for inferred items - now will be individual items for confirmation
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([
     {
       id: "inferred-1",
@@ -86,11 +83,9 @@ const HomePage = () => {
     }
   ]);
 
-  // Fetch recent uploads
   const { data: recentUploads, isLoading } = useQuery({
     queryKey: ["recentUploads"],
     queryFn: async () => {
-      // Simulating API call
       const response = await fetch("/api/recent");
       if (!response.ok) throw new Error("Failed to fetch recent uploads");
       return response.json() as Promise<RecentUpload[]>;
@@ -126,16 +121,12 @@ const HomePage = () => {
 
     setIsUploading(true);
     
-    // Create FormData
     const formData = new FormData();
     formData.append("image", file);
 
     try {
-      // Simulating API call
-      // In real implementation, send to /api/upload
-      await new Promise(resolve => setTimeout(resolve, 1500)); // simulate upload delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate receiving inference results
       const inferredItem = {
         id: `inferred-${Date.now()}`,
         name: "New Clothing Item",
@@ -145,10 +136,8 @@ const HomePage = () => {
         confidence: 0.85
       };
       
-      // Show dialog with single inferred item
       setSelectedItem(inferredItem);
       setInferenceDialogOpen(true);
-      
     } catch (error) {
       toast({
         title: "Upload failed",
@@ -157,23 +146,20 @@ const HomePage = () => {
       });
     } finally {
       setIsUploading(false);
-      // Reset file input
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
   const handleRecentItemClick = (item: RecentUpload) => {
-    // Convert RecentUpload to ItemInference format
     const inferredItem: ItemInference = {
       id: item.id,
       name: item.name,
       category: item.category,
-      color: "", // Assuming color isn't available in RecentUpload
+      color: "",
       imageUrl: item.imageUrl,
       confidence: 1.0
     };
     
-    // Set this single item and show dialog
     setSelectedItem(inferredItem);
     setInferenceDialogOpen(true);
   };
@@ -236,7 +222,6 @@ const HomePage = () => {
           )}
         </Button>
 
-        {/* Spiegazione del riconoscimento vestiti */}
         <Card className="p-4 mt-4 border bg-secondary/10">
           <h3 className="font-medium text-sm mb-2">Come funziona il riconoscimento vestiti</h3>
           <p className="text-sm text-muted-foreground mb-2">
@@ -292,7 +277,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Dialog for confirming a single item */}
       <Dialog open={inferenceDialogOpen} onOpenChange={setInferenceDialogOpen}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>

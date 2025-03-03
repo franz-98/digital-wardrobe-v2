@@ -479,6 +479,31 @@ const WardrobePage = () => {
     return outfit.items.map(item => item.color);
   };
 
+  // Add delete item handler
+  const handleDeleteItem = (itemId: string) => {
+    // Filter out the item with the specified ID
+    const updatedItems = clothingItems.filter(item => item.id !== itemId);
+    setClothingItems(updatedItems);
+    
+    // Also update outfits that contain this item
+    const updatedOutfits = outfits.map(outfit => {
+      if (outfit.items.some(item => item.id === itemId)) {
+        return {
+          ...outfit,
+          items: outfit.items.filter(item => item.id !== itemId)
+        };
+      }
+      return outfit;
+    });
+    setOutfits(updatedOutfits);
+    
+    // Show a success toast
+    toast({
+      title: "Item deleted",
+      description: "The clothing item has been removed from your wardrobe.",
+    });
+  };
+
   return (
     <div 
       className="space-y-6 pb-20"
@@ -697,6 +722,8 @@ const WardrobePage = () => {
                 <ClothingItemCard
                   item={item}
                   onClick={() => isCreatingOutfit ? toggleItemSelection(item) : handleItemClick(item)}
+                  onDelete={handleDeleteItem}
+                  showDeleteButton={!isCreatingOutfit}
                 />
               </div>
             ))}
