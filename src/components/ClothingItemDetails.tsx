@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { X, Calendar, Tag, Info, Shirt, ChevronLeft } from "lucide-react";
+import { X, Calendar, Tag, Info, Shirt, ChevronLeft, Trash2 } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -41,18 +40,19 @@ interface ClothingItemDetailsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   relatedOutfits?: Outfit[];
+  onDelete?: (id: string) => void;
 }
 
 const ClothingItemDetails = ({ 
   item, 
   open, 
   onOpenChange,
-  relatedOutfits = []
+  relatedOutfits = [],
+  onDelete
 }: ClothingItemDetailsProps) => {
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   
-  // Close dialog when scrolling
   useEffect(() => {
     const handleScroll = () => {
       if (open) {
@@ -64,7 +64,6 @@ const ClothingItemDetails = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, [open, onOpenChange]);
   
-  // Return null early if no item is provided
   if (!item) return null;
 
   const formatDate = (dateString?: string) => {
@@ -76,7 +75,6 @@ const ClothingItemDetails = ({
     }
   };
 
-  // Check if the current item is part of an outfit (not a single clothing item)
   const isPartOfOutfit = () => {
     return relatedOutfits && relatedOutfits.some(outfit => 
       outfit.items.some(outfitItem => outfitItem.id === item.id)
@@ -97,11 +95,21 @@ const ClothingItemDetails = ({
     setSelectedOutfit(null);
   };
 
+  const handleDeleteItem = () => {
+    if (onDelete && item) {
+      onDelete(item.id);
+      onOpenChange(false);
+      toast("Item deleted", {
+        description: "The item has been removed from your wardrobe",
+        duration: 1500,
+      });
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md overflow-auto bg-background p-0">
         {viewMode === "outfit" && selectedOutfit ? (
-          // Outfit View
           <>
             <DialogHeader className="px-4 pt-4 pb-2">
               <div className="flex items-center mb-2">
@@ -175,7 +183,6 @@ const ClothingItemDetails = ({
             </div>
           </>
         ) : (
-          // Item View - More schematic and organized
           <div className="flex flex-col h-full">
             <DialogHeader className="px-4 pt-4 pb-0">
               <div className="flex items-center justify-between">
@@ -298,6 +305,17 @@ const ClothingItemDetails = ({
                     ))}
                   </div>
                 </div>
+              )}
+              
+              {onDelete && (
+                <Button 
+                  variant="destructive" 
+                  className="w-full mt-4"
+                  onClick={handleDeleteItem}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Item
+                </Button>
               )}
             </div>
           </div>

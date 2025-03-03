@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, ChevronLeft, ChevronRight } from "lucide-react";
@@ -338,13 +337,10 @@ const WardrobePage = () => {
     setIsDetailsOpen(false);
   };
   
-  // Add delete item handler
   const handleDeleteItem = (itemId: string) => {
-    // Filter out the item with the specified ID
     const updatedItems = clothingItems.filter(item => item.id !== itemId);
     setClothingItems(updatedItems);
     
-    // Also update outfits that contain this item
     const updatedOutfits = outfits.map(outfit => {
       if (outfit.items.some(item => item.id === itemId)) {
         return {
@@ -356,7 +352,6 @@ const WardrobePage = () => {
     });
     setOutfits(updatedOutfits);
     
-    // Show a success toast
     toast({
       title: "Item deleted",
       description: "The clothing item has been removed from your wardrobe.",
@@ -484,6 +479,7 @@ const WardrobePage = () => {
               open={isDetailsOpen}
               onOpenChange={setIsDetailsOpen}
               relatedOutfits={findRelatedOutfits(selectedItem.id)}
+              onDelete={handleDeleteItem}
             />
           </DialogContent>
         </Dialog>

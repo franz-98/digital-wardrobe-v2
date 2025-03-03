@@ -62,8 +62,7 @@ const ClothingTab = ({
           <ClothingItemCard
             item={item}
             onClick={() => isCreatingOutfit ? toggleItemSelection(item) : handleItemClick(item)}
-            onDelete={handleDeleteItem}
-            showDeleteButton={!isCreatingOutfit}
+            // Remove showDeleteButton prop
           />
         </div>
       ))}
