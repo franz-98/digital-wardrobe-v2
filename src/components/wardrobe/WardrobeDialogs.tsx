@@ -46,7 +46,6 @@ const WardrobeDialogs = ({
               onOutfitClick={(outfit) => {
                 setIsDetailsOpen(false);
                 setIsOutfitDetailsOpen(true);
-                // This will be handled by WardrobePage
               }}
             />
           </DialogContent>

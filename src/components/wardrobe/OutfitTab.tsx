@@ -63,6 +63,33 @@ const OutfitTab = ({
 
   return (
     <>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">My Outfits</h2>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="h-10 ml-auto"
+          onClick={() => {
+            setIsCreatingOutfit(!isCreatingOutfit);
+            setActiveTab("clothing");
+          }}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create Outfit
+        </Button>
+      </div>
+      
+      <div className="mb-4">
+        <Button 
+          variant="ghost"
+          size="icon"
+          onClick={toggleSearchBar}
+          className="h-10 w-10 p-0"
+        >
+          <Search className="h-5 w-5" />
+        </Button>
+      </div>
+      
       {showSearchBar && (
         <div className="mb-4">
           <Input
@@ -74,21 +101,6 @@ const OutfitTab = ({
           />
         </div>
       )}
-      
-      <div className="flex items-center justify-between mb-4">
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="h-10"
-          onClick={() => {
-            setIsCreatingOutfit(!isCreatingOutfit);
-            setActiveTab("clothing");
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Create Outfit
-        </Button>
-      </div>
       
       {isCreatingOutfit && selectedItemsForOutfit.length > 0 && (
         <div className="mb-4 p-3 bg-muted/40 rounded-lg">
