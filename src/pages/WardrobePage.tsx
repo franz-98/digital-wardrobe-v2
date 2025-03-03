@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
@@ -819,4 +820,169 @@ const WardrobePage = () => {
                   <span className="font-medium text-sm">20%</span>
                 </div>
                 <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '
+                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Dresses</span>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Shoes</span>
+                  <span className="font-medium text-sm">10%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Accessories</span>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-4">
+              <h3 className="text-base font-medium mb-4">Most Worn Items</h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <img src={clothingItems[0].imageUrl} alt="Most worn item" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{clothingItems[0].name}</p>
+                    <p className="text-xs text-muted-foreground">Worn 12 times</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <img src={clothingItems[1].imageUrl} alt="Second most worn item" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{clothingItems[1].name}</p>
+                    <p className="text-xs text-muted-foreground">Worn 9 times</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0">
+                    <img src={clothingItems[2].imageUrl} alt="Third most worn item" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{clothingItems[2].name}</p>
+                    <p className="text-xs text-muted-foreground">Worn 7 times</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+      
+      {/* Item Details Dialog */}
+      {selectedItem && (
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{selectedItem.name}</DialogTitle>
+              <DialogDescription>Item details</DialogDescription>
+            </DialogHeader>
+            <ClothingItemDetails item={selectedItem} />
+            
+            {/* Related Outfits */}
+            <div className="mt-4">
+              <h4 className="text-sm font-medium mb-2">Used in outfits:</h4>
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {findRelatedOutfits(selectedItem.id).map((outfit) => (
+                  <div 
+                    key={outfit.id}
+                    className="flex-shrink-0 w-16 h-16 relative rounded overflow-hidden"
+                    onClick={() => {
+                      setSelectedOutfit(outfit);
+                      setIsDetailsOpen(false);
+                      setIsOutfitDetailsOpen(true);
+                    }}
+                  >
+                    <img src={outfit.imageUrl} alt={outfit.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                      <p className="text-white text-xs font-medium px-1 text-center">{outfit.name}</p>
+                    </div>
+                  </div>
+                ))}
+                
+                {findRelatedOutfits(selectedItem.id).length === 0 && (
+                  <p className="text-xs text-muted-foreground">Not used in any outfits yet.</p>
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {/* Outfit Details Dialog */}
+      {selectedOutfit && (
+        <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>{selectedOutfit.name}</DialogTitle>
+              <DialogDescription>Outfit details</DialogDescription>
+            </DialogHeader>
+            
+            <div className="aspect-square rounded-md overflow-hidden mb-4">
+              <img 
+                src={selectedOutfit.imageUrl || selectedOutfit.items[0]?.imageUrl} 
+                alt={selectedOutfit.name} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-medium mb-2">Items in this outfit:</h4>
+              <div className="grid grid-cols-4 gap-2">
+                {selectedOutfit.items.map((item) => (
+                  <div 
+                    key={item.id}
+                    className="aspect-square rounded overflow-hidden cursor-pointer"
+                    onClick={() => {
+                      setSelectedItem(item);
+                      setIsOutfitDetailsOpen(false);
+                      setIsDetailsOpen(true);
+                    }}
+                  >
+                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <h4 className="text-sm font-medium mb-1">Color palette:</h4>
+              <div className="flex gap-1">
+                {getOutfitColorPalette(selectedOutfit).map((color, index) => (
+                  <div 
+                    key={index}
+                    className="w-6 h-6 rounded-full border border-border"
+                    style={{ 
+                      backgroundColor: color.toLowerCase(),
+                      boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.05)"
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+};
+
+export default WardrobePage;
