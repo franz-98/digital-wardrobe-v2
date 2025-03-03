@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { X, Calendar, Tag, Info, Shirt, ChevronLeft } from "lucide-react";
@@ -7,14 +6,13 @@ import {
   DialogContent, 
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogClose
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface ClothingItem {
   id: string;
@@ -80,8 +78,7 @@ const ClothingItemDetails = ({
   const handleOutfitClick = (outfit: Outfit) => {
     setSelectedOutfit(outfit);
     setViewMode("outfit");
-    toast({
-      title: "Outfit selezionato",
+    toast("Outfit selezionato", {
       description: `Hai selezionato l'outfit: ${outfit.name}`,
     });
   };
@@ -174,16 +171,13 @@ const ClothingItemDetails = ({
             <DialogHeader className="px-4 pt-4 pb-0">
               <div className="flex items-center justify-between">
                 <DialogTitle className="text-lg font-semibold">{item.name}</DialogTitle>
-                <DialogClose asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </DialogClose>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenChange(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             </DialogHeader>
             
             <div className="p-4 flex-1 overflow-auto">
-              {/* Image and basic details in a grid layout */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="aspect-square rounded-lg overflow-hidden border">
                   <img 
@@ -231,7 +225,6 @@ const ClothingItemDetails = ({
                 </div>
               </div>
               
-              {/* Specifications section */}
               {item.metadata && Object.keys(item.metadata).length > 0 && (
                 <Card className="p-3 mb-4">
                   <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
@@ -269,7 +262,6 @@ const ClothingItemDetails = ({
                 </Card>
               )}
               
-              {/* Related outfits section */}
               {relatedOutfits && relatedOutfits.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium mb-2 flex items-center gap-1">

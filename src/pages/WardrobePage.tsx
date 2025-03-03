@@ -576,6 +576,22 @@ const WardrobePage = () => {
               <p className="text-xs text-muted-foreground mb-2">
                 Select items for your outfit ({selectedItemsForOutfit.length} selected)
               </p>
+              {selectedItemsForOutfit.length > 0 && (
+                <div className="mt-2">
+                  <Input
+                    placeholder="Outfit name"
+                    value={newOutfitName}
+                    onChange={(e) => setNewOutfitName(e.target.value)}
+                    className="text-sm mb-2"
+                  />
+                  <Button 
+                    onClick={createNewOutfit}
+                    disabled={!newOutfitName.trim()}
+                  >
+                    Save Outfit
+                  </Button>
+                </div>
+              )}
             </div>
           )}
           
