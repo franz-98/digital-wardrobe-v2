@@ -340,6 +340,16 @@ const WardrobePage = () => {
     }
   };
 
+  const handleStartDateSelect = (date: Date | undefined) => {
+    setStartDate(date);
+    document.body.click();
+  };
+
+  const handleEndDateSelect = (date: Date | undefined) => {
+    setEndDate(date);
+    document.body.click();
+  };
+
   const confirmCustomRange = () => {
     if (startDate && endDate) {
       setTimeRange(`${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`);
@@ -477,7 +487,7 @@ const WardrobePage = () => {
                           <CalendarComponent
                             mode="single"
                             selected={startDate}
-                            onSelect={setStartDate}
+                            onSelect={handleStartDateSelect}
                             initialFocus
                           />
                         </PopoverContent>
@@ -498,7 +508,7 @@ const WardrobePage = () => {
                           <CalendarComponent
                             mode="single"
                             selected={endDate}
-                            onSelect={setEndDate}
+                            onSelect={handleEndDateSelect}
                             initialFocus
                           />
                         </PopoverContent>
