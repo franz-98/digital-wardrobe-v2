@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -186,11 +186,20 @@ const WardrobePage = () => {
       }
     };
     
+    const handleScroll = () => {
+      if (showTimeRangeMenu) {
+        setShowTimeRangeMenu(false);
+      }
+    };
+    
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("scroll", handleScroll);
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [showTimeRangeMenu]);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -359,22 +368,11 @@ const WardrobePage = () => {
           
           {activeTab === "stats" && (
             <div className="flex items-center relative">
-              <Button 
-                ref={timeRangeButtonRef}
-                variant="outline" 
-                size="sm" 
-                className="h-8 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
-                onClick={toggleTimeRangeMenu}
-              >
-                <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
-                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : "Custom range"}
-                <ChevronDown className="h-3.5 w-3.5 ml-1.5 opacity-70" />
-              </Button>
-              
               {showTimeRangeMenu && (
                 <div 
                   ref={timeRangeMenuRef}
-                  className="absolute left-0 bottom-full mb-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
+                  className="absolute right-0 bottom-full mb-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
+                  style={{ right: 'auto', left: '0' }}
                 >
                   <button 
                     className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
@@ -396,6 +394,17 @@ const WardrobePage = () => {
                   </button>
                 </div>
               )}
+              <Button 
+                ref={timeRangeButtonRef}
+                variant="outline" 
+                size="sm" 
+                className="h-8 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
+                onClick={toggleTimeRangeMenu}
+              >
+                <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
+                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : "Custom range"}
+                <ChevronDown className="h-3.5 w-3.5 ml-1.5 opacity-70" />
+              </Button>
             </div>
           )}
         </div>
@@ -522,7 +531,7 @@ const WardrobePage = () => {
           {!isPremium && (
             <div className="mt-8 p-4 border rounded-lg bg-muted/20 text-center">
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-2">
-                <Lock className="h-5 w-5 text-muted-foreground" />
+                <LockIcon className="h-5 w-5 text-muted-foreground" />
               </div>
               <h3 className="font-medium mb-1">Unlock Suggested Outfits</h3>
               <p className="text-sm text-muted-foreground mb-3">

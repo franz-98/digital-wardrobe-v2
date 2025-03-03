@@ -53,7 +53,7 @@ const ClothingItemDetails = ({
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   
-  // Close dropdown when scrolling
+  // Close dialog when scrolling
   useEffect(() => {
     const handleScroll = () => {
       if (open) {
@@ -93,21 +93,21 @@ const ClothingItemDetails = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-auto bg-background">
+      <DialogContent className="max-w-md overflow-auto bg-background p-0">
         {viewMode === "outfit" && selectedOutfit ? (
           // Outfit View
           <>
-            <DialogHeader className="pb-2">
+            <DialogHeader className="px-4 pt-4 pb-2">
               <div className="flex items-center mb-2">
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  className="mr-2" 
+                  className="mr-2 h-8 w-8" 
                   onClick={handleBackToItem}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <DialogTitle className="text-xl font-bold">{selectedOutfit.name}</DialogTitle>
+                <DialogTitle className="text-lg font-semibold">{selectedOutfit.name}</DialogTitle>
               </div>
               <DialogDescription>
                 <Badge variant="outline" className="bg-primary/10 text-primary">
@@ -116,7 +116,7 @@ const ClothingItemDetails = ({
               </DialogDescription>
             </DialogHeader>
             
-            <div className="relative aspect-square w-full overflow-hidden rounded-md mb-4 bg-secondary/10">
+            <div className="relative aspect-square w-full overflow-hidden mb-2">
               <img 
                 src={selectedOutfit.imageUrl || selectedOutfit.items[0]?.imageUrl} 
                 alt={selectedOutfit.name} 
@@ -125,200 +125,182 @@ const ClothingItemDetails = ({
               />
             </div>
             
-            <div className="space-y-4">
+            <div className="px-4 pb-4 space-y-3">
               <h3 className="text-sm font-medium flex items-center gap-1">
                 <Shirt className="h-4 w-4" /> Indumenti in questo outfit
               </h3>
               
-              {selectedOutfit.items.map((outfitItem) => (
-                <Card 
-                  key={`outfit-item-${outfitItem.id}`}
-                  className="overflow-hidden border shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="flex gap-3 p-3">
-                    <div className="w-20 h-20 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20">
-                      <img 
-                        src={outfitItem.imageUrl} 
-                        alt={outfitItem.name} 
-                        className="w-full h-full object-cover"
-                      />
+              <div className="space-y-2">
+                {selectedOutfit.items.map((outfitItem) => (
+                  <Card 
+                    key={`outfit-item-${outfitItem.id}`}
+                    className="overflow-hidden border shadow-sm"
+                  >
+                    <div className="flex gap-3 p-3">
+                      <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20">
+                        <img 
+                          src={outfitItem.imageUrl} 
+                          alt={outfitItem.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{outfitItem.name}</h4>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                          <Badge variant="outline" className="text-xs bg-secondary/10">
+                            {outfitItem.category}
+                          </Badge>
+                          <div className="flex items-center gap-1">
+                            <div 
+                              className="w-2 h-2 rounded-full" 
+                              style={{ 
+                                backgroundColor: outfitItem.color.toLowerCase() === "white" ? "#EEEEEE" : outfitItem.color,
+                                border: outfitItem.color.toLowerCase() === "white" ? "1px solid #DDDDDD" : "none"
+                              }}
+                            />
+                            <span className="text-xs text-muted-foreground">{outfitItem.color}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">{outfitItem.name}</h4>
-                      <div className="flex items-center gap-2 mt-1 mb-2">
-                        <Badge variant="outline" className="text-xs bg-secondary/10">
-                          {outfitItem.category}
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          // Item View - More schematic and organized
+          <div className="flex flex-col h-full">
+            <DialogHeader className="px-4 pt-4 pb-0">
+              <div className="flex items-center justify-between">
+                <DialogTitle className="text-lg font-semibold">{item.name}</DialogTitle>
+                <DialogClose asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </DialogClose>
+              </div>
+            </DialogHeader>
+            
+            <div className="p-4 flex-1 overflow-auto">
+              {/* Image and basic details in a grid layout */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="aspect-square rounded-lg overflow-hidden border">
+                  <img 
+                    src={item.imageUrl} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">Details</h3>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Category:</span>
+                        <Badge variant="outline" className="text-xs">
+                          {item.category}
                         </Badge>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Color:</span>
                         <div className="flex items-center gap-1">
                           <div 
                             className="w-3 h-3 rounded-full" 
                             style={{ 
-                              backgroundColor: outfitItem.color.toLowerCase() === "white" ? "#EEEEEE" : outfitItem.color,
-                              border: outfitItem.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
+                              backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
+                              border: item.color.toLowerCase() === "white" ? "1px solid #DDDDDD" : "none"
                             }}
                           />
-                          <span className="text-xs text-muted-foreground">{outfitItem.color}</span>
+                          <span className="text-xs">{item.color}</span>
                         </div>
                       </div>
-                      
-                      {outfitItem.metadata && (
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
-                          {outfitItem.metadata.brand && (
-                            <>
-                              <span className="text-muted-foreground">Brand:</span>
-                              <span className="font-medium">{outfitItem.metadata.brand}</span>
-                            </>
-                          )}
-                          {outfitItem.metadata.material && (
-                            <>
-                              <span className="text-muted-foreground">Materiale:</span>
-                              <span className="font-medium">{outfitItem.metadata.material}</span>
-                            </>
-                          )}
-                          {outfitItem.metadata.season && (
-                            <>
-                              <span className="text-muted-foreground">Stagione:</span>
-                              <span className="font-medium">{outfitItem.metadata.season}</span>
-                            </>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          </>
-        ) : (
-          // Item View - Image prominently displayed at the top
-          <>
-            <DialogHeader className="pb-2">
-              <DialogTitle className="text-xl font-bold">{item.name}</DialogTitle>
-            </DialogHeader>
-            
-            {/* Full width image at the top */}
-            <div className="w-full aspect-square overflow-hidden rounded-md mb-4 border-2 border-primary/20">
-              <img 
-                src={item.imageUrl} 
-                alt={item.name} 
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </div>
-            
-            {/* Item details section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="bg-primary/10 text-primary">
-                  {item.category}
-                </Badge>
-                <div className="flex items-center gap-1 ml-auto">
-                  <div 
-                    className="w-4 h-4 rounded-full" 
-                    style={{ 
-                      backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
-                      border: item.color.toLowerCase() === "white" ? "1px solid #000000" : "none"
-                    }}
-                  />
-                  <span className="text-sm">{item.color}</span>
+                  
+                  {item.metadata?.brand && (
+                    <div className="mt-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Brand:</span>
+                        <span className="text-xs font-medium">{item.metadata.brand}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               
-              {/* Detailed metadata */}
-              {item.metadata && (
-                <Card className="shadow-sm border p-4">
-                  <h3 className="text-sm font-medium flex items-center gap-1 mb-3">
-                    <Info className="h-4 w-4" /> Dettagli dell'indumento
+              {/* Specifications section */}
+              {item.metadata && Object.keys(item.metadata).length > 0 && (
+                <Card className="p-3 mb-4">
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
+                    <Info className="h-3.5 w-3.5" /> Specifications
                   </h3>
-                  <div className="grid grid-cols-2 gap-y-3 text-sm">
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
                     {item.metadata.dateTaken && (
                       <>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                          <span className="text-muted-foreground">Data:</span>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3" />
+                          <span>Date:</span>
                         </div>
-                        <div className="font-medium">{formatDate(item.metadata.dateTaken)}</div>
-                      </>
-                    )}
-                    
-                    {item.metadata.brand && (
-                      <>
-                        <div className="flex items-center gap-1">
-                          <Tag className="h-3.5 w-3.5 text-muted-foreground" />
-                          <span className="text-muted-foreground">Brand:</span>
-                        </div>
-                        <div className="font-medium">{item.metadata.brand}</div>
+                        <div className="text-xs">{formatDate(item.metadata.dateTaken)}</div>
                       </>
                     )}
                     
                     {item.metadata.material && (
                       <>
-                        <div className="flex items-center gap-1">
-                          <span className="text-muted-foreground">Materiale:</span>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <span>Material:</span>
                         </div>
-                        <div className="font-medium">{item.metadata.material}</div>
+                        <div className="text-xs">{item.metadata.material}</div>
                       </>
                     )}
                     
                     {item.metadata.season && (
                       <>
-                        <div className="flex items-center gap-1">
-                          <span className="text-muted-foreground">Stagione:</span>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <span>Season:</span>
                         </div>
-                        <div className="font-medium">{item.metadata.season}</div>
+                        <div className="text-xs">{item.metadata.season}</div>
                       </>
                     )}
                   </div>
                 </Card>
               )}
-            </div>
-            
-            {/* Related outfits section */}
-            {relatedOutfits && relatedOutfits.length > 0 && (
-              <div className="mt-6 space-y-3">
-                <Separator className="my-4" />
-                <h3 className="text-sm font-medium flex items-center gap-1">
-                  <Shirt className="h-4 w-4" />
-                  Outfit con questo indumento
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {relatedOutfits.map((outfit) => (
-                    <Card 
-                      key={`outfit-${outfit.id}`}
-                      className="overflow-hidden border shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() => handleOutfitClick(outfit)}
-                    >
-                      <div className="aspect-square overflow-hidden bg-secondary/10">
-                        <img 
-                          src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
-                          alt={outfit.name} 
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                      <div className="p-2">
-                        <p className="text-sm font-medium truncate">{outfit.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {outfit.items.length} items
-                        </p>
-                      </div>
-                    </Card>
-                  ))}
+              
+              {/* Related outfits section */}
+              {relatedOutfits && relatedOutfits.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
+                    <Shirt className="h-3.5 w-3.5" /> Related Outfits
+                  </h3>
+                  <div className="grid grid-cols-3 gap-2">
+                    {relatedOutfits.map((outfit) => (
+                      <Card 
+                        key={`outfit-${outfit.id}`}
+                        className="overflow-hidden border cursor-pointer hover:shadow-sm transition-shadow"
+                        onClick={() => handleOutfitClick(outfit)}
+                      >
+                        <div className="aspect-square overflow-hidden bg-secondary/10">
+                          <img 
+                            src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
+                            alt={outfit.name} 
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                        <div className="p-1.5">
+                          <p className="text-xs font-medium truncate">{outfit.name}</p>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </>
+              )}
+            </div>
+          </div>
         )}
-        
-        <DialogClose asChild>
-          <Button 
-            variant="destructive" 
-            size="icon" 
-            className="absolute top-3 right-3 rounded-full z-10 shadow-md"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </DialogClose>
       </DialogContent>
     </Dialog>
   );
