@@ -40,7 +40,7 @@ const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
           className="object-cover w-full h-full"
           onError={handleImageError}
         />
-        <div className="absolute inset-0 bg-black/30 flex items-end p-2">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-2">
           <h3 className="text-white font-medium text-xs">{outfit.name}</h3>
         </div>
       </div>

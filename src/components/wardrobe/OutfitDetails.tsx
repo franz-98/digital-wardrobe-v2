@@ -1,10 +1,11 @@
 
 import React, { useState } from 'react';
-import { Shirt, X, Trash2 } from "lucide-react";
+import { Shirt, X, Trash2, ZoomIn } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
+import ImageZoom from "@/components/wardrobe/ImageZoom";
 
 interface OutfitDetailsProps {
   outfit: Outfit;
@@ -14,6 +15,7 @@ interface OutfitDetailsProps {
 
 const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -41,13 +43,21 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
         <div className="space-y-4">
-          <div className="aspect-square overflow-hidden rounded-lg">
+          <div 
+            className="aspect-square overflow-hidden rounded-lg relative cursor-pointer"
+            onClick={() => setIsImageZoomOpen(true)}
+          >
             {outfit.imageUrl ? (
-              <img 
-                src={outfit.imageUrl} 
-                alt={outfit.name} 
-                className="w-full h-full object-cover"
-              />
+              <>
+                <img 
+                  src={outfit.imageUrl} 
+                  alt={outfit.name} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-2 right-2 p-1.5 bg-black/40 rounded-full">
+                  <ZoomIn className="h-4 w-4 text-white" />
+                </div>
+              </>
             ) : (
               <div className="w-full h-full bg-muted flex items-center justify-center">
                 <Shirt className="h-12 w-12 text-muted-foreground" />
@@ -121,6 +131,13 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
           onDelete={onDelete}
         />
       )}
+      
+      <ImageZoom 
+        imageUrl={outfit.imageUrl || (outfit.items[0]?.imageUrl || "")}
+        alt={outfit.name}
+        isOpen={isImageZoomOpen}
+        onClose={() => setIsImageZoomOpen(false)}
+      />
     </div>
   );
 };

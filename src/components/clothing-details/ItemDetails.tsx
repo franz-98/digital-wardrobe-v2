@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Calendar, Info, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { ClothingItem } from "@/components/wardrobe/types";
+import ImageZoom from "@/components/wardrobe/ImageZoom";
 
 interface ItemDetailsProps {
   item: ClothingItem;
@@ -15,6 +17,8 @@ interface ItemDetailsProps {
 }
 
 const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetailsProps) => {
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Unknown";
     try {
@@ -24,12 +28,20 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
     }
   };
 
+  const handleImageClick = () => {
+    if (onImageClick) {
+      onImageClick(item.imageUrl);
+    } else {
+      setIsImageZoomOpen(true);
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div 
           className="aspect-square rounded-lg overflow-hidden border cursor-pointer"
-          onClick={() => onImageClick && onImageClick(item.imageUrl)}
+          onClick={handleImageClick}
         >
           <img 
             src={item.imageUrl} 
@@ -112,6 +124,13 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
           </div>
         </Card>
       )}
+      
+      <ImageZoom 
+        imageUrl={item.imageUrl}
+        alt={item.name}
+        isOpen={isImageZoomOpen}
+        onClose={() => setIsImageZoomOpen(false)}
+      />
     </div>
   );
 };

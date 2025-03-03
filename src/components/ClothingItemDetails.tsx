@@ -6,7 +6,8 @@ import {
   DialogContent, 
   DialogHeader,
   DialogTitle,
-  DialogClose
+  DialogClose,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +17,7 @@ import DeleteOutfitDialog from "./clothing-details/DeleteOutfitDialog";
 import ItemDetails from "./clothing-details/ItemDetails";
 import RelatedOutfits from "./clothing-details/RelatedOutfits";
 import OutfitView from "./clothing-details/OutfitView";
+import ImageZoom from "@/components/wardrobe/ImageZoom";
 
 interface ClothingItemDetailsProps {
   item: ClothingItem | null;
@@ -40,6 +42,7 @@ const ClothingItemDetails = ({
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   
   if (!item) return null;
 
@@ -66,6 +69,10 @@ const ClothingItemDetails = ({
       setShowOutfitDeleteConfirmation(true);
     }
   };
+  
+  const handleImageClick = (imageUrl: string) => {
+    setIsImageZoomOpen(true);
+  };
 
   return (
     <>
@@ -77,9 +84,10 @@ const ClothingItemDetails = ({
               onBackClick={handleBackToItem}
               onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
               onItemClick={(itemId) => {
-                // Non facciamo nulla qui, lasciamo che sia gestito esternamente
+                // Go back to item view but set the parent to handle navigation
                 console.log("Item clicked in outfit view:", itemId);
               }}
+              onImageClick={handleImageClick}
             />
           ) : (
             <div className="flex flex-col h-full">
@@ -92,6 +100,9 @@ const ClothingItemDetails = ({
                     </Button>
                   </DialogClose>
                 </div>
+                <DialogDescription>
+                  View details and related outfits
+                </DialogDescription>
               </DialogHeader>
               
               <div className="flex-1 overflow-y-auto overscroll-bounce">
@@ -99,6 +110,7 @@ const ClothingItemDetails = ({
                   item={item}
                   onDeleteClick={handleDeleteItem}
                   onDelete={onDelete}
+                  onImageClick={handleImageClick}
                 />
                 
                 <div className="px-4 pb-4">
@@ -145,6 +157,13 @@ const ClothingItemDetails = ({
           onDelete={onOutfitDelete}
         />
       )}
+      
+      <ImageZoom 
+        imageUrl={item.imageUrl}
+        alt={item.name}
+        isOpen={isImageZoomOpen}
+        onClose={() => setIsImageZoomOpen(false)}
+      />
     </>
   );
 };

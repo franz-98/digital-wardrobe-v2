@@ -1,10 +1,12 @@
 
-import { ChevronLeft, Shirt, X } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, Shirt, X, ZoomIn } from "lucide-react";
 import { DialogTitle, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Outfit } from "@/components/wardrobe/types";
+import ImageZoom from "@/components/wardrobe/ImageZoom";
 
 interface OutfitViewProps {
   outfit: Outfit;
@@ -15,6 +17,16 @@ interface OutfitViewProps {
 }
 
 const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageClick }: OutfitViewProps) => {
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  
+  const handleImageClick = () => {
+    if (onImageClick) {
+      onImageClick(outfit.imageUrl || outfit.items[0]?.imageUrl || "");
+    } else {
+      setIsImageZoomOpen(true);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-4 pt-4 pb-2">
@@ -47,13 +59,19 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
       </DialogHeader>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce">
-        <div className="aspect-square w-full overflow-hidden mb-2">
+        <div 
+          className="aspect-square w-full overflow-hidden mb-2 relative cursor-pointer"
+          onClick={handleImageClick}
+        >
           <img 
             src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
             alt={outfit.name} 
             className="w-full h-full object-cover"
             loading="lazy"
           />
+          <div className="absolute bottom-2 right-2 p-1.5 bg-black/40 rounded-full">
+            <ZoomIn className="h-4 w-4 text-white" />
+          </div>
         </div>
         
         <div className="px-4 pb-4 space-y-3">
@@ -115,6 +133,13 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
           </Button>
         </div>
       )}
+      
+      <ImageZoom 
+        imageUrl={outfit.imageUrl || outfit.items[0]?.imageUrl || ""}
+        alt={outfit.name}
+        isOpen={isImageZoomOpen}
+        onClose={() => setIsImageZoomOpen(false)}
+      />
     </div>
   );
 };

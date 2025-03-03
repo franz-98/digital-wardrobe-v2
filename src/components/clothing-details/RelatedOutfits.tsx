@@ -14,7 +14,7 @@ const RelatedOutfits = ({ relatedOutfits, onOutfitClick }: RelatedOutfitsProps) 
   return (
     <div className="overflow-y-auto overscroll-bounce">
       <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
-        <Shirt className="h-3.5 w-3.5" /> Related Outfits <span className="text-xs text-muted-foreground">({relatedOutfits.length})</span>
+        <Shirt className="h-3.5 w-3.5" /> In these outfits <span className="text-xs text-muted-foreground">({relatedOutfits.length})</span>
       </h3>
       <div className="grid grid-cols-3 gap-2">
         {relatedOutfits.map((outfit) => (

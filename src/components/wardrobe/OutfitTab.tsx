@@ -35,6 +35,8 @@ interface OutfitTabProps {
   createNewOutfit: () => void;
   handleOutfitClick: (outfit: Outfit) => void;
   togglePremium: () => void;
+  showSearchBar: boolean;
+  toggleSearchBar: () => void;
 }
 
 const OutfitTab = ({
@@ -50,7 +52,9 @@ const OutfitTab = ({
   setActiveTab,
   createNewOutfit,
   handleOutfitClick,
-  togglePremium
+  togglePremium,
+  showSearchBar,
+  toggleSearchBar
 }: OutfitTabProps) => {
   
   const filteredOutfits = outfits.filter((outfit) =>
@@ -59,22 +63,31 @@ const OutfitTab = ({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4 mt-2">
-        <h3 className="font-medium">My Outfits</h3>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="h-10"
-            onClick={() => {
-              setIsCreatingOutfit(!isCreatingOutfit);
-              setActiveTab("clothing");
-            }}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Create Outfit
-          </Button>
+      {showSearchBar && (
+        <div className="mb-4">
+          <Input
+            id="search"
+            placeholder="Search outfits..."
+            value={searchTerm}
+            className="w-full"
+            autoFocus
+          />
         </div>
+      )}
+      
+      <div className="flex items-center justify-between mb-4">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="h-10"
+          onClick={() => {
+            setIsCreatingOutfit(!isCreatingOutfit);
+            setActiveTab("clothing");
+          }}
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create Outfit
+        </Button>
       </div>
       
       {isCreatingOutfit && selectedItemsForOutfit.length > 0 && (
