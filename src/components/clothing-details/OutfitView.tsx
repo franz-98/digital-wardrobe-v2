@@ -11,9 +11,10 @@ interface OutfitViewProps {
   onBackClick: () => void;
   onDeleteClick?: () => void;
   onItemClick?: (itemId: string) => void;
+  onImageClick?: (imageUrl: string) => void;
 }
 
-const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitViewProps) => {
+const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageClick }: OutfitViewProps) => {
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-4 pt-4 pb-2">
@@ -46,7 +47,10 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitV
       </DialogHeader>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce">
-        <div className="aspect-square w-full overflow-hidden mb-2">
+        <div 
+          className="aspect-square w-full overflow-hidden mb-2 cursor-pointer"
+          onClick={() => onImageClick && onImageClick(outfit.imageUrl || outfit.items[0]?.imageUrl)}
+        >
           <img 
             src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
             alt={outfit.name} 
@@ -57,7 +61,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitV
         
         <div className="px-4 pb-4 space-y-3">
           <h3 className="text-sm font-medium flex items-center gap-1">
-            <Shirt className="h-4 w-4" /> Indumenti in questo outfit
+            <Shirt className="h-4 w-4" /> Indumenti in questo outfit <span className="ml-1 text-muted-foreground">({outfit.items.length})</span>
           </h3>
           
           <div className="space-y-2">
@@ -68,7 +72,13 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitV
                 onClick={() => onItemClick && onItemClick(outfitItem.id)}
               >
                 <div className="flex gap-3 p-3">
-                  <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20">
+                  <div 
+                    className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onImageClick && onImageClick(outfitItem.imageUrl);
+                    }}
+                  >
                     <img 
                       src={outfitItem.imageUrl} 
                       alt={outfitItem.name} 

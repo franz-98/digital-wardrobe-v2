@@ -14,6 +14,7 @@ interface OutfitDetailsProps {
 
 const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -41,7 +42,10 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
         <div className="space-y-4">
-          <div className="aspect-square overflow-hidden rounded-lg">
+          <div 
+            className="aspect-square overflow-hidden rounded-lg cursor-pointer" 
+            onClick={() => setExpandedImage(outfit.imageUrl || '')}
+          >
             {outfit.imageUrl ? (
               <img 
                 src={outfit.imageUrl} 
@@ -56,7 +60,9 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
           </div>
           
           <div>
-            <h4 className="font-medium mb-2">Items in this outfit</h4>
+            <h4 className="font-medium mb-2 flex items-center">
+              Items in this outfit <span className="ml-2 text-sm text-muted-foreground">({outfit.items.length})</span>
+            </h4>
             <div className="space-y-2">
               {outfit.items.map((item) => (
                 <div 
@@ -64,7 +70,13 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
                   onClick={() => onItemClick && onItemClick(item)}
                 >
-                  <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                  <div 
+                    className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedImage(item.imageUrl);
+                    }}
+                  >
                     <img 
                       src={item.imageUrl} 
                       alt={item.name} 
@@ -108,6 +120,29 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
             <Trash2 className="h-4 w-4 mr-2" />
             Elimina Outfit
           </Button>
+        </div>
+      )}
+      
+      {expandedImage && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setExpandedImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-[90vh] w-full">
+            <img 
+              src={expandedImage} 
+              alt="Expanded view" 
+              className="w-full h-full object-contain" 
+            />
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="absolute top-2 right-2 bg-black/40 text-white hover:bg-black/60"
+              onClick={() => setExpandedImage(null)}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       )}
       

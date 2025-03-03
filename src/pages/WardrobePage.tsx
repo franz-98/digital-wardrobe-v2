@@ -345,7 +345,7 @@ const WardrobePage = () => {
       <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
         <WardrobeTabsNav activeTab={activeTab} />
         
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between h-10">
           <SearchBar
             showSearchBar={showSearchBar}
             searchTerm={searchTerm}
