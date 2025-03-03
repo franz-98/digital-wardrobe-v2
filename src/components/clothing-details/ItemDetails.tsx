@@ -24,7 +24,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete }: ItemDetailsProps) => {
   };
 
   return (
-    <div className="p-4 flex-1 overflow-auto">
+    <div className="p-4 max-h-[60vh] overflow-y-auto overscroll-bounce">
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div className="aspect-square rounded-lg overflow-hidden border">
           <img 

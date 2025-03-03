@@ -10,34 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import { ClothingItem, Outfit } from "@/components/wardrobe/types";
+import { Outfit } from "@/components/wardrobe/types";
 
-interface DeleteConfirmationDialogProps {
-  item: ClothingItem;
+interface DeleteOutfitDialogProps {
+  outfit: Outfit;
   showDeleteConfirmation: boolean;
   setShowDeleteConfirmation: (show: boolean) => void;
-  relatedOutfits?: Outfit[];
   onDelete: (id: string) => void;
-  onOpenChange: (open: boolean) => void;
 }
 
-const DeleteConfirmationDialog = ({
-  item,
+const DeleteOutfitDialog = ({
+  outfit,
   showDeleteConfirmation,
   setShowDeleteConfirmation,
-  relatedOutfits = [],
-  onDelete,
-  onOpenChange
-}: DeleteConfirmationDialogProps) => {
-  const isPartOfOutfit = () => {
-    return relatedOutfits && relatedOutfits.some(outfit => 
-      outfit.items.some(outfitItem => outfitItem.id === item.id)
-    );
-  };
-
+  onDelete
+}: DeleteOutfitDialogProps) => {
   const confirmDelete = () => {
-    onDelete(item.id);
-    onOpenChange(false);
+    onDelete(outfit.id);
     setShowDeleteConfirmation(false);
   };
 
@@ -50,12 +39,7 @@ const DeleteConfirmationDialog = ({
             Conferma Eliminazione
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata.
-            {isPartOfOutfit() && (
-              <p className="mt-2 text-destructive font-medium">
-                Attenzione: Questo elemento è utilizzato in uno o più outfit!
-              </p>
-            )}
+            Sei sicuro di voler eliminare questo outfit? Questa azione non può essere annullata.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -69,4 +53,4 @@ const DeleteConfirmationDialog = ({
   );
 };
 
-export default DeleteConfirmationDialog;
+export default DeleteOutfitDialog;

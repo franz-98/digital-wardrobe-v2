@@ -5,13 +5,15 @@ import {
   Dialog, 
   DialogContent, 
   DialogHeader,
-  DialogTitle
+  DialogTitle,
+  DialogClose
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import DeleteConfirmationDialog from "./clothing-details/DeleteConfirmationDialog";
+import DeleteOutfitDialog from "./clothing-details/DeleteOutfitDialog";
 import ItemDetails from "./clothing-details/ItemDetails";
 import RelatedOutfits from "./clothing-details/RelatedOutfits";
 import OutfitView from "./clothing-details/OutfitView";
@@ -22,6 +24,7 @@ interface ClothingItemDetailsProps {
   onOpenChange: (open: boolean) => void;
   relatedOutfits?: Outfit[];
   onDelete?: (id: string) => void;
+  onOutfitDelete?: (id: string) => void;
 }
 
 const ClothingItemDetails = ({ 
@@ -29,22 +32,13 @@ const ClothingItemDetails = ({
   open, 
   onOpenChange,
   relatedOutfits = [],
-  onDelete
+  onDelete,
+  onOutfitDelete
 }: ClothingItemDetailsProps) => {
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      if (open) {
-        onOpenChange(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [open, onOpenChange]);
+  const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
   
   if (!item) return null;
 
@@ -65,24 +59,33 @@ const ClothingItemDetails = ({
   const handleDeleteItem = () => {
     setShowDeleteConfirmation(true);
   };
+  
+  const handleDeleteOutfit = () => {
+    if (selectedOutfit && onOutfitDelete) {
+      setShowOutfitDeleteConfirmation(true);
+    }
+  };
 
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md overflow-auto bg-background p-0">
+        <DialogContent className="max-w-md p-0 overflow-hidden bg-background">
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
               outfit={selectedOutfit}
               onBackClick={handleBackToItem}
+              onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
             />
           ) : (
             <div className="flex flex-col h-full">
               <DialogHeader className="px-4 pt-4 pb-0">
                 <div className="flex items-center justify-between">
                   <DialogTitle className="text-lg font-semibold">{item.name}</DialogTitle>
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onOpenChange(false)}>
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <DialogClose asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </DialogClose>
                 </div>
               </DialogHeader>
               
@@ -111,6 +114,15 @@ const ClothingItemDetails = ({
           relatedOutfits={relatedOutfits}
           onDelete={onDelete}
           onOpenChange={onOpenChange}
+        />
+      )}
+      
+      {selectedOutfit && onOutfitDelete && (
+        <DeleteOutfitDialog
+          outfit={selectedOutfit}
+          showDeleteConfirmation={showOutfitDeleteConfirmation}
+          setShowDeleteConfirmation={setShowOutfitDeleteConfirmation}
+          onDelete={onOutfitDelete}
         />
       )}
     </>

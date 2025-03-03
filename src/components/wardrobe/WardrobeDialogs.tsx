@@ -14,6 +14,7 @@ interface WardrobeDialogsProps {
   setIsOutfitDetailsOpen: (open: boolean) => void;
   findRelatedOutfits: (itemId: string) => Outfit[];
   handleDeleteItem: (itemId: string) => void;
+  handleDeleteOutfit?: (outfitId: string) => void;
 }
 
 const WardrobeDialogs = ({
@@ -24,19 +25,21 @@ const WardrobeDialogs = ({
   setIsDetailsOpen,
   setIsOutfitDetailsOpen,
   findRelatedOutfits,
-  handleDeleteItem
+  handleDeleteItem,
+  handleDeleteOutfit
 }: WardrobeDialogsProps) => {
   return (
     <>
       {selectedItem && (
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md p-0">
             <ClothingItemDetails
               item={selectedItem}
               open={isDetailsOpen}
               onOpenChange={setIsDetailsOpen}
               relatedOutfits={findRelatedOutfits(selectedItem.id)}
               onDelete={handleDeleteItem}
+              onOutfitDelete={handleDeleteOutfit}
             />
           </DialogContent>
         </Dialog>
@@ -44,8 +47,11 @@ const WardrobeDialogs = ({
       
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
-          <DialogContent className="max-w-md">
-            <OutfitDetails outfit={selectedOutfit} />
+          <DialogContent className="max-w-md p-0">
+            <OutfitDetails 
+              outfit={selectedOutfit} 
+              onDelete={handleDeleteOutfit}
+            />
           </DialogContent>
         </Dialog>
       )}
