@@ -420,7 +420,7 @@ const WardrobePage = () => {
                 {showTimeRangeMenu && !showCustomRange && (
                   <div 
                     ref={timeRangeMenuRef}
-                    className="absolute top-full left-0 mt-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
+                    className="absolute top-full right-0 mt-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
                   >
                     <button 
                       className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
@@ -446,7 +446,7 @@ const WardrobePage = () => {
                 {showCustomRange && (
                   <div
                     ref={timeRangeMenuRef}
-                    className="absolute top-full right-0 sm:left-0 sm:right-auto mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
+                    className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
                     style={{ maxWidth: "calc(100vw - 2rem)" }}
                   >
                     <div className="flex justify-between items-center mb-2">
@@ -461,7 +461,7 @@ const WardrobePage = () => {
                       </Button>
                     </div>
                     
-                    <div className="flex gap-2 mb-3">
+                    <div className="flex flex-col gap-2 mb-3">
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button 
@@ -473,7 +473,7 @@ const WardrobePage = () => {
                             {startDate ? format(startDate, 'PPP') : "Start date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="center">
                           <CalendarComponent
                             mode="single"
                             selected={startDate}
@@ -494,7 +494,7 @@ const WardrobePage = () => {
                             {endDate ? format(endDate, 'PPP') : "End date"}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
+                        <PopoverContent className="w-auto p-0" align="center">
                           <CalendarComponent
                             mode="single"
                             selected={endDate}
