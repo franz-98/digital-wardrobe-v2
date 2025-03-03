@@ -7,12 +7,12 @@ const Layout = () => {
   const location = useLocation();
   const [isPageTransitioning, setIsPageTransitioning] = useState(false);
   
-  // Page transition effect
+  // Page transition effect with reduced wave
   useEffect(() => {
     setIsPageTransitioning(true);
     const timer = setTimeout(() => {
       setIsPageTransitioning(false);
-    }, 300);
+    }, 200); // Reduced from 300 to 200ms
     
     return () => clearTimeout(timer);
   }, [location.pathname]);
@@ -21,8 +21,8 @@ const Layout = () => {
     <div className="flex flex-col min-h-screen bg-background">
       <main className="flex-1 container px-4 pb-20 pt-6 max-w-5xl mx-auto">
         <div
-          className={`transition-all duration-300 ease-in-out transform ${
-            isPageTransitioning ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+          className={`transition-all duration-200 ease-in-out transform ${
+            isPageTransitioning ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
           }`}
         >
           <Outlet />

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon } from "lucide-react";
+import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
+import { format } from "date-fns";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import ClothingItemCard from "@/components/ClothingItemCard";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
@@ -157,6 +160,11 @@ const WardrobePage = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
+  // Custom date range states
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [showCustomRange, setShowCustomRange] = useState(false);
+
   const minSwipeDistance = 50;
 
   useEffect(() => {
@@ -190,16 +198,21 @@ const WardrobePage = () => {
       if (showTimeRangeMenu) {
         setShowTimeRangeMenu(false);
       }
+      if (showCustomRange) {
+        setShowCustomRange(false);
+      }
     };
     
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("scroll", handleScroll);
+    window.addEventListener("wheel", handleScroll);
     
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleScroll);
     };
-  }, [showTimeRangeMenu]);
+  }, [showTimeRangeMenu, showCustomRange]);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -312,11 +325,53 @@ const WardrobePage = () => {
 
   const toggleTimeRangeMenu = () => {
     setShowTimeRangeMenu(!showTimeRangeMenu);
+    if (showCustomRange) {
+      setShowCustomRange(false);
+    }
   };
 
   const selectTimeRange = (range: string) => {
-    setTimeRange(range);
-    setShowTimeRangeMenu(false);
+    if (range === "custom") {
+      setShowCustomRange(true);
+    } else {
+      setTimeRange(range);
+      setShowTimeRangeMenu(false);
+      
+      // Apply actual filtering based on time range
+      updateStatsForTimeRange(range);
+    }
+  };
+
+  const confirmCustomRange = () => {
+    if (startDate && endDate) {
+      setTimeRange(`${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`);
+      setShowCustomRange(false);
+      setShowTimeRangeMenu(false);
+      
+      // Apply filtering with custom date range
+      updateStatsForCustomRange(startDate, endDate);
+      
+      toast({
+        title: "Custom range applied",
+        description: `Date range set to ${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`,
+      });
+    }
+  };
+
+  // Sample function to update stats (to be implemented with real data)
+  const updateStatsForTimeRange = (range: string) => {
+    console.log(`Updating stats for time range: ${range}`);
+    // Here you would fetch or filter the actual data based on the time range
+    
+    toast({
+      title: "Time range updated",
+      description: `Stats now showing for ${range === "week" ? "the last week" : "the last month"}`,
+    });
+  };
+
+  const updateStatsForCustomRange = (start: Date, end: Date) => {
+    console.log(`Updating stats for custom range: ${format(start, 'yyyy-MM-dd')} to ${format(end, 'yyyy-MM-dd')}`);
+    // Here you would fetch or filter the actual data based on the custom date range
   };
 
   return (
@@ -367,33 +422,107 @@ const WardrobePage = () => {
           </div>
           
           {activeTab === "stats" && (
-            <div className="flex items-center relative">
-              {showTimeRangeMenu && (
-                <div 
-                  ref={timeRangeMenuRef}
-                  className="absolute right-0 bottom-full mb-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
-                  style={{ right: 'auto', left: '0' }}
-                >
-                  <button 
-                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
-                    onClick={() => selectTimeRange("week")}
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                {showTimeRangeMenu && !showCustomRange && (
+                  <div 
+                    ref={timeRangeMenuRef}
+                    className="absolute top-full left-0 mt-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
                   >
-                    Last week
-                  </button>
-                  <button 
-                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "month" ? "font-medium text-primary" : ""}`}
-                    onClick={() => selectTimeRange("month")}
+                    <button 
+                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
+                      onClick={() => selectTimeRange("week")}
+                    >
+                      Last week
+                    </button>
+                    <button 
+                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "month" ? "font-medium text-primary" : ""}`}
+                      onClick={() => selectTimeRange("month")}
+                    >
+                      Last month
+                    </button>
+                    <button 
+                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange !== "week" && timeRange !== "month" ? "font-medium text-primary" : ""}`}
+                      onClick={() => selectTimeRange("custom")}
+                    >
+                      Custom range...
+                    </button>
+                  </div>
+                )}
+                
+                {showCustomRange && (
+                  <div
+                    ref={timeRangeMenuRef}
+                    className="absolute top-full left-0 mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
                   >
-                    Last month
-                  </button>
-                  <button 
-                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "custom" ? "font-medium text-primary" : ""}`}
-                    onClick={() => selectTimeRange("custom")}
-                  >
-                    Advanced...
-                  </button>
-                </div>
-              )}
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-medium">Select date range</h3>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => setShowCustomRange(false)}
+                        className="h-7 w-7"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    <div className="flex gap-2 mb-3">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="w-full justify-start text-left font-normal"
+                            size="sm"
+                          >
+                            <Calendar className="mr-2 h-4 w-4" />
+                            {startDate ? format(startDate, 'PPP') : "Start date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={startDate}
+                            onSelect={setStartDate}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button 
+                            variant="outline" 
+                            className="w-full justify-start text-left font-normal"
+                            size="sm"
+                          >
+                            <Calendar className="mr-2 h-4 w-4" />
+                            {endDate ? format(endDate, 'PPP') : "End date"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <CalendarComponent
+                            mode="single"
+                            selected={endDate}
+                            onSelect={setEndDate}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    
+                    <Button 
+                      className="w-full"
+                      size="sm"
+                      onClick={confirmCustomRange}
+                      disabled={!startDate || !endDate}
+                    >
+                      Apply range
+                    </Button>
+                  </div>
+                )}
+              </div>
+              
               <Button 
                 ref={timeRangeButtonRef}
                 variant="outline" 
@@ -402,7 +531,7 @@ const WardrobePage = () => {
                 onClick={toggleTimeRangeMenu}
               >
                 <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
-                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : "Custom range"}
+                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : timeRange}
                 <ChevronDown className="h-3.5 w-3.5 ml-1.5 opacity-70" />
               </Button>
             </div>
