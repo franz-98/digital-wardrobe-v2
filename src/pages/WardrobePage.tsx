@@ -346,8 +346,8 @@ const WardrobePage = () => {
       const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
       popoverElements.forEach(element => {
         const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton) {
-          closeButton.click();
+        if (closeButton && 'click' in closeButton) {
+          (closeButton as HTMLButtonElement).click();
         }
       });
     }, 10);
@@ -359,8 +359,8 @@ const WardrobePage = () => {
       const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
       popoverElements.forEach(element => {
         const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton) {
-          closeButton.click();
+        if (closeButton && 'click' in closeButton) {
+          (closeButton as HTMLButtonElement).click();
         }
       });
     }, 10);
