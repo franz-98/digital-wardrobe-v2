@@ -1,49 +1,26 @@
-import { useState, useEffect, useRef } from "react";
+
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
-import { format, isAfter, isBefore } from "date-fns";
+import { Plus, Grip, Shirt, BarChart, Search, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-import ClothingItemCard from "@/components/ClothingItemCard";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
-import OutfitCard from "@/components/OutfitCard";
-
-interface ClothingItem {
-  id: string;
-  name: string;
-  category: string;
-  color: string;
-  imageUrl: string;
-  metadata?: {
-    dateTaken?: string;
-    brand?: string;
-    material?: string;
-    season?: string;
-  };
-}
-
-interface Outfit {
-  id: string;
-  name: string;
-  items: ClothingItem[];
-  imageUrl?: string;
-}
+import { ClothingItem, Outfit } from "@/components/wardrobe/types";
+import ClothingTab from "@/components/wardrobe/ClothingTab";
+import OutfitTab from "@/components/wardrobe/OutfitTab";
+import StatsTab from "@/components/wardrobe/StatsTab";
+import OutfitCreation from "@/components/wardrobe/OutfitCreation";
+import SearchBar from "@/components/wardrobe/SearchBar";
+import OutfitDetails from "@/components/wardrobe/OutfitDetails";
 
 const WardrobePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const timeRangeMenuRef = useRef<HTMLDivElement>(null);
-  const timeRangeButtonRef = useRef<HTMLButtonElement>(null);
 
   const [clothingItems, setClothingItems] = useState<ClothingItem[]>([
     {
@@ -214,15 +191,10 @@ const WardrobePage = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
   const [timeRange, setTimeRange] = useState("month");
-  const [showTimeRangeMenu, setShowTimeRangeMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
-  const [showCustomRange, setShowCustomRange] = useState(false);
 
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [isOutfitDetailsOpen, setIsOutfitDetailsOpen] = useState(false);
@@ -244,52 +216,12 @@ const WardrobePage = () => {
     }
   }, [location, toast, navigate]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        timeRangeMenuRef.current && 
-        !timeRangeMenuRef.current.contains(event.target as Node) &&
-        timeRangeButtonRef.current &&
-        !timeRangeButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowTimeRangeMenu(false);
-      }
-    };
-    
-    const handleScroll = () => {
-      if (showTimeRangeMenu) {
-        setShowTimeRangeMenu(false);
-      }
-      if (showCustomRange) {
-        setShowCustomRange(false);
-      }
-    };
-    
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("scroll", handleScroll);
-    window.addEventListener("wheel", handleScroll);
-    
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", handleScroll);
-    };
-  }, [showTimeRangeMenu, showCustomRange]);
-
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
     setSelectedOutfit(null);
     setIsDetailsOpen(true);
     setIsOutfitDetailsOpen(false);
   };
-
-  const filteredClothingItems = clothingItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredOutfits = outfits.filter((outfit) =>
-    outfit.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const findRelatedOutfits = (itemId: string) => {
     return outfits.filter((outfit) =>
@@ -387,75 +319,6 @@ const WardrobePage = () => {
     }
   };
 
-  const toggleTimeRangeMenu = () => {
-    setShowTimeRangeMenu(!showTimeRangeMenu);
-    if (showCustomRange) {
-      setShowCustomRange(false);
-    }
-  };
-
-  const selectTimeRange = (range: string) => {
-    if (range === "custom") {
-      setShowCustomRange(true);
-    } else {
-      setTimeRange(range);
-      setShowTimeRangeMenu(false);
-      
-      updateStatsForTimeRange(range);
-    }
-  };
-
-  const handleStartDateSelect = (date: Date | undefined) => {
-    setStartDate(date);
-    
-    setTimeout(() => {
-      const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
-      popoverElements.forEach(element => {
-        const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton && closeButton instanceof HTMLButtonElement) {
-          closeButton.click();
-        }
-      });
-    }, 10);
-  };
-
-  const handleEndDateSelect = (date: Date | undefined) => {
-    setEndDate(date);
-    
-    setTimeout(() => {
-      const popoverElements = document.querySelectorAll('[data-state="open"][data-radix-popper-content-wrapper]');
-      popoverElements.forEach(element => {
-        const closeButton = element.querySelector('button[type="button"]');
-        if (closeButton && closeButton instanceof HTMLButtonElement) {
-          closeButton.click();
-        }
-      });
-    }, 10);
-  };
-
-  const confirmCustomRange = () => {
-    if (startDate && endDate) {
-      if (isBefore(endDate, startDate)) {
-        toast({
-          title: "Invalid date range",
-          description: "End date cannot be before start date",
-        });
-        return;
-      }
-      
-      setTimeRange(`${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`);
-      setShowCustomRange(false);
-      setShowTimeRangeMenu(false);
-      
-      updateStatsForCustomRange(startDate, endDate);
-      
-      toast({
-        title: "Custom range applied",
-        description: `Date range set to ${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`,
-      });
-    }
-  };
-
   const updateStatsForTimeRange = (range: string) => {
     console.log(`Updating stats for time range: ${range}`);
     toast({
@@ -465,7 +328,7 @@ const WardrobePage = () => {
   };
 
   const updateStatsForCustomRange = (start: Date, end: Date) => {
-    console.log(`Updating stats for custom range: ${format(start, 'yyyy-MM-dd')} to ${format(end, 'yyyy-MM-dd')}`);
+    console.log(`Updating stats for custom range: ${start.toISOString()} to ${end.toISOString()}`);
   };
 
   const handleOutfitClick = (outfit: Outfit) => {
@@ -474,11 +337,7 @@ const WardrobePage = () => {
     setIsOutfitDetailsOpen(true);
     setIsDetailsOpen(false);
   };
-
-  const getOutfitColorPalette = (outfit: Outfit) => {
-    return outfit.items.map(item => item.color);
-  };
-
+  
   // Add delete item handler
   const handleDeleteItem = (itemId: string) => {
     // Filter out the item with the specified ID
@@ -535,405 +394,85 @@ const WardrobePage = () => {
           </TabsTrigger>
         </TabsList>
         <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <Button variant="ghost" size="icon" onClick={toggleSearchBar}>
-              <Search className="h-5 w-5" />
-            </Button>
-            {showSearchBar && (
-              <Input
-                type="search"
-                id="search"
-                placeholder={`Search ${activeTab}`}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full ml-2 animate-fade-in"
-              />
-            )}
-          </div>
+          <SearchBar
+            showSearchBar={showSearchBar}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            toggleSearchBar={toggleSearchBar}
+            activeTab={activeTab}
+          />
           
           {activeTab === "stats" && (
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                {showTimeRangeMenu && !showCustomRange && (
-                  <div 
-                    ref={timeRangeMenuRef}
-                    className="absolute top-full right-0 mt-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
-                  >
-                    <button 
-                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
-                      onClick={() => selectTimeRange("week")}
-                    >
-                      Last week
-                    </button>
-                    <button 
-                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "month" ? "font-medium text-primary" : ""}`}
-                      onClick={() => selectTimeRange("month")}
-                    >
-                      Last month
-                    </button>
-                    <button 
-                      className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange !== "week" && timeRange !== "month" ? "font-medium text-primary" : ""}`}
-                      onClick={() => selectTimeRange("custom")}
-                    >
-                      Custom range...
-                    </button>
-                  </div>
-                )}
-                
-                {showCustomRange && (
-                  <div
-                    ref={timeRangeMenuRef}
-                    className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-10 bg-background/95 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 p-3 text-sm w-72 animate-fade-in"
-                    style={{ maxWidth: "calc(100vw - 2rem)" }}
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-medium">Select date range</h3>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => setShowCustomRange(false)}
-                        className="h-7 w-7"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    
-                    <div className="flex flex-col gap-2 mb-3">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            className="w-full justify-start text-left font-normal"
-                            size="sm"
-                          >
-                            <Calendar className="mr-2 h-4 w-4" />
-                            {startDate ? format(startDate, 'PPP') : "Start date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="center">
-                          <CalendarComponent
-                            mode="single"
-                            selected={startDate}
-                            onSelect={handleStartDateSelect}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button 
-                            variant="outline" 
-                            className="w-full justify-start text-left font-normal"
-                            size="sm"
-                          >
-                            <Calendar className="mr-2 h-4 w-4" />
-                            {endDate ? format(endDate, 'PPP') : "End date"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="center">
-                          <CalendarComponent
-                            mode="single"
-                            selected={endDate}
-                            onSelect={handleEndDateSelect}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    
-                    <Button 
-                      className="w-full"
-                      size="sm"
-                      onClick={confirmCustomRange}
-                      disabled={!startDate || !endDate}
-                    >
-                      Apply range
-                    </Button>
-                  </div>
-                )}
+            <div className="flex items-center justify-end">
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => {
+                    const newRange = timeRange === "week" ? "month" : "week";
+                    setTimeRange(newRange);
+                    updateStatsForTimeRange(newRange);
+                  }}
+                >
+                  {timeRange === "week" ? (
+                    <ChevronRight className="h-5 w-5" />
+                  ) : (
+                    <ChevronLeft className="h-5 w-5" />
+                  )}
+                </Button>
+                <span className="text-sm font-medium">
+                  {timeRange === "week" ? "Last Week" : 
+                   timeRange === "month" ? "Last Month" : timeRange}
+                </span>
               </div>
-              
-              <Button 
-                ref={timeRangeButtonRef}
-                variant="outline" 
-                size="sm" 
-                className="h-8 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
-                onClick={toggleTimeRangeMenu}
-              >
-                <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
-                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : timeRange}
-                <ChevronDown className="h-3.5 w-3.5 ml-1.5 opacity-70" />
-              </Button>
             </div>
           )}
         </div>
         <TabsContent value="clothing" className="mt-4">
-          {isCreatingOutfit && (
-            <div className="mb-4 p-3 bg-muted/40 rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-medium">Create new outfit</h3>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => {
-                    setIsCreatingOutfit(false);
-                    setSelectedItemsForOutfit([]);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-              <div>
-                <Input
-                  placeholder="Outfit name"
-                  value={newOutfitName}
-                  onChange={(e) => setNewOutfitName(e.target.value)}
-                  className="text-sm mb-2"
-                />
-                <Button 
-                  onClick={createNewOutfit}
-                  disabled={!newOutfitName.trim() || selectedItemsForOutfit.length === 0}
-                >
-                  Save Outfit
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-2 mb-2">
-                Select items for your outfit ({selectedItemsForOutfit.length} selected)
-              </p>
-            </div>
-          )}
+          <OutfitCreation 
+            isCreatingOutfit={isCreatingOutfit}
+            selectedItemsForOutfit={selectedItemsForOutfit}
+            newOutfitName={newOutfitName}
+            setNewOutfitName={setNewOutfitName}
+            setSelectedItemsForOutfit={setSelectedItemsForOutfit}
+            setIsCreatingOutfit={setIsCreatingOutfit}
+            createNewOutfit={createNewOutfit}
+          />
           
-          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
-            {filteredClothingItems.map((item) => (
-              <div key={item.id} className="relative">
-                {isCreatingOutfit && (
-                  <button 
-                    className="absolute top-1 left-1 z-10 rounded-full bg-white/90 p-0.5 shadow-sm"
-                    onClick={() => toggleItemSelection(item)}
-                  >
-                    {selectedItemsForOutfit.some(i => i.id === item.id) ? (
-                      <CheckCircle2 className="h-4 w-4 text-primary" />
-                    ) : (
-                      <div className="h-4 w-4 rounded-full border-2" />
-                    )}
-                  </button>
-                )}
-                <ClothingItemCard
-                  item={item}
-                  onClick={() => isCreatingOutfit ? toggleItemSelection(item) : handleItemClick(item)}
-                  onDelete={handleDeleteItem}
-                  showDeleteButton={!isCreatingOutfit}
-                />
-              </div>
-            ))}
-          </div>
+          <ClothingTab 
+            clothingItems={clothingItems}
+            searchTerm={searchTerm}
+            isCreatingOutfit={isCreatingOutfit}
+            selectedItemsForOutfit={selectedItemsForOutfit}
+            toggleItemSelection={toggleItemSelection}
+            handleItemClick={handleItemClick}
+            handleDeleteItem={handleDeleteItem}
+          />
         </TabsContent>
         <TabsContent value="outfits" className="mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium">My Outfits</h3>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => {
-                  setIsCreatingOutfit(!isCreatingOutfit);
-                  setActiveTab("clothing");
-                }}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Create Outfit
-              </Button>
-            </div>
-          </div>
-          
-          {isCreatingOutfit && selectedItemsForOutfit.length > 0 && (
-            <div className="mb-4 p-3 bg-muted/40 rounded-lg">
-              <div className="flex gap-2 mb-2">
-                <Input
-                  placeholder="Outfit name"
-                  value={newOutfitName}
-                  onChange={(e) => setNewOutfitName(e.target.value)}
-                  className="text-sm"
-                />
-                <Button 
-                  onClick={createNewOutfit}
-                  disabled={!newOutfitName.trim() || selectedItemsForOutfit.length === 0}
-                >
-                  Save
-                </Button>
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {selectedItemsForOutfit.map((item) => (
-                  <div key={item.id} className="h-16 w-16 rounded overflow-hidden flex-shrink-0 relative">
-                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-                    <button 
-                      className="absolute top-0.5 right-0.5 bg-black/60 rounded-full p-0.5"
-                      onClick={() => setSelectedItemsForOutfit(selectedItemsForOutfit.filter(i => i.id !== item.id))}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
-            {filteredOutfits.map((outfit) => (
-              <OutfitCard 
-                key={outfit.id} 
-                outfit={outfit} 
-                onClick={() => handleOutfitClick(outfit)}
-              />
-            ))}
-          </div>
-          
-          {isPremium && (
-            <>
-              <div className="flex items-center justify-between mt-8 mb-4">
-                <h3 className="font-medium">Suggested Outfits</h3>
-                <Badge variant="outline" className="text-xs py-0 h-5">
-                  <span className="text-primary mr-1">Premium</span>
-                </Badge>
-              </div>
-              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {suggestedOutfits.map((outfit) => (
-                  <OutfitCard 
-                    key={outfit.id} 
-                    outfit={outfit} 
-                    onClick={() => handleOutfitClick(outfit)}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-          
-          {!isPremium && (
-            <div className="mt-8 p-4 border rounded-lg bg-muted/20 text-center">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-2">
-                <LockIcon className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <h3 className="font-medium mb-1">Unlock Suggested Outfits</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Get personalized outfit suggestions based on your style and wardrobe.
-              </p>
-              <Button size="sm" onClick={togglePremium}>
-                Upgrade to Premium
-              </Button>
-            </div>
-          )}
+          <OutfitTab
+            outfits={outfits}
+            suggestedOutfits={suggestedOutfits}
+            searchTerm={searchTerm}
+            isPremium={isPremium}
+            isCreatingOutfit={isCreatingOutfit}
+            selectedItemsForOutfit={selectedItemsForOutfit}
+            newOutfitName={newOutfitName}
+            setNewOutfitName={setNewOutfitName}
+            setIsCreatingOutfit={setIsCreatingOutfit}
+            setActiveTab={setActiveTab}
+            createNewOutfit={createNewOutfit}
+            handleOutfitClick={handleOutfitClick}
+            togglePremium={togglePremium}
+          />
         </TabsContent>
         <TabsContent value="stats" className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="p-4">
-              <h3 className="text-base font-medium mb-4">Wardrobe Composition</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Tops</span>
-                  <span className="font-medium text-sm">40%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '40%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Bottoms</span>
-                  <span className="font-medium text-sm">20%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Dresses</span>
-                  <span className="font-medium text-sm">15%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Outerwear</span>
-                  <span className="font-medium text-sm">10%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Accessories</span>
-                  <span className="font-medium text-sm">15%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
-                </div>
-              </div>
-            </Card>
-            
-            <Card className="p-4">
-              <h3 className="text-base font-medium mb-4">Color Distribution</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                    <span className="text-sm">Blue</span>
-                  </div>
-                  <span className="font-medium text-sm">25%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-blue-500 h-full rounded-full" style={{ width: '25%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-black rounded-full mr-2"></div>
-                    <span className="text-sm">Black</span>
-                  </div>
-                  <span className="font-medium text-sm">20%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-black h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                    <span className="text-sm">Red</span>
-                  </div>
-                  <span className="font-medium text-sm">15%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-red-500 h-full rounded-full" style={{ width: '15%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                    <span className="text-sm">Green</span>
-                  </div>
-                  <span className="font-medium text-sm">15%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-green-500 h-full rounded-full" style={{ width: '15%' }}></div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
-                    <span className="text-sm">Other</span>
-                  </div>
-                  <span className="font-medium text-sm">25%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-yellow-500 h-full rounded-full" style={{ width: '25%' }}></div>
-                </div>
-              </div>
-            </Card>
-          </div>
+          <StatsTab 
+            timeRange={timeRange}
+            setTimeRange={setTimeRange}
+            updateStatsForTimeRange={updateStatsForTimeRange}
+            updateStatsForCustomRange={updateStatsForCustomRange}
+          />
         </TabsContent>
       </Tabs>
       
@@ -953,67 +492,7 @@ const WardrobePage = () => {
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
           <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>{selectedOutfit.name}</DialogTitle>
-              <DialogDescription>
-                {selectedOutfit.items.length} items in this outfit
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="aspect-square overflow-hidden rounded-lg">
-                {selectedOutfit.imageUrl ? (
-                  <img 
-                    src={selectedOutfit.imageUrl} 
-                    alt={selectedOutfit.name} 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
-                    <Shirt className="h-12 w-12 text-muted-foreground" />
-                  </div>
-                )}
-              </div>
-              
-              <div>
-                <h4 className="font-medium mb-2">Items in this outfit</h4>
-                <div className="space-y-2">
-                  {selectedOutfit.items.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                        <img 
-                          src={item.imageUrl} 
-                          alt={item.name} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">{item.category}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium mb-2">Color palette</h4>
-                <div className="flex gap-2">
-                  {getOutfitColorPalette(selectedOutfit).map((color, index) => (
-                    <div 
-                      key={index}
-                      className="w-8 h-8 rounded-full border border-border/50"
-                      style={{ 
-                        backgroundColor: color.toLowerCase(),
-                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-            <DialogClose asChild>
-              <Button variant="outline" className="w-full mt-2">Close</Button>
-            </DialogClose>
+            <OutfitDetails outfit={selectedOutfit} />
           </DialogContent>
         </Dialog>
       )}
