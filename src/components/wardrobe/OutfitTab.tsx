@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -76,6 +76,17 @@ const OutfitTab = ({
         >
           <Plus className="mr-2 h-4 w-4" />
           Create Outfit
+        </Button>
+      </div>
+      
+      <div className="mb-4 flex justify-end">
+        <Button 
+          variant="ghost"
+          size="icon"
+          onClick={toggleSearchBar}
+          className="h-10 w-10"
+        >
+          <Search className="h-5 w-5" />
         </Button>
       </div>
       
