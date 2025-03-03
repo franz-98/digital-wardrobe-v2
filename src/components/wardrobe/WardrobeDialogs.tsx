@@ -32,7 +32,7 @@ const WardrobeDialogs = ({
     <>
       {selectedItem && (
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="max-w-md p-0">
+          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none">
             <ClothingItemDetails
               item={selectedItem}
               open={isDetailsOpen}
@@ -47,7 +47,7 @@ const WardrobeDialogs = ({
       
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
-          <DialogContent className="max-w-md p-0">
+          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none">
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}

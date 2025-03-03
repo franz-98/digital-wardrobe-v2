@@ -69,7 +69,7 @@ const ClothingItemDetails = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md p-0 overflow-hidden bg-background">
+        <DialogContent className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none">
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
               outfit={selectedOutfit}
@@ -89,18 +89,33 @@ const ClothingItemDetails = ({
                 </div>
               </DialogHeader>
               
-              <ItemDetails 
-                item={item}
-                onDeleteClick={handleDeleteItem}
-                onDelete={onDelete}
-              />
-              
-              <div className="px-4 pb-4">
-                <RelatedOutfits 
-                  relatedOutfits={relatedOutfits} 
-                  onOutfitClick={handleOutfitClick}
+              <div className="flex-1 overflow-y-auto overscroll-bounce">
+                <ItemDetails 
+                  item={item}
+                  onDeleteClick={handleDeleteItem}
+                  onDelete={onDelete}
                 />
+                
+                <div className="px-4 pb-4">
+                  <RelatedOutfits 
+                    relatedOutfits={relatedOutfits} 
+                    onOutfitClick={handleOutfitClick}
+                  />
+                </div>
               </div>
+
+              {onDelete && (
+                <div className="p-4 border-t">
+                  <Button 
+                    variant="destructive" 
+                    className="w-full"
+                    onClick={handleDeleteItem}
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Delete Item
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

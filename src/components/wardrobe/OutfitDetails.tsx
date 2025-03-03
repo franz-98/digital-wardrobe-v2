@@ -3,15 +3,16 @@ import React, { useState } from 'react';
 import { Shirt, X, Trash2 } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Outfit } from './types';
+import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
 
 interface OutfitDetailsProps {
   outfit: Outfit;
   onDelete?: (id: string) => void;
+  onItemClick?: (item: ClothingItem) => void;
 }
 
-const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
+const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   
   const getOutfitColorPalette = (outfit: Outfit) => {
@@ -23,7 +24,7 @@ const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-6 pt-6 pb-0">
         <div className="flex items-center justify-between mb-2">
           <DialogTitle className="text-lg font-semibold">{outfit.name}</DialogTitle>
@@ -38,7 +39,7 @@ const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
         </DialogDescription>
       </DialogHeader>
       
-      <div className="p-6 max-h-[60vh] overflow-y-auto overscroll-bounce">
+      <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
         <div className="space-y-4">
           <div className="aspect-square overflow-hidden rounded-lg">
             {outfit.imageUrl ? (
@@ -58,7 +59,11 @@ const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
             <h4 className="font-medium mb-2">Items in this outfit</h4>
             <div className="space-y-2">
               {outfit.items.map((item) => (
-                <div key={item.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div 
+                  key={item.id} 
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => onItemClick && onItemClick(item)}
+                >
                   <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
                     <img 
                       src={item.imageUrl} 
@@ -90,19 +95,21 @@ const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
               ))}
             </div>
           </div>
-          
-          {onDelete && (
-            <Button 
-              variant="destructive" 
-              className="w-full mt-4"
-              onClick={handleDeleteClick}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Elimina Outfit
-            </Button>
-          )}
         </div>
       </div>
+      
+      {onDelete && (
+        <div className="p-4 border-t">
+          <Button 
+            variant="destructive" 
+            className="w-full"
+            onClick={handleDeleteClick}
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
+            Elimina Outfit
+          </Button>
+        </div>
+      )}
       
       {onDelete && (
         <DeleteOutfitDialog
@@ -112,7 +119,7 @@ const OutfitDetails = ({ outfit, onDelete }: OutfitDetailsProps) => {
           onDelete={onDelete}
         />
       )}
-    </>
+    </div>
   );
 };
 

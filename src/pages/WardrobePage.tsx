@@ -298,6 +298,13 @@ const WardrobePage = () => {
     setIsDetailsOpen(false);
   };
   
+  const handleOutfitItemClick = (item: ClothingItem) => {
+    setSelectedOutfit(null);
+    setSelectedItem(item);
+    setIsOutfitDetailsOpen(false);
+    setIsDetailsOpen(true);
+  };
+  
   const handleDeleteItem = (itemId: string) => {
     const updatedItems = clothingItems.filter(item => item.id !== itemId);
     setClothingItems(updatedItems);
@@ -317,6 +324,18 @@ const WardrobePage = () => {
       title: "Item deleted",
       description: "The clothing item has been removed from your wardrobe.",
     });
+  };
+  
+  const handleDeleteOutfit = (outfitId: string) => {
+    const updatedOutfits = outfits.filter(outfit => outfit.id !== outfitId);
+    setOutfits(updatedOutfits);
+    
+    toast({
+      title: "Outfit deleted",
+      description: "The outfit has been removed from your wardrobe.",
+    });
+    
+    setIsOutfitDetailsOpen(false);
   };
 
   return (
@@ -372,6 +391,7 @@ const WardrobePage = () => {
         setIsOutfitDetailsOpen={setIsOutfitDetailsOpen}
         findRelatedOutfits={findRelatedOutfits}
         handleDeleteItem={handleDeleteItem}
+        handleDeleteOutfit={handleDeleteOutfit}
       />
     </SwipeHandler>
   );

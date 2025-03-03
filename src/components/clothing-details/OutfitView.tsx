@@ -10,11 +10,12 @@ interface OutfitViewProps {
   outfit: Outfit;
   onBackClick: () => void;
   onDeleteClick?: () => void;
+  onItemClick?: (itemId: string) => void;
 }
 
-const OutfitView = ({ outfit, onBackClick, onDeleteClick }: OutfitViewProps) => {
+const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick }: OutfitViewProps) => {
   return (
-    <>
+    <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center">
@@ -44,7 +45,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick }: OutfitViewProps) => 
         </DialogDescription>
       </DialogHeader>
       
-      <div className="relative max-h-[50vh] overflow-y-auto pb-2 overscroll-bounce">
+      <div className="flex-1 overflow-y-auto overscroll-bounce">
         <div className="aspect-square w-full overflow-hidden mb-2">
           <img 
             src={outfit.imageUrl || outfit.items[0]?.imageUrl} 
@@ -64,6 +65,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick }: OutfitViewProps) => 
               <Card 
                 key={`outfit-item-${outfitItem.id}`}
                 className="overflow-hidden border shadow-sm"
+                onClick={() => onItemClick && onItemClick(outfitItem.id)}
               >
                 <div className="flex gap-3 p-3">
                   <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0 bg-secondary/20">
@@ -99,7 +101,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick }: OutfitViewProps) => 
       </div>
       
       {onDeleteClick && (
-        <div className="px-4 pb-4">
+        <div className="p-4 border-t">
           <Button 
             variant="destructive" 
             className="w-full"
@@ -110,7 +112,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick }: OutfitViewProps) => 
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
