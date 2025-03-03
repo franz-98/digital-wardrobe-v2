@@ -45,7 +45,9 @@ const WardrobeDialogs = ({
               onOutfitDelete={handleDeleteOutfit}
               onOutfitClick={(outfit) => {
                 setIsDetailsOpen(false);
-                setIsOutfitDetailsOpen(true);
+                setTimeout(() => {
+                  setIsOutfitDetailsOpen(true);
+                }, 100);
               }}
             />
           </DialogContent>
