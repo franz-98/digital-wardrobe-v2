@@ -15,6 +15,7 @@ interface WardrobeDialogsProps {
   findRelatedOutfits: (itemId: string) => Outfit[];
   handleDeleteItem: (itemId: string) => void;
   handleDeleteOutfit?: (outfitId: string) => void;
+  handleOutfitItemClick: (itemId: string) => void;
 }
 
 const WardrobeDialogs = ({
@@ -26,23 +27,9 @@ const WardrobeDialogs = ({
   setIsOutfitDetailsOpen,
   findRelatedOutfits,
   handleDeleteItem,
-  handleDeleteOutfit
+  handleDeleteOutfit,
+  handleOutfitItemClick
 }: WardrobeDialogsProps) => {
-  
-  const handleOutfitItemClick = (item: ClothingItem) => {
-    // Switch from outfit view to item view
-    setSelectedItem(item);
-    setIsDetailsOpen(true);
-    setIsOutfitDetailsOpen(false);
-  };
-  
-  const setSelectedItem = (item: ClothingItem | null) => {
-    // This is a local function to help with state management
-    // The actual state is managed in the parent component
-    if (item) {
-      setIsDetailsOpen(true);
-    }
-  };
   
   return (
     <>
@@ -56,6 +43,12 @@ const WardrobeDialogs = ({
               relatedOutfits={findRelatedOutfits(selectedItem.id)}
               onDelete={handleDeleteItem}
               onOutfitDelete={handleDeleteOutfit}
+              onOutfitClick={(outfit) => {
+                // Navigate to the outfit view
+                setIsDetailsOpen(false);
+                setIsOutfitDetailsOpen(true);
+                // This will be handled by WardrobePage
+              }}
             />
           </DialogContent>
         </Dialog>

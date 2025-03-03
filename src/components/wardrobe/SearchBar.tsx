@@ -55,14 +55,16 @@ const SearchBar = ({
           </Button>
         </div>
       ) : (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleSearchBar}
-          className="h-10 w-10"
-        >
-          <Search className="h-5 w-5" />
-        </Button>
+        <div className="h-10 flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSearchBar}
+            className="h-10 w-10 ml-0"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+        </div>
       )}
     </div>
   );

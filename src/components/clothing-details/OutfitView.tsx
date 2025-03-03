@@ -41,7 +41,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
         </div>
         <DialogDescription>
           <Badge variant="outline" className="bg-primary/10 text-primary">
-            {outfit.items.length} indumenti
+            {outfit.items.length} items
           </Badge>
         </DialogDescription>
       </DialogHeader>
@@ -58,7 +58,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
         
         <div className="px-4 pb-4 space-y-3">
           <h3 className="text-sm font-medium flex items-center gap-1">
-            <Shirt className="h-4 w-4" /> Indumenti in questo outfit <span className="ml-1 text-muted-foreground">({outfit.items.length})</span>
+            <Shirt className="h-4 w-4" /> Items in this outfit <span className="ml-1 text-muted-foreground">({outfit.items.length})</span>
           </h3>
           
           <div className="space-y-2">
@@ -111,7 +111,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
             onClick={onDeleteClick}
           >
             <X className="h-4 w-4 mr-2" />
-            Elimina Outfit
+            Delete Outfit
           </Button>
         </div>
       )}

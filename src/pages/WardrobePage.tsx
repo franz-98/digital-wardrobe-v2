@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Tabs } from "@/components/ui/tabs";
@@ -111,11 +110,9 @@ const WardrobePage = () => {
     },
   ]);
   
-  // Define the initial outfits
   const [outfits, setOutfits] = useState<Outfit[]>([]);
   const [suggestedOutfits, setSuggestedOutfits] = useState<Outfit[]>([]);
 
-  // Initialize outfits after clothingItems are loaded
   useEffect(() => {
     if (clothingItems.length > 0) {
       setOutfits([
@@ -295,12 +292,7 @@ const WardrobePage = () => {
   };
   
   const handleOutfitItemClick = (itemId: string) => {
-    // Find the item by id from the outfit's items
-    let itemToShow: ClothingItem | undefined;
-    
-    if (selectedOutfit) {
-      itemToShow = selectedOutfit.items.find(item => item.id === itemId);
-    }
+    const itemToShow = clothingItems.find(item => item.id === itemId);
     
     if (itemToShow) {
       setSelectedItem(itemToShow);

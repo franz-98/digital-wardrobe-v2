@@ -57,7 +57,7 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
           
           <div>
             <h4 className="font-medium mb-2 flex items-center">
-              Items in this outfit <span className="ml-2 text-sm text-muted-foreground">({outfit.items.length})</span>
+              Items in this outfit <span className="ml-2 text-xs text-muted-foreground">({outfit.items.length})</span>
             </h4>
             <div className="space-y-2">
               {outfit.items.map((item) => (
@@ -108,7 +108,7 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
             onClick={handleDeleteClick}
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            Elimina Outfit
+            Delete Outfit
           </Button>
         </div>
       )}

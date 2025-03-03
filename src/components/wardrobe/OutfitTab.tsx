@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -59,7 +59,7 @@ const OutfitTab = ({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-4 mt-2">
         <h3 className="font-medium">My Outfits</h3>
         <div className="flex gap-2">
           <Button 

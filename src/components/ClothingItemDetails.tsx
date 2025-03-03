@@ -24,6 +24,7 @@ interface ClothingItemDetailsProps {
   relatedOutfits?: Outfit[];
   onDelete?: (id: string) => void;
   onOutfitDelete?: (id: string) => void;
+  onOutfitClick?: (outfit: Outfit) => void;
 }
 
 const ClothingItemDetails = ({ 
@@ -32,7 +33,8 @@ const ClothingItemDetails = ({
   onOpenChange,
   relatedOutfits = [],
   onDelete,
-  onOutfitDelete
+  onOutfitDelete,
+  onOutfitClick
 }: ClothingItemDetailsProps) => {
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
@@ -42,8 +44,12 @@ const ClothingItemDetails = ({
   if (!item) return null;
 
   const handleOutfitClick = (outfit: Outfit) => {
-    setSelectedOutfit(outfit);
-    setViewMode("outfit");
+    if (onOutfitClick) {
+      onOutfitClick(outfit);
+    } else {
+      setSelectedOutfit(outfit);
+      setViewMode("outfit");
+    }
   };
 
   const handleBackToItem = () => {
