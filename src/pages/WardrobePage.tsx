@@ -1,3 +1,4 @@
+<lov-code>
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown, CheckCircle2, Lock as LockIcon, X, Calendar } from "lucide-react";
@@ -50,7 +51,7 @@ const WardrobePage = () => {
       name: "Blue T-shirt",
       category: "Tops",
       color: "Blue",
-      imageUrl: "/images/clothing-items/blue-t-shirt.png",
+      imageUrl: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&h=400&fit=crop",
       metadata: {
         dateTaken: "2023-03-15",
         brand: "Nike",
@@ -63,7 +64,7 @@ const WardrobePage = () => {
       name: "Black Jeans",
       category: "Bottoms",
       color: "Black",
-      imageUrl: "/images/clothing-items/black-jeans.png",
+      imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop",
       metadata: {
         dateTaken: "2023-03-20",
         brand: "Levi's",
@@ -76,7 +77,7 @@ const WardrobePage = () => {
       name: "Red Dress",
       category: "Dresses",
       color: "Red",
-      imageUrl: "/images/clothing-items/red-dress.png",
+      imageUrl: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=400&fit=crop",
       metadata: {
         dateTaken: "2023-03-25",
         brand: "Zara",
@@ -89,7 +90,7 @@ const WardrobePage = () => {
       name: "White Sneakers",
       category: "Shoes",
       color: "White",
-      imageUrl: "/images/clothing-items/white-sneakers.png",
+      imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
       metadata: {
         dateTaken: "2023-03-30",
         brand: "Adidas",
@@ -102,7 +103,7 @@ const WardrobePage = () => {
       name: "Green Scarf",
       category: "Accessories",
       color: "Green",
-      imageUrl: "/images/clothing-items/green-scarf.png",
+      imageUrl: "https://images.unsplash.com/photo-1520903470926-dca555cd44f4?w=400&h=400&fit=crop",
       metadata: {
         dateTaken: "2023-04-05",
         brand: "Gucci",
@@ -110,35 +111,94 @@ const WardrobePage = () => {
         season: "Winter",
       },
     },
+    {
+      id: "6",
+      name: "Brown Jacket",
+      category: "Outerwear",
+      color: "Brown",
+      imageUrl: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=400&h=400&fit=crop",
+      metadata: {
+        dateTaken: "2023-04-10",
+        brand: "The North Face",
+        material: "Leather",
+        season: "Fall",
+      },
+    },
+    {
+      id: "7",
+      name: "Yellow Hat",
+      category: "Accessories",
+      color: "Yellow",
+      imageUrl: "https://images.unsplash.com/photo-1533055640609-24b498dfd74c?w=400&h=400&fit=crop",
+      metadata: {
+        dateTaken: "2023-04-15",
+        brand: "Urban Outfitters",
+        material: "Cotton",
+        season: "Summer",
+      },
+    },
   ]);
+  
   const [outfits, setOutfits] = useState<Outfit[]>([
     {
       id: "o1",
       name: "Casual Look",
-      items: [clothingItems[0], clothingItems[1]],
-      imageUrl: "/images/outfits/casual-look.png",
+      items: [
+        clothingItems.find(item => item.id === "1") || clothingItems[0],
+        clothingItems.find(item => item.id === "2") || clothingItems[1]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=400&fit=crop",
     },
     {
       id: "o2",
       name: "Summer Dress",
-      items: [clothingItems[2], clothingItems[3]],
-      imageUrl: "/images/outfits/summer-dress.png",
+      items: [
+        clothingItems.find(item => item.id === "3") || clothingItems[2],
+        clothingItems.find(item => item.id === "4") || clothingItems[3]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop",
     },
+    {
+      id: "o3",
+      name: "Winter Style",
+      items: [
+        clothingItems.find(item => item.id === "5") || clothingItems[4],
+        clothingItems.find(item => item.id === "6") || clothingItems[5]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+    }
   ]);
 
   const [suggestedOutfits, setSuggestedOutfits] = useState<Outfit[]>([
     {
       id: "so1",
       name: "Spring Look",
-      items: [clothingItems[0], clothingItems[3], clothingItems[4]],
-      imageUrl: "/images/outfits/spring-look.png",
+      items: [
+        clothingItems.find(item => item.id === "1") || clothingItems[0],
+        clothingItems.find(item => item.id === "4") || clothingItems[3],
+        clothingItems.find(item => item.id === "5") || clothingItems[4]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?w=400&h=400&fit=crop",
     },
     {
       id: "so2",
       name: "Party Outfit",
-      items: [clothingItems[2], clothingItems[3]],
-      imageUrl: "/images/outfits/party-outfit.png",
+      items: [
+        clothingItems.find(item => item.id === "3") || clothingItems[2],
+        clothingItems.find(item => item.id === "4") || clothingItems[3]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1568252542512-9fe8fe6a8d75?w=400&h=400&fit=crop",
     },
+    {
+      id: "so3",
+      name: "Autumn Style",
+      items: [
+        clothingItems.find(item => item.id === "6") || clothingItems[5],
+        clothingItems.find(item => item.id === "2") || clothingItems[1],
+        clothingItems.find(item => item.id === "7") || clothingItems[6]
+      ],
+      imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+    }
   ]);
   
   const [isPremium, setIsPremium] = useState(false);
@@ -753,123 +813,4 @@ const WardrobePage = () => {
                   <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
                 </div>
                 
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Accessories</span>
-                  <span className="font-medium text-sm">10%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
-                </div>
-              </div>
-            </Card>
-            
-            <Card className="p-4">
-              <h3 className="text-base font-medium mb-4">Most Worn Items</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
-                    <span className="text-sm">Blue T-shirt</span>
-                  </div>
-                  <span className="font-medium text-sm">12 times</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
-                    <span className="text-sm">Black Jeans</span>
-                  </div>
-                  <span className="font-medium text-sm">8 times</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
-                    <span className="text-sm">White Sneakers</span>
-                  </div>
-                  <span className="font-medium text-sm">6 times</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-8 h-8 rounded bg-primary/20 mr-2"></div>
-                    <span className="text-sm">Red Dress</span>
-                  </div>
-                  <span className="font-medium text-sm">4 times</span>
-                </div>
-              </div>
-            </Card>
-            
-            <Card className="p-4">
-              <h3 className="text-base font-medium mb-4">Most Worn Colors</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-blue-500"></div>
-                    <span className="text-sm">Blue</span>
-                  </div>
-                  <span className="font-medium text-sm">32%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-blue-500 h-full rounded-full" style={{ width: '32%' }}></div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-black border border-gray-300"></div>
-                    <span className="text-sm">Black</span>
-                  </div>
-                  <span className="font-medium text-sm">28%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-black h-full rounded-full" style={{ width: '28%' }}></div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-white border border-gray-300"></div>
-                    <span className="text-sm">White</span>
-                  </div>
-                  <span className="font-medium text-sm">20%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-gray-100 h-full rounded-full" style={{ width: '20%' }}></div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-red-500"></div>
-                    <span className="text-sm">Red</span>
-                  </div>
-                  <span className="font-medium text-sm">12%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-red-500 h-full rounded-full" style={{ width: '12%' }}></div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full bg-green-500"></div>
-                    <span className="text-sm">Green</span>
-                  </div>
-                  <span className="font-medium text-sm">8%</span>
-                </div>
-                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-green-500 h-full rounded-full" style={{ width: '8%' }}></div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {selectedItem && (
-        <ClothingItemDetails
-          open={isDetailsOpen}
-          onOpenChange={setIsDetailsOpen}
-          item={selectedItem}
-          relatedOutfits={findRelatedOutfits(selectedItem.id)}
-        />
-      )}
-    </div>
-  );
-};
-
-export default WardrobePage;
+                <div

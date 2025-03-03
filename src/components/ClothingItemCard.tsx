@@ -22,6 +22,11 @@ interface ClothingItemCardProps {
 }
 
 const ClothingItemCard = ({ item, onClick }: ClothingItemCardProps) => {
+  // Use a fallback image if the provided URL is invalid or missing
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=300&fit=crop";
+  };
+
   return (
     <Card
       className="overflow-hidden cursor-pointer transition-all hover:shadow-md border"
@@ -29,9 +34,10 @@ const ClothingItemCard = ({ item, onClick }: ClothingItemCardProps) => {
     >
       <div className="aspect-square overflow-hidden relative">
         <img
-          src={item.imageUrl}
+          src={item.imageUrl || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300&h=300&fit=crop"}
           alt={item.name}
           className="object-cover w-full h-full"
+          onError={handleImageError}
         />
       </div>
       <div className="p-3">

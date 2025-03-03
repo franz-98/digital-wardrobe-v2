@@ -23,6 +23,11 @@ interface OutfitCardProps {
 }
 
 const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
+  // Use a fallback image if the provided URL is invalid or missing
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=300&h=300&fit=crop";
+  };
+
   return (
     <Card 
       className="overflow-hidden cursor-pointer transition-all hover:shadow-md border"
@@ -30,9 +35,10 @@ const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
     >
       <div className="aspect-square overflow-hidden relative">
         <img
-          src={outfit.imageUrl || outfit.items[0]?.imageUrl}
+          src={outfit.imageUrl || outfit.items[0]?.imageUrl || "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=300&h=300&fit=crop"}
           alt={outfit.name}
           className="object-cover w-full h-full"
+          onError={handleImageError}
         />
         <div className="absolute inset-0 bg-black/30 flex items-end p-2">
           <h3 className="text-white font-medium text-xs">{outfit.name}</h3>
@@ -49,6 +55,7 @@ const OutfitCard = ({ outfit, onClick }: OutfitCardProps) => {
                 src={item.imageUrl}
                 alt={item.name}
                 className="h-full w-full object-cover"
+                onError={handleImageError}
               />
             </div>
           ))}
