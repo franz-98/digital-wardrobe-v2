@@ -86,7 +86,6 @@ const ClothingItemDetails = ({
               onBackClick={handleBackToItem}
               onDeleteClick={onOutfitDelete ? handleDeleteOutfit : undefined}
               onItemClick={(itemId) => {
-                // Go back to item view but set the parent to handle navigation
                 console.log("Item clicked in outfit view:", itemId);
               }}
               onImageClick={handleImageClick}
