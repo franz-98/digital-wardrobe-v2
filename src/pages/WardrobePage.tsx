@@ -475,7 +475,6 @@ const WardrobePage = () => {
     setIsDetailsOpen(false);
   };
 
-  // Helper function to extract color palette from outfit
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
   };
@@ -819,4 +818,180 @@ const WardrobePage = () => {
                   <span className="font-medium text-sm">20%</span>
                 </div>
                 <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
-                  <div className="bg-primary h-full rounded-full" style={{
+                  <div className="bg-primary h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Dresses</span>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Outerwear</span>
+                  <span className="font-medium text-sm">10%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '10%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm">Accessories</span>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-primary h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+              </div>
+            </Card>
+            
+            <Card className="p-4">
+              <h3 className="text-base font-medium mb-4">Color Distribution</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                    <span className="text-sm">Blue</span>
+                  </div>
+                  <span className="font-medium text-sm">25%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-blue-500 h-full rounded-full" style={{ width: '25%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-black rounded-full mr-2"></div>
+                    <span className="text-sm">Black</span>
+                  </div>
+                  <span className="font-medium text-sm">20%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-black h-full rounded-full" style={{ width: '20%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                    <span className="text-sm">Red</span>
+                  </div>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-red-500 h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                    <span className="text-sm">Green</span>
+                  </div>
+                  <span className="font-medium text-sm">15%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-green-500 h-full rounded-full" style={{ width: '15%' }}></div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                    <span className="text-sm">Other</span>
+                  </div>
+                  <span className="font-medium text-sm">25%</span>
+                </div>
+                <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
+                  <div className="bg-yellow-500 h-full rounded-full" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+      
+      {selectedItem && (
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent className="max-w-md">
+            <ClothingItemDetails
+              item={selectedItem}
+              open={isDetailsOpen}
+              onOpenChange={setIsDetailsOpen}
+              relatedOutfits={findRelatedOutfits(selectedItem.id)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
+      
+      {selectedOutfit && (
+        <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>{selectedOutfit.name}</DialogTitle>
+              <DialogDescription>
+                {selectedOutfit.items.length} items in this outfit
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="aspect-square overflow-hidden rounded-lg">
+                {selectedOutfit.imageUrl ? (
+                  <img 
+                    src={selectedOutfit.imageUrl} 
+                    alt={selectedOutfit.name} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-muted flex items-center justify-center">
+                    <Shirt className="h-12 w-12 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Items in this outfit</h4>
+                <div className="space-y-2">
+                  {selectedOutfit.items.map((item) => (
+                    <div key={item.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
+                        <img 
+                          src={item.imageUrl} 
+                          alt={item.name} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">{item.category}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">Color palette</h4>
+                <div className="flex gap-2">
+                  {getOutfitColorPalette(selectedOutfit).map((color, index) => (
+                    <div 
+                      key={index}
+                      className="w-8 h-8 rounded-full border border-border/50"
+                      style={{ 
+                        backgroundColor: color.toLowerCase(),
+                        boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+            <DialogClose asChild>
+              <Button variant="outline" className="w-full mt-2">Close</Button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+};
+
+export default WardrobePage;
