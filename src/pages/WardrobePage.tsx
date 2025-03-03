@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Plus, Grip, Shirt, BarChart, Search, Clock, Lock, CheckCircle2 } from "lucide-react";
+import { Plus, Grip, Shirt, BarChart, Search, Clock, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,8 @@ const WardrobePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const timeRangeMenuRef = useRef<HTMLDivElement>(null);
+  const timeRangeButtonRef = useRef<HTMLButtonElement>(null);
 
   const [clothingItems, setClothingItems] = useState<ClothingItem[]>([
     {
@@ -147,7 +149,9 @@ const WardrobePage = () => {
   });
   const [selectedItem, setSelectedItem] = useState<ClothingItem | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  
   const [timeRange, setTimeRange] = useState("month");
+  const [showTimeRangeMenu, setShowTimeRangeMenu] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -169,6 +173,24 @@ const WardrobePage = () => {
       navigate("/wardrobe", { replace: true });
     }
   }, [location, toast, navigate]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        timeRangeMenuRef.current && 
+        !timeRangeMenuRef.current.contains(event.target as Node) &&
+        timeRangeButtonRef.current &&
+        !timeRangeButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowTimeRangeMenu(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleItemClick = (item: ClothingItem) => {
     setSelectedItem(item);
@@ -279,6 +301,15 @@ const WardrobePage = () => {
     }
   };
 
+  const toggleTimeRangeMenu = () => {
+    setShowTimeRangeMenu(!showTimeRangeMenu);
+  };
+
+  const selectTimeRange = (range: string) => {
+    setTimeRange(range);
+    setShowTimeRangeMenu(false);
+  };
+
   return (
     <div 
       className="space-y-6 pb-20"
@@ -329,39 +360,42 @@ const WardrobePage = () => {
           {activeTab === "stats" && (
             <div className="flex items-center relative">
               <Button 
+                ref={timeRangeButtonRef}
                 variant="outline" 
                 size="sm" 
-                className="h-7 px-2 text-xs font-normal border-muted"
-                onClick={() => document.getElementById('time-range-menu')?.classList.toggle('hidden')}
+                className="h-8 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"
+                onClick={toggleTimeRangeMenu}
               >
-                <Clock className="h-3 w-3 mr-1 opacity-70" />
-                {timeRange === "week" && "Last week"}
-                {timeRange === "month" && "Last month"}
-                {timeRange === "custom" && "Custom range"}
+                <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
+                {timeRange === "week" ? "Last week" : timeRange === "month" ? "Last month" : "Custom range"}
+                <ChevronDown className="h-3.5 w-3.5 ml-1.5 opacity-70" />
               </Button>
-              <div 
-                id="time-range-menu" 
-                className="absolute left-0 bottom-full mb-1 z-10 hidden bg-background divide-y divide-border rounded-md shadow-md border py-1 text-xs w-32"
-              >
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "week" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("week"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
+              
+              {showTimeRangeMenu && (
+                <div 
+                  ref={timeRangeMenuRef}
+                  className="absolute left-0 bottom-full mb-2 z-10 bg-background/90 backdrop-blur-lg rounded-xl shadow-lg border border-border/50 py-1 text-sm w-40 overflow-hidden animate-fade-in"
                 >
-                  Last week
-                </button>
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "month" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("month"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
-                >
-                  Last month
-                </button>
-                <button 
-                  className={`w-full text-left px-3 py-2 hover:bg-accent text-foreground ${timeRange === "custom" ? "font-medium" : ""}`}
-                  onClick={() => { setTimeRange("custom"); document.getElementById('time-range-menu')?.classList.add('hidden'); }}
-                >
-                  Advanced...
-                </button>
-              </div>
+                  <button 
+                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "week" ? "font-medium text-primary" : ""}`}
+                    onClick={() => selectTimeRange("week")}
+                  >
+                    Last week
+                  </button>
+                  <button 
+                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "month" ? "font-medium text-primary" : ""}`}
+                    onClick={() => selectTimeRange("month")}
+                  >
+                    Last month
+                  </button>
+                  <button 
+                    className={`w-full text-left px-4 py-2.5 hover:bg-primary/10 text-foreground transition-colors ${timeRange === "custom" ? "font-medium text-primary" : ""}`}
+                    onClick={() => selectTimeRange("custom")}
+                  >
+                    Advanced...
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
