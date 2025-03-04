@@ -105,6 +105,7 @@ export const useItemInference = () => {
   };
 
   const handleDialogOpenChange = (open: boolean) => {
+    // Just handle the dialog open state without affecting other state
     setInferenceDialogOpen(open);
     if (!open) {
       // Reset selected item when dialog is closed

@@ -50,6 +50,7 @@ const InferenceDialog = ({
   if (!selectedItem) return null;
 
   const handleCancel = () => {
+    // Simply close the dialog without additional side effects
     onOpenChange(false);
   };
 
@@ -133,7 +134,7 @@ const InferenceDialog = ({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={handleCancel}>
+          <Button variant="outline" onClick={handleCancel} type="button">
             Annulla
           </Button>
           <Button onClick={onConfirm} className="gap-1">
