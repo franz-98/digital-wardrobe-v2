@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import OutfitDetails from "@/components/wardrobe/OutfitDetails";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
@@ -48,6 +48,7 @@ const WardrobeDialogs = ({
       {selectedItem && (
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none">
+            <DialogTitle className="sr-only">Item Details</DialogTitle>
             <ClothingItemDetails
               item={selectedItem}
               open={isDetailsOpen}
@@ -64,6 +65,7 @@ const WardrobeDialogs = ({
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
           <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none">
+            <DialogTitle className="sr-only">Outfit Details</DialogTitle>
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}

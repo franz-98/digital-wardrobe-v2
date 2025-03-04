@@ -83,7 +83,7 @@ const ClothingItemDetails = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none">
+        <DialogContent className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col">
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
               outfit={selectedOutfit}
@@ -95,8 +95,8 @@ const ClothingItemDetails = ({
               onImageClick={handleImageClick}
             />
           ) : (
-            <div className="flex flex-col h-full">
-              <DialogHeader className="px-4 pt-4 pb-0">
+            <>
+              <DialogHeader className="px-4 pt-4 pb-0 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <DialogTitle className="text-lg font-semibold">{item.name}</DialogTitle>
                   <DialogClose asChild>
@@ -110,7 +110,7 @@ const ClothingItemDetails = ({
                 </DialogDescription>
               </DialogHeader>
               
-              <div className="flex-1 overflow-y-auto overscroll-bounce">
+              <div className="flex-1 overflow-y-auto overscroll-contain">
                 <ItemDetails 
                   item={item}
                   onDeleteClick={handleDeleteItem}
@@ -127,7 +127,7 @@ const ClothingItemDetails = ({
               </div>
 
               {onDelete && (
-                <div className="p-4 border-t">
+                <div className="p-4 border-t flex-shrink-0">
                   <Button 
                     variant="destructive" 
                     className="w-full"
@@ -138,7 +138,7 @@ const ClothingItemDetails = ({
                   </Button>
                 </div>
               )}
-            </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
