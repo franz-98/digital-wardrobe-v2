@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Plus, Loader2, Image, Check, X as XIcon } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -129,9 +130,9 @@ const HomePage = () => {
       
       const inferredItem = {
         id: `inferred-${Date.now()}`,
-        name: "New Clothing Item",
-        category: "Tops",
-        color: "Blue",
+        name: "", // Empty initial name
+        category: "Tops", // Default category
+        color: "",
         imageUrl: URL.createObjectURL(file),
         confidence: 0.85
       };
@@ -153,7 +154,7 @@ const HomePage = () => {
   const handleRecentItemClick = (item: RecentUpload) => {
     const inferredItem: ItemInference = {
       id: item.id,
-      name: item.name,
+      name: "", // Empty initial name
       category: item.category,
       color: "",
       imageUrl: item.imageUrl,
@@ -181,6 +182,14 @@ const HomePage = () => {
     setSelectedItem(prev => 
       prev ? { ...prev, [field]: value } : null
     );
+  };
+
+  const handleDialogOpenChange = (open: boolean) => {
+    setInferenceDialogOpen(open);
+    if (!open) {
+      // Reset selected item when dialog is closed
+      setSelectedItem(null);
+    }
   };
 
   return (
@@ -277,7 +286,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <Dialog open={inferenceDialogOpen} onOpenChange={setInferenceDialogOpen}>
+      <Dialog open={inferenceDialogOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Conferma Riconoscimento</DialogTitle>
@@ -306,6 +315,7 @@ const HomePage = () => {
                         id="name"
                         value={selectedItem.name}
                         onChange={(e) => handleInferenceEdit('name', e.target.value)}
+                        placeholder="Inserisci nome"
                       />
                     </div>
                     
@@ -334,6 +344,7 @@ const HomePage = () => {
                         id="color"
                         value={selectedItem.color}
                         onChange={(e) => handleInferenceEdit('color', e.target.value)}
+                        placeholder="Inserisci colore"
                       />
                     </div>
                   </div>

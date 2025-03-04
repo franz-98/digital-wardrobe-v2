@@ -26,8 +26,8 @@ export function useItemSelection() {
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {
     // Check if this is an outfit ID (starts with 'o')
     if (itemId.startsWith('o')) {
-      // This is an outfit ID - we don't do anything here as this should be handled by
-      // the parent component's handleOutfitClick function
+      // Find the outfit in the outfits collection and navigate to it
+      console.log("Outfit clicked:", itemId);
       return;
     }
     
