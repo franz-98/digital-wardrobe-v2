@@ -41,6 +41,11 @@ const DeleteConfirmationDialog = ({
     setShowDeleteConfirmation(false);
   };
 
+  // Handle the cancel action, but don't close the parent dialog
+  const handleCancel = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   return (
     <AlertDialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
       <AlertDialogContent>
@@ -59,7 +64,7 @@ const DeleteConfirmationDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annulla</AlertDialogCancel>
+          <AlertDialogCancel onClick={handleCancel}>Annulla</AlertDialogCancel>
           <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
             Elimina
           </AlertDialogAction>

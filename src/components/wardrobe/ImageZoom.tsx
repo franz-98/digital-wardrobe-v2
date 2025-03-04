@@ -61,13 +61,13 @@ const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
         </button>
         
         <div 
-          className="p-4 w-full max-w-screen-lg flex items-center justify-center" 
+          className="p-4 w-full h-full flex items-center justify-center" 
           onClick={(e) => e.stopPropagation()}
         >
           <img 
             src={imageUrl} 
             alt={alt} 
-            className="max-w-full max-h-[90vh] object-contain shadow-xl"
+            className="max-w-[90vw] max-h-[90vh] object-contain shadow-xl"
           />
         </div>
       </DialogContent>
