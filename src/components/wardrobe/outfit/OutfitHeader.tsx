@@ -24,16 +24,7 @@ const OutfitHeader = ({
   return (
     <div className="flex items-center justify-between mb-4">
       <div className={`flex items-center gap-2 ${showSearchBar ? 'w-full' : ''}`}>
-        {!showSearchBar ? (
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={toggleSearchBar}
-            className="h-10 w-10"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-        ) : (
+        {showSearchBar && (
           <div className="w-full relative">
             <Input
               id="search"

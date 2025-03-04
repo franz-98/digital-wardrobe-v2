@@ -1,6 +1,8 @@
 
 import React from 'react';
+import { Search } from 'lucide-react';
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import TimeRangeSelector from './TimeRangeSelector';
 
 interface StatsTabProps {
@@ -18,7 +20,10 @@ const StatsTab = ({
 }: StatsTabProps) => {
   return (
     <>
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between mb-2">
+        <Button variant="ghost" size="icon" className="h-10 w-10">
+          <Search className="h-5 w-5" />
+        </Button>
         <TimeRangeSelector 
           timeRange={timeRange}
           setTimeRange={setTimeRange}

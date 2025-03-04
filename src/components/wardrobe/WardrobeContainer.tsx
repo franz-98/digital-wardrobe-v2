@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Tabs } from "@/components/ui/tabs";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import WardrobeHeader from "@/components/wardrobe/WardrobeHeader";
 import WardrobeTabsNav from "@/components/wardrobe/WardrobeTabsNav";
 import WardrobeTabContent from "@/components/wardrobe/WardrobeTabContent";
@@ -61,11 +63,22 @@ const WardrobeContainer = () => {
                 className="ml-auto"
                 onClick={toggleSearchBar}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.3-4.3"></path>
-                </svg>
+                <Search className="h-5 w-5" />
               </button>
+            </div>
+          )}
+          
+          {activeTab === "clothing" && (
+            <div className="flex justify-between w-full">
+              <h2 className="text-xl font-semibold">My Clothing</h2>
+              <Button 
+                variant="ghost"
+                size="icon"
+                onClick={toggleSearchBar}
+                className="ml-auto"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
             </div>
           )}
         </div>
