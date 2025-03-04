@@ -46,7 +46,9 @@ const WardrobeDialogs = ({
     handleOutfitItemClick(outfit.id);
     
     // Open the outfit view
-    setIsOutfitDetailsOpen(true);
+    setTimeout(() => {
+      setIsOutfitDetailsOpen(true);
+    }, 50); // Small delay to ensure previous dialog is closed
   };
   
   const handleItemClickFromOutfit = (item: ClothingItem) => {

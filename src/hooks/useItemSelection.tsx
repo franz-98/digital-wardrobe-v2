@@ -19,10 +19,17 @@ export function useItemSelection() {
 
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("handleOutfitClick in useItemSelection called with outfit:", outfit);
+    // First ensure any open item details are closed
+    setIsDetailsOpen(false);
+    
+    // Then set the outfit and open outfit details
     setSelectedOutfit(outfit);
     setSelectedItem(null);
-    setIsOutfitDetailsOpen(true);
-    setIsDetailsOpen(false);
+    
+    // A slight delay to ensure the item dialog is properly closed first
+    setTimeout(() => {
+      setIsOutfitDetailsOpen(true);
+    }, 50);
   };
   
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {

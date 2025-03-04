@@ -57,8 +57,12 @@ const ItemDetailsDialog = ({
       // First close the current dialog
       onOpenChange(false);
       
-      // Navigate to the outfit immediately
-      onOutfitClick(outfit);
+      // Use a slight delay to ensure dialog state is updated before navigating
+      // This prevents race conditions in the UI state
+      setTimeout(() => {
+        // Navigate to the outfit
+        onOutfitClick(outfit);
+      }, 50);
       return;
     }
     
@@ -142,7 +146,7 @@ const ItemDetailsDialog = ({
         <DeleteOutfitDialog
           outfit={selectedOutfit}
           showDeleteConfirmation={showOutfitDeleteConfirmation}
-          setShowDeleteConfirmation={setShowOutfitDeleteConfirmation}
+          setShowDeleteConfirmation={setShowDeleteConfirmation}
           onDelete={onOutfitDelete}
         />
       )}
