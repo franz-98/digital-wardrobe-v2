@@ -110,7 +110,7 @@ export const useItemInference = () => {
       }
     }, 50);
   };
-
+  
   const confirmInference = () => {
     if (!selectedItem) return;
     
@@ -139,7 +139,7 @@ export const useItemInference = () => {
     toast({
       title: "Item confermato",
       description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
-      duration: 3000, // 3 seconds duration
+      duration: 1500, // Reduced from 3000 to 1500 ms (1.5 seconds)
       className: "compact-toast top-toast", // Custom class for styling
     });
     

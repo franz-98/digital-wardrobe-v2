@@ -101,7 +101,7 @@
   
   /* Custom toast styles */
   .compact-toast {
-    @apply p-3 text-sm max-w-xs;
+    @apply p-2 text-xs max-w-[250px];
   }
   
   .top-toast {
