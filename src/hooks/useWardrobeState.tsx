@@ -117,6 +117,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "2") || clothingItems[1]
           ],
           imageUrl: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400&h=400&fit=crop",
+          createdAt: "2023-11-15T10:30:00Z",
+          season: "All Seasons"
         },
         {
           id: "o2",
@@ -126,6 +128,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "4") || clothingItems[3]
           ],
           imageUrl: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&h=400&fit=crop",
+          createdAt: "2023-12-20T14:15:00Z",
+          season: "Summer"
         },
         {
           id: "o3",
@@ -135,6 +139,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "6") || clothingItems[5]
           ],
           imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+          createdAt: "2024-01-05T09:45:00Z",
+          season: "Winter"
         }
       ]);
 
@@ -148,6 +154,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "5") || clothingItems[4]
           ],
           imageUrl: "https://images.unsplash.com/photo-1550614000-4895a10e1bfd?w=400&h=400&fit=crop",
+          createdAt: "2024-02-10T11:20:00Z",
+          season: "Spring"
         },
         {
           id: "so2",
@@ -157,6 +165,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "4") || clothingItems[3]
           ],
           imageUrl: "https://images.unsplash.com/photo-1568252542512-9fe8fe6a8d75?w=400&h=400&fit=crop",
+          createdAt: "2024-03-15T18:30:00Z",
+          season: "All Seasons"
         },
         {
           id: "so3",
@@ -167,6 +177,8 @@ export function useWardrobeState() {
             clothingItems.find(item => item.id === "7") || clothingItems[6]
           ],
           imageUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop",
+          createdAt: "2024-04-02T15:10:00Z",
+          season: "Fall"
         }
       ]);
     }
@@ -255,6 +267,8 @@ export function useWardrobeState() {
         name: newOutfitName,
         items: selectedItemsForOutfit,
         imageUrl: selectedItemsForOutfit[0].imageUrl,
+        createdAt: new Date().toISOString(),
+        season: "All Seasons", // Default season
       };
       
       setOutfits([...outfits, newOutfit]);

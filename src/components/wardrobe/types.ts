@@ -18,4 +18,6 @@ export interface Outfit {
   name: string;
   items: ClothingItem[];
   imageUrl?: string;
+  createdAt?: string;
+  season?: string;
 }
