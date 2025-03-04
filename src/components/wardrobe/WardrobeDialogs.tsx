@@ -41,6 +41,7 @@ const WardrobeDialogs = ({
     
     // Wait a small amount of time to allow the first dialog to close
     setTimeout(() => {
+      console.log("Outfit clicked:", outfit.id);
       console.log("Navigating to outfit:", outfit.name);
       
       // This will be handled by the parent component through handleOutfitClick
@@ -48,7 +49,7 @@ const WardrobeDialogs = ({
       
       // Open the outfit view
       setIsOutfitDetailsOpen(true);
-    }, 150);
+    }, 250);
   };
   
   return (

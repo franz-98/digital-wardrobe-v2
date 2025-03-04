@@ -49,9 +49,10 @@ const InferenceDialog = ({
 }: InferenceDialogProps) => {
   if (!selectedItem) return null;
 
-  // Enhanced cancel handler to properly close the dialog without freezing
+  // Enhanced cancel handler to properly close the dialog and redirect
   const handleCancel = () => {
     // Important: Call onOpenChange(false) directly to ensure parent state is updated
+    // This will trigger the handleDialogOpenChange function in useItemInference
     onOpenChange(false);
   };
 

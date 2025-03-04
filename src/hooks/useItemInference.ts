@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
@@ -103,16 +102,17 @@ export const useItemInference = () => {
     );
   };
 
-  // Completely reworked to fix freezing issues when pressing "Annulla"
+  // Improved dialog open/close handler with proper redirection
   const handleDialogOpenChange = (open: boolean) => {
     if (!open) {
-      // First, close the dialog
+      // First, close the dialog immediately
       setInferenceDialogOpen(false);
       
       // Then, clear the selected item after a delay
       // This delay ensures the dialog animation completes before state changes
       setTimeout(() => {
         setSelectedItem(null);
+        // No redirection needed as we're already on the homepage
       }, 300);
     } else {
       setInferenceDialogOpen(true);
