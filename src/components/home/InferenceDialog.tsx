@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogClose
 } from "@/components/ui/dialog";
 import { 
   Select,
@@ -49,6 +48,10 @@ const InferenceDialog = ({
   clothingCategories
 }: InferenceDialogProps) => {
   if (!selectedItem) return null;
+
+  const handleCancel = () => {
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -128,11 +131,9 @@ const InferenceDialog = ({
         </div>
 
         <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">
-              Annulla
-            </Button>
-          </DialogClose>
+          <Button variant="outline" onClick={handleCancel}>
+            Annulla
+          </Button>
           <Button onClick={onConfirm} className="gap-1">
             <Check className="h-4 w-4" /> Conferma
           </Button>

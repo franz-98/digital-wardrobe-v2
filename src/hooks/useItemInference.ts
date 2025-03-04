@@ -65,7 +65,7 @@ export const useItemInference = () => {
   const handleRecentItemClick = (item: RecentUpload) => {
     const inferredItem: ItemInference = {
       id: item.id,
-      name: "",
+      name: item.name, // Use the existing name from the recent upload item
       category: item.category,
       color: "",
       imageUrl: item.imageUrl,
