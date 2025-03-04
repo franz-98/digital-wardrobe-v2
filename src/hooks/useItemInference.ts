@@ -1,8 +1,10 @@
+
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
 import { useNavigate } from "react-router-dom";
-import { useWardrobeState } from "@/hooks/useWardrobeState";
+import { useWardrobeData } from "@/hooks/useWardrobeData";
+import { ClothingItem } from "@/components/wardrobe/types";
 
 export const useItemInference = () => {
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ export const useItemInference = () => {
   const [selectedItem, setSelectedItem] = useState<ItemInference | null>(null);
   const [inferenceDialogOpen, setInferenceDialogOpen] = useState(false);
   
-  const { setClothingItems, clothingItems } = useWardrobeState();
+  const { setClothingItems, clothingItems } = useWardrobeData();
   
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([
     {
@@ -113,7 +115,7 @@ export const useItemInference = () => {
   const confirmInference = () => {
     if (!selectedItem) return;
     
-    const newClothingItem = {
+    const newClothingItem: ClothingItem = {
       id: `clothing-${Date.now()}`,
       name: selectedItem.name,
       category: selectedItem.category,
