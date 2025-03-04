@@ -44,6 +44,7 @@ const ClothingItemDetails = ({
   const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [zoomImageUrl, setZoomImageUrl] = useState("");
+  const [dismissProgress, setDismissProgress] = useState(0);
   
   if (!item) return null;
 
@@ -94,6 +95,7 @@ const ClothingItemDetails = ({
           enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation && viewMode === "item"}
           dismissThreshold={70}
           showDismissIndicator={true}
+          onProgressChange={setDismissProgress}
         >
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
@@ -118,6 +120,11 @@ const ClothingItemDetails = ({
                 </div>
                 <DialogDescription>
                   View details and related outfits
+                  {dismissProgress > 0 && dismissProgress < 60 && (
+                    <span className="ml-2 text-xs opacity-60">
+                      Pull down to close ({Math.round(dismissProgress)}%)
+                    </span>
+                  )}
                 </DialogDescription>
               </DialogHeader>
               

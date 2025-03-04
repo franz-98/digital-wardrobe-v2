@@ -12,6 +12,7 @@ export interface DialogContentProps extends
   enableDismissOnScroll?: boolean;
   dismissThreshold?: number;
   showDismissIndicator?: boolean;
+  onProgressChange?: (progress: number) => void;
 }
 
 const DialogContent = React.forwardRef<
@@ -23,6 +24,7 @@ const DialogContent = React.forwardRef<
   enableDismissOnScroll = false, 
   dismissThreshold = 50,
   showDismissIndicator = true,
+  onProgressChange,
   ...props 
 }, ref) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -33,7 +35,13 @@ const DialogContent = React.forwardRef<
     enableDismissOnScroll,
     dismissThreshold,
     onDismiss: (e) => props.onPointerDownOutside?.(e as any),
-    onProgressChange: (progress) => setDismissProgress(progress)
+    onProgressChange: (progress) => {
+      setDismissProgress(progress);
+      // Forward progress to parent component if callback is provided
+      if (onProgressChange) {
+        onProgressChange(progress);
+      }
+    }
   });
 
   return (

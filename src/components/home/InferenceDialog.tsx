@@ -56,7 +56,12 @@ const InferenceDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent 
+        className="max-w-md max-h-[90vh] overflow-y-auto"
+        enableDismissOnScroll={true}
+        dismissThreshold={60}
+        showDismissIndicator={true}
+      >
         <DialogHeader>
           <DialogTitle>Conferma Riconoscimento</DialogTitle>
           <DialogDescription>

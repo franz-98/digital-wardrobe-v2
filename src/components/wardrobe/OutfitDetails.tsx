@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Shirt, X, Trash2, Calendar, Tag } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
@@ -18,6 +17,7 @@ interface OutfitDetailsProps {
 const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  const [dismissProgress, setDismissProgress] = useState(0);
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -31,7 +31,6 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
     setIsImageZoomOpen(true);
   };
 
-  // Get creation date (using current date as fallback)
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
@@ -52,6 +51,11 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
         </div>
         <DialogDescription>
           {outfit.items.length} items in this outfit
+          {dismissProgress > 0 && dismissProgress < 60 && (
+            <span className="ml-2 text-xs opacity-60">
+              Pull down to close ({Math.round(dismissProgress)}%)
+            </span>
+          )}
         </DialogDescription>
       </DialogHeader>
       
@@ -74,7 +78,6 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
             )}
           </div>
           
-          {/* Outfit Creation Details */}
           <div className="bg-muted/30 p-4 rounded-lg space-y-3">
             <h4 className="font-medium">Outfit Details</h4>
             
