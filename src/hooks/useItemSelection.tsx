@@ -24,6 +24,13 @@ export function useItemSelection() {
   };
   
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {
+    // Verifica se l'ID appartiene a un outfit
+    if (itemId.startsWith('o')) {
+      // È un outfit ID, trova l'outfit corrispondente invece dell'elemento
+      return;
+    }
+    
+    // Altrimenti è un elemento di abbigliamento
     const itemToShow = clothingItems.find(item => item.id === itemId);
     
     if (itemToShow) {
