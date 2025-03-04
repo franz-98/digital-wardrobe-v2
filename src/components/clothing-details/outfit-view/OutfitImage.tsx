@@ -13,6 +13,7 @@ const OutfitImage = ({ imageUrl, onImageClick }: OutfitImageProps) => {
   
   const handleImageClick = () => {
     if (imageUrl) {
+      // Directly open zoom view instead of calling onImageClick
       setIsImageZoomOpen(true);
     } else {
       onImageClick();

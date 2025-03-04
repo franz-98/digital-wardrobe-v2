@@ -1,7 +1,6 @@
 
 import React, { useRef, useEffect } from "react";
 import { X } from "lucide-react";
-import { DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageZoomProps {
@@ -40,6 +39,9 @@ const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
+
+  // Add debugging log to check if the component is being opened
+  console.log("ImageZoom rendering with isOpen:", isOpen);
   
   return (
     <AnimatePresence>

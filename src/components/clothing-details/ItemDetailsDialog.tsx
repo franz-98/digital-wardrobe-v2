@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -86,6 +85,7 @@ const ItemDetailsDialog = ({
   };
   
   const handleImageClick = (imageUrl: string) => {
+    console.log("ItemDetailsDialog: Image click handler with URL:", imageUrl);
     setZoomImageUrl(imageUrl);
     setIsImageZoomOpen(true);
   };
