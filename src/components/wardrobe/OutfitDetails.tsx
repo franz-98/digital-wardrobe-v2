@@ -1,8 +1,10 @@
 
 import React, { useState } from 'react';
-import { Shirt, X, Trash2 } from "lucide-react";
+import { Shirt, X, Trash2, Calendar, Tag } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
 import ImageZoom from "@/components/wardrobe/ImageZoom";
@@ -29,6 +31,14 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
     setIsImageZoomOpen(true);
   };
 
+  // Get creation date (using current date as fallback)
+  const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
+  const formattedDate = creationDate.toLocaleDateString('default', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-6 pt-6 pb-0">
@@ -46,7 +56,7 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
       </DialogHeader>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div 
             className="aspect-square overflow-hidden rounded-lg relative cursor-pointer"
             onClick={handleImageClick}
@@ -62,6 +72,45 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
                 <Shirt className="h-12 w-12 text-muted-foreground" />
               </div>
             )}
+          </div>
+          
+          {/* Outfit Creation Details */}
+          <div className="bg-muted/30 p-4 rounded-lg space-y-3">
+            <h4 className="font-medium">Outfit Details</h4>
+            
+            <div className="flex items-center gap-2 text-sm">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span>Created on {formattedDate}</span>
+            </div>
+            
+            <div className="flex items-center gap-2 text-sm">
+              <Tag className="h-4 w-4 text-muted-foreground" />
+              <span>{outfit.season || 'All Seasons'}</span>
+            </div>
+            
+            <div>
+              <h5 className="text-sm font-medium mb-2 flex items-center">
+                Color palette
+              </h5>
+              <div className="flex gap-2">
+                {getOutfitColorPalette(outfit).map((color, index) => (
+                  <Popover key={index}>
+                    <PopoverTrigger asChild>
+                      <div 
+                        className="w-8 h-8 rounded-full border border-border/50 cursor-pointer hover:ring-2 hover:ring-primary/20 transition-all"
+                        style={{ 
+                          backgroundColor: color.toLowerCase(),
+                          boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
+                        }}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2">
+                      <p className="text-sm font-medium">{color}</p>
+                    </PopoverContent>
+                  </Popover>
+                ))}
+              </div>
+            </div>
           </div>
           
           <div>
@@ -84,25 +133,17 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
                   </div>
                   <div>
                     <p className="font-medium">{item.name}</p>
-                    <p className="text-xs text-muted-foreground">{item.category}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-muted-foreground">{item.category}</p>
+                      <Badge 
+                        variant="outline" 
+                        className="text-xs h-4 px-1.5 bg-secondary/10"
+                      >
+                        {item.color}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-2">Color palette</h4>
-            <div className="flex gap-2">
-              {getOutfitColorPalette(outfit).map((color, index) => (
-                <div 
-                  key={index}
-                  className="w-8 h-8 rounded-full border border-border/50"
-                  style={{ 
-                    backgroundColor: color.toLowerCase(),
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)"
-                  }}
-                />
               ))}
             </div>
           </div>

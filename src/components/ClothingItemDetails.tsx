@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -48,11 +49,13 @@ const ClothingItemDetails = ({
 
   const handleOutfitClick = (outfit: Outfit) => {
     if (onOutfitClick) {
+      // Close the current dialog and trigger the parent's outfit click handler
       onOpenChange(false);
       onOutfitClick(outfit);
       return;
     }
     
+    // Fallback to local state navigation within the component
     setSelectedOutfit(outfit);
     setViewMode("outfit");
   };
