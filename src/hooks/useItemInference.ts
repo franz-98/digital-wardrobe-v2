@@ -92,8 +92,7 @@ export const useItemInference = () => {
       title: "Item confermato",
       description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
     });
-    setInferenceDialogOpen(false);
-    setSelectedItem(null);
+    handleDialogOpenChange(false);
   };
 
   const handleInferenceEdit = (field: keyof ItemInference, value: string) => {
@@ -104,15 +103,17 @@ export const useItemInference = () => {
     );
   };
 
+  // Fixed the handleDialogOpenChange to ensure state is properly cleaned up
   const handleDialogOpenChange = (open: boolean) => {
+    // First set the dialog state
     setInferenceDialogOpen(open);
     
-    // If dialog is closing, clear the selected item after a small delay
-    // to ensure smooth transition and prevent state issues
+    // If dialog is closing, clear the selected item
     if (!open) {
+      // Use a small delay to ensure state updates happen after dialog animation
       setTimeout(() => {
         setSelectedItem(null);
-      }, 100);
+      }, 200);
     }
   };
 

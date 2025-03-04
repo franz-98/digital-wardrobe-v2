@@ -50,8 +50,8 @@ const InferenceDialog = ({
   if (!selectedItem) return null;
 
   const handleCancel = () => {
-    // Use onOpenChange to safely close the dialog without freezing
-    // This will trigger the proper cleanup in the parent component
+    // Call the parent's onOpenChange to safely close the dialog
+    // This ensures proper cleanup is triggered in the parent component
     onOpenChange(false);
   };
 
