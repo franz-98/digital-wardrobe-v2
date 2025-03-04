@@ -68,7 +68,7 @@ const WardrobeDialogs = ({
       
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
-          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none">
+          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none" enableDismissOnScroll={true}>
             <DialogTitle className="sr-only">Outfit Details</DialogTitle>
             <OutfitDetails 
               outfit={selectedOutfit} 
