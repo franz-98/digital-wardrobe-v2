@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Dialog, 
@@ -40,17 +41,12 @@ const WardrobeDialogs = ({
     // Close item details dialog first to avoid UI conflicts
     setIsDetailsOpen(false);
     
-    // Wait a small amount of time to allow the first dialog to close
-    setTimeout(() => {
-      console.log("Opening outfit detail:", outfit.name);
-      
-      // Find the selected outfit in the wardrobe context
-      // and set it as the current outfit
-      handleOutfitItemClick(outfit.id);
-      
-      // Open the outfit view
-      setIsOutfitDetailsOpen(true);
-    }, 800); // Increased delay to ensure smooth transition
+    // Find the selected outfit in the wardrobe context
+    // and set it as the current outfit, opening the outfit detail view
+    handleOutfitItemClick(outfit.id);
+    
+    // Open the outfit view
+    setIsOutfitDetailsOpen(true);
   };
   
   const handleItemClickFromOutfit = (item: ClothingItem) => {
