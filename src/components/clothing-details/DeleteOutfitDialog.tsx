@@ -29,6 +29,11 @@ const DeleteOutfitDialog = ({
     onDelete(outfit.id);
     setShowDeleteConfirmation(false);
   };
+  
+  // Handle the cancel action, preventing dialog closing
+  const handleCancel = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   return (
     <AlertDialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
@@ -43,7 +48,7 @@ const DeleteOutfitDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Annulla</AlertDialogCancel>
+          <AlertDialogCancel onClick={handleCancel}>Annulla</AlertDialogCancel>
           <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
             Elimina
           </AlertDialogAction>
