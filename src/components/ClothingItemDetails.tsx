@@ -89,7 +89,10 @@ const ClothingItemDetails = ({
           onOpenChange(isOpen);
         }
       }}>
-        <DialogContent className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col">
+        <DialogContent 
+          className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col"
+          enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation && viewMode === "item"}
+        >
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
               outfit={selectedOutfit}
