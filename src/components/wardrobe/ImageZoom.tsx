@@ -47,7 +47,7 @@ const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
       <DialogOverlay className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm" />
       <DialogContent 
         ref={containerRef}
-        className="fixed inset-0 z-50 flex items-center justify-center p-0 border-none bg-transparent shadow-none max-w-none max-h-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center p-0 border-none bg-transparent shadow-none max-w-none max-h-none"
         onClick={onClose}
       >
         <button 
@@ -61,7 +61,7 @@ const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
         </button>
         
         <div 
-          className="p-4 max-w-screen-lg max-h-screen" 
+          className="p-4 w-full max-w-screen-lg flex items-center justify-center" 
           onClick={(e) => e.stopPropagation()}
         >
           <img 

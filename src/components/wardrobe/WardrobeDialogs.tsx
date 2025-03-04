@@ -32,18 +32,17 @@ const WardrobeDialogs = ({
 }: WardrobeDialogsProps) => {
   
   const handleOutfitClick = (outfit: Outfit) => {
-    // Chiudiamo prima la finestra di dialogo dei dettagli dell'elemento per evitare conflitti di UI
+    // Close item details dialog first to avoid UI conflicts
     setIsDetailsOpen(false);
     
-    // Attendiamo un po' per consentire alla prima finestra di dialogo di chiudersi
+    // Wait a small amount of time to allow the first dialog to close
     setTimeout(() => {
-      // Questo verrà gestito dal componente padre attraverso handleOutfitClick
       console.log("Navigating to outfit:", outfit.name);
       
-      // Impostiamo l'outfit selezionato tramite il genitore
+      // This will be handled by the parent component through handleOutfitClick
       handleOutfitItemClick(outfit.id);
       
-      // Apriamo la visualizzazione dell'outfit
+      // Open the outfit view
       setIsOutfitDetailsOpen(true);
     }, 150);
   };

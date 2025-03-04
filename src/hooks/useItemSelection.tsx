@@ -24,9 +24,10 @@ export function useItemSelection() {
   };
   
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {
-    // Verifica se l'ID appartiene a un outfit
+    // Check if this is an outfit ID (starts with 'o')
     if (itemId.startsWith('o')) {
-      // È un outfit ID, trova l'outfit corrispondente invece dell'elemento
+      // This is an outfit ID - we don't do anything here as this should be handled by
+      // the parent component's handleOutfitClick function
       return;
     }
     
