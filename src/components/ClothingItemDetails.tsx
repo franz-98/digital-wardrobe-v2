@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -83,7 +82,12 @@ const ClothingItemDetails = ({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={(isOpen) => {
+        // Only allow the parent dialog to close if delete confirmation is not showing
+        if (!showDeleteConfirmation && !showOutfitDeleteConfirmation) {
+          onOpenChange(isOpen);
+        }
+      }}>
         <DialogContent className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col">
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
@@ -144,7 +148,7 @@ const ClothingItemDetails = ({
         </DialogContent>
       </Dialog>
 
-      {onDelete && (
+      {onDelete && item && (
         <DeleteConfirmationDialog
           item={item}
           showDeleteConfirmation={showDeleteConfirmation}
