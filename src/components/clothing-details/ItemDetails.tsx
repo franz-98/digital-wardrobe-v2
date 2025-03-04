@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Calendar, Info, Tag } from "lucide-react";
+import { Calendar, Info, Tag, Maximize2 } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +40,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div 
-          className="aspect-square rounded-lg overflow-hidden border cursor-pointer"
+          className="aspect-square rounded-lg overflow-hidden border cursor-pointer relative group"
           onClick={handleImageClick}
         >
           <img 
@@ -49,6 +49,9 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
             className="w-full h-full object-cover"
             loading="lazy"
           />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <Maximize2 className="h-6 w-6 text-white drop-shadow-md" />
+          </div>
         </div>
         
         <div className="flex flex-col justify-between">
