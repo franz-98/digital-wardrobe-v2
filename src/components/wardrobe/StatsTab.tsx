@@ -20,7 +20,7 @@ const StatsTab = ({
 }: StatsTabProps) => {
   return (
     <>
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between mb-0">
         <Button variant="ghost" size="icon" className="h-10 w-10">
           <Search className="h-5 w-5" />
         </Button>
