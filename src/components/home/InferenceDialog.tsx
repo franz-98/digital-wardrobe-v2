@@ -83,6 +83,7 @@ const InferenceDialog = ({
                     value={selectedItem.name}
                     onChange={(e) => onFieldChange('name', e.target.value)}
                     placeholder="Inserisci nome"
+                    autoFocus={false}
                   />
                 </div>
                 
@@ -112,6 +113,7 @@ const InferenceDialog = ({
                     value={selectedItem.color}
                     onChange={(e) => onFieldChange('color', e.target.value)}
                     placeholder="Inserisci colore"
+                    autoFocus={false}
                   />
                 </div>
               </div>

@@ -74,6 +74,15 @@ export const useItemInference = () => {
     
     setSelectedItem(inferredItem);
     setInferenceDialogOpen(true);
+
+    // Prevent any input field from auto-focusing by delaying any potential
+    // automatic focus that might occur after the dialog opens
+    setTimeout(() => {
+      // This will cause any currently focused element to lose focus
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    }, 50);
   };
 
   const confirmInference = () => {
