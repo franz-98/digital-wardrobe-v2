@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
+import { useNavigate } from "react-router-dom";
+import { useWardrobeState } from "@/hooks/useWardrobeState";
 
 export const useItemInference = () => {
+  const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ItemInference | null>(null);
   const [inferenceDialogOpen, setInferenceDialogOpen] = useState(false);
+  
+  const { setClothingItems, clothingItems } = useWardrobeState();
   
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([
     {
@@ -24,6 +29,30 @@ export const useItemInference = () => {
       imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
       confidence: 0.88
     }
+  ]);
+
+  const [recentUploadItems, setRecentUploadItems] = useState<RecentUpload[]>([
+    {
+      id: "1",
+      name: "Blue T-Shirt",
+      imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+      category: "Tops",
+      createdAt: "2023-11-01T00:00:00Z",
+    },
+    {
+      id: "2",
+      name: "Black Jeans",
+      imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+      category: "Bottoms",
+      createdAt: "2023-11-02T00:00:00Z",
+    },
+    {
+      id: "3",
+      name: "White Sneakers",
+      imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
+      category: "Footwear",
+      createdAt: "2023-11-03T00:00:00Z",
+    },
   ]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,10 +103,7 @@ export const useItemInference = () => {
     setSelectedItem(inferredItem);
     setInferenceDialogOpen(true);
 
-    // Prevent any input field from auto-focusing by delaying any potential
-    // automatic focus that might occur after the dialog opens
     setTimeout(() => {
-      // This will cause any currently focused element to lose focus
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
@@ -87,11 +113,36 @@ export const useItemInference = () => {
   const confirmInference = () => {
     if (!selectedItem) return;
     
+    const newClothingItem = {
+      id: `clothing-${Date.now()}`,
+      name: selectedItem.name,
+      category: selectedItem.category,
+      color: selectedItem.color || "Unknown", // Default if color is not provided
+      imageUrl: selectedItem.imageUrl,
+      metadata: {
+        dateTaken: new Date().toISOString().split('T')[0],
+        material: "",
+        brand: "",
+        season: ""
+      }
+    };
+    
+    setClothingItems([newClothingItem, ...clothingItems]);
+    
+    if (selectedItem.id.startsWith("1") || selectedItem.id.startsWith("2") || selectedItem.id.startsWith("3")) {
+      setRecentUploadItems(prevItems => 
+        prevItems.filter(item => item.id !== selectedItem.id)
+      );
+    }
+    
     toast({
       title: "Item confermato",
       description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
     });
+    
     handleDialogOpenChange(false);
+    
+    setTimeout(() => navigate("/wardrobe"), 500);
   };
 
   const handleInferenceEdit = (field: keyof ItemInference, value: string) => {
@@ -102,18 +153,10 @@ export const useItemInference = () => {
     );
   };
 
-  // Improved dialog open/close handler with proper redirection
   const handleDialogOpenChange = (open: boolean) => {
     if (!open) {
-      // First, close the dialog immediately
       setInferenceDialogOpen(false);
-      
-      // Then, clear the selected item after a delay
-      // This delay ensures the dialog animation completes before state changes
-      setTimeout(() => {
-        setSelectedItem(null);
-        // No redirection needed as we're already on the homepage
-      }, 300);
+      setTimeout(() => setSelectedItem(null), 300);
     } else {
       setInferenceDialogOpen(true);
     }
@@ -124,6 +167,7 @@ export const useItemInference = () => {
     selectedItem,
     inferenceDialogOpen,
     inferredItems,
+    recentUploadItems,
     handleFileChange,
     handleRecentItemClick,
     confirmInference,

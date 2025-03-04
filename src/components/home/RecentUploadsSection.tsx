@@ -3,17 +3,10 @@ import React from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RecentItemCard from "./RecentItemCard";
-
-interface RecentUpload {
-  id: string;
-  name: string;
-  imageUrl: string;
-  category: string;
-  createdAt: string;
-}
+import { RecentUpload } from "@/components/home/types";
 
 interface RecentUploadsSectionProps {
-  recentUploads: RecentUpload[] | undefined;
+  recentUploads: RecentUpload[];
   isLoading: boolean;
   onItemClick: (item: RecentUpload) => void;
 }
@@ -36,10 +29,10 @@ const RecentUploadsSection = ({
         <div className="flex justify-center py-10">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      ) : (
+      ) : recentUploads.length > 0 ? (
         <div className="overflow-x-auto pb-4 -mx-4 px-4">
           <div className="flex space-x-4">
-            {recentUploads?.map((item) => (
+            {recentUploads.map((item) => (
               <RecentItemCard 
                 key={`recent-${item.id}`} 
                 item={item} 
@@ -47,6 +40,10 @@ const RecentUploadsSection = ({
               />
             ))}
           </div>
+        </div>
+      ) : (
+        <div className="flex justify-center py-10 text-muted-foreground">
+          No recent uploads
         </div>
       )}
     </div>

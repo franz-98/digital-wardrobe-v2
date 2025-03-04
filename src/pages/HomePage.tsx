@@ -29,12 +29,15 @@ const CLOTHING_CATEGORIES = [
 ];
 
 const HomePage = () => {
-  // Use custom hooks for data fetching and state management
-  const { data: recentUploads, isLoading } = useRecentUploads();
+  // Use React Query for data fetching (but we won't use this data directly anymore)
+  const { isLoading: isLoadingFromAPI } = useRecentUploads();
+  
+  // Use custom hooks for state management and item inference
   const {
     isUploading,
     selectedItem,
     inferenceDialogOpen,
+    recentUploadItems, // Use the local state from the hook
     handleFileChange,
     handleRecentItemClick,
     confirmInference,
@@ -55,8 +58,8 @@ const HomePage = () => {
         <HowItWorksGuide />
 
         <RecentUploadsSection 
-          recentUploads={recentUploads} 
-          isLoading={isLoading} 
+          recentUploads={recentUploadItems} // Use our local state instead of API data
+          isLoading={isLoadingFromAPI && recentUploadItems.length === 0}
           onItemClick={handleRecentItemClick} 
         />
       </div>
