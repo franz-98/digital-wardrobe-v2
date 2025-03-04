@@ -49,6 +49,7 @@ const ClothingItemDetails = ({
 
   const handleOutfitClick = (outfit: Outfit) => {
     if (onOutfitClick) {
+      console.log("Outfit click handler triggered, navigating to outfit:", outfit.name);
       // Close the current dialog and trigger the parent's outfit click handler
       onOpenChange(false);
       onOutfitClick(outfit);
