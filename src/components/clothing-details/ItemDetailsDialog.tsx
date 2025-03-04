@@ -57,11 +57,8 @@ const ItemDetailsDialog = ({
       // First close the current dialog
       onOpenChange(false);
       
-      // Important: Add a delay before navigating to the outfit
-      // This ensures the current dialog is fully closed before opening a new one
-      setTimeout(() => {
-        onOutfitClick(outfit);
-      }, 500);
+      // Navigate to the outfit immediately
+      onOutfitClick(outfit);
       return;
     }
     
