@@ -35,10 +35,11 @@ const WardrobeDialogs = ({
     setIsDetailsOpen(false);
     setTimeout(() => {
       setIsOutfitDetailsOpen(true);
-      // Set selected outfit via a more type-safe approach
-      if (window && selectedOutfit !== outfit) {
-        // This will be handled by the parent component's state management
-        // without relying on global window properties
+      if (handleDeleteOutfit) {
+        // This will trigger the outfit details dialog with the selected outfit
+        if (window && selectedOutfit !== outfit) {
+          // We'll handle this through the parent component
+        }
       }
     }, 100);
   };
