@@ -105,11 +105,14 @@ export const useItemInference = () => {
   };
 
   const handleDialogOpenChange = (open: boolean) => {
-    // Just handle the dialog open state without affecting other state
     setInferenceDialogOpen(open);
+    
+    // If dialog is closing, clear the selected item after a small delay
+    // to ensure smooth transition and prevent state issues
     if (!open) {
-      // Reset selected item when dialog is closed
-      setSelectedItem(null);
+      setTimeout(() => {
+        setSelectedItem(null);
+      }, 100);
     }
   };
 
