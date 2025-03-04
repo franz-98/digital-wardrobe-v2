@@ -54,15 +54,13 @@ const ItemDetailsDialog = ({
     
     if (onOutfitClick) {
       console.log("Using external onOutfitClick handler");
-      // First close the current dialog
+      
+      // First directly close the current dialog to avoid UI conflicts
       onOpenChange(false);
       
-      // Use a slight delay to ensure dialog state is updated before navigating
-      // This prevents race conditions in the UI state
-      setTimeout(() => {
-        // Navigate to the outfit
-        onOutfitClick(outfit);
-      }, 50);
+      // Then immediately invoke the outfit click handler
+      onOutfitClick(outfit);
+      
       return;
     }
     
@@ -146,7 +144,7 @@ const ItemDetailsDialog = ({
         <DeleteOutfitDialog
           outfit={selectedOutfit}
           showDeleteConfirmation={showOutfitDeleteConfirmation}
-          setShowDeleteConfirmation={setShowDeleteConfirmation}
+          setShowDeleteConfirmation={setShowOutfitDeleteConfirmation}
           onDelete={onOutfitDelete}
         />
       )}

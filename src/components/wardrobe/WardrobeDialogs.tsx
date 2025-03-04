@@ -38,26 +38,20 @@ const WardrobeDialogs = ({
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("WardrobeDialogs - outfit clicked:", outfit);
     
-    // Close item details dialog first to avoid UI conflicts
+    // First close item details dialog to avoid UI conflicts
     setIsDetailsOpen(false);
     
-    // Find the selected outfit in the wardrobe context
-    // and set it as the current outfit, opening the outfit detail view
+    // Process the outfit click immediately
     handleOutfitItemClick(outfit.id);
-    
-    // Open the outfit view
-    setTimeout(() => {
-      setIsOutfitDetailsOpen(true);
-    }, 50); // Small delay to ensure previous dialog is closed
   };
   
   const handleItemClickFromOutfit = (item: ClothingItem) => {
     console.log("Item clicked from outfit view:", item.name);
     
-    // Close outfit details first
+    // Close outfit details
     setIsOutfitDetailsOpen(false);
     
-    // Call the handler immediately without delay
+    // Process the item click
     handleOutfitItemClick(item.id);
   };
   

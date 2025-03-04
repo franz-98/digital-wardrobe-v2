@@ -5,6 +5,7 @@ import { useWardrobeUI } from "./useWardrobeUI";
 import { useItemSelection } from "./useItemSelection";
 import { useWardrobeActions } from "./useWardrobeActions";
 import { useNavigationEffects } from "./useNavigationEffects";
+import { Outfit } from "@/components/wardrobe/types";
 
 export function useWardrobeState() {
   const {
@@ -45,13 +46,36 @@ export function useWardrobeState() {
     selectedItemsForOutfit,
     setSelectedItemsForOutfit,
     handleItemClick,
-    handleOutfitClick,
+    handleOutfitClick: baseHandleOutfitClick,
     handleOutfitItemClick: baseHandleOutfitItemClick,
     toggleItemSelection
   } = useItemSelection();
 
+  // Enhanced handleOutfitItemClick function that can find outfits by ID
   const handleOutfitItemClick = (itemId: string) => {
-    baseHandleOutfitItemClick(itemId, clothingItems);
+    // Check if this is an outfit ID
+    if (itemId.startsWith('o')) {
+      console.log("Processing outfit ID:", itemId);
+      // Find the outfit in our data
+      const outfitToShow = outfits.find(outfit => outfit.id === itemId) || 
+                           suggestedOutfits.find(outfit => outfit.id === itemId);
+      
+      if (outfitToShow) {
+        console.log("Found outfit to display:", outfitToShow.name);
+        // Use the outfit click handler to show the outfit details
+        handleOutfitClick(outfitToShow);
+      } else {
+        console.log("Outfit not found with ID:", itemId);
+      }
+    } else {
+      // Handle normal item clicks
+      baseHandleOutfitItemClick(itemId, clothingItems);
+    }
+  };
+
+  // Explicitly handle outfit clicks
+  const handleOutfitClick = (outfit: Outfit) => {
+    baseHandleOutfitClick(outfit);
   };
 
   const {

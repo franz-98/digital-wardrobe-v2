@@ -19,17 +19,14 @@ export function useItemSelection() {
 
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("handleOutfitClick in useItemSelection called with outfit:", outfit);
-    // First ensure any open item details are closed
-    setIsDetailsOpen(false);
     
-    // Then set the outfit and open outfit details
-    setSelectedOutfit(outfit);
+    // Close any open item details first
+    setIsDetailsOpen(false);
     setSelectedItem(null);
     
-    // A slight delay to ensure the item dialog is properly closed first
-    setTimeout(() => {
-      setIsOutfitDetailsOpen(true);
-    }, 50);
+    // Set the outfit and open outfit details
+    setSelectedOutfit(outfit);
+    setIsOutfitDetailsOpen(true);
   };
   
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {
@@ -37,8 +34,9 @@ export function useItemSelection() {
     
     // Check if this is an outfit ID (starts with 'o')
     if (itemId.startsWith('o')) {
-      // This will be handled in the parent component that has access to outfits collection
-      console.log("Outfit ID detected, handling at parent level");
+      // This is an outfit ID - we need to handle it specially
+      console.log("Outfit ID detected, will open outfit directly");
+      // This will be handled in the function caller where outfit data is available
       return;
     }
     
@@ -48,12 +46,12 @@ export function useItemSelection() {
     if (itemToShow) {
       console.log("Found item to show:", itemToShow.name);
       
-      // Ensure we close any open outfit details first
+      // Close any open outfit details first
       setIsOutfitDetailsOpen(false);
-      
-      // Immediately open item details without delay
-      setSelectedItem(itemToShow);
       setSelectedOutfit(null);
+      
+      // Then open item details
+      setSelectedItem(itemToShow);
       setIsDetailsOpen(true);
     } else {
       console.log("Item not found with ID:", itemId);
