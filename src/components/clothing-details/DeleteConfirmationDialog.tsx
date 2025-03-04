@@ -50,8 +50,8 @@ const DeleteConfirmationDialog = ({
     <AlertDialog 
       open={showDeleteConfirmation} 
       onOpenChange={(open) => {
-        // When the dialog is closing, make sure it's because of our button handlers
-        // and not because of clicking outside or Escape key
+        // This prevents the AlertDialog from closing when clicking outside
+        // Only allow our explicit button handlers to change the state
         if (!open) {
           setShowDeleteConfirmation(false);
         }
