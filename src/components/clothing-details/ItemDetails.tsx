@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { ClothingItem } from "@/components/wardrobe/types";
 import ImageZoom from "@/components/wardrobe/ImageZoom";
+import { motion } from "framer-motion";
 
 interface ItemDetailsProps {
   item: ClothingItem;
@@ -39,9 +40,11 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <div 
+        <motion.div 
           className="aspect-square rounded-lg overflow-hidden border cursor-pointer relative group"
           onClick={handleImageClick}
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
         >
           <img 
             src={item.imageUrl} 
@@ -52,7 +55,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
             <Maximize2 className="h-6 w-6 text-white drop-shadow-md" />
           </div>
-        </div>
+        </motion.div>
         
         <div className="flex flex-col justify-between">
           <div>
