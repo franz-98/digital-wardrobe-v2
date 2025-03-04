@@ -103,17 +103,19 @@ export const useItemInference = () => {
     );
   };
 
-  // Fixed the handleDialogOpenChange to ensure state is properly cleaned up
+  // Completely reworked to fix freezing issues when pressing "Annulla"
   const handleDialogOpenChange = (open: boolean) => {
-    // First set the dialog state
-    setInferenceDialogOpen(open);
-    
-    // If dialog is closing, clear the selected item
     if (!open) {
-      // Use a small delay to ensure state updates happen after dialog animation
+      // First, close the dialog
+      setInferenceDialogOpen(false);
+      
+      // Then, clear the selected item after a delay
+      // This delay ensures the dialog animation completes before state changes
       setTimeout(() => {
         setSelectedItem(null);
-      }, 200);
+      }, 300);
+    } else {
+      setInferenceDialogOpen(true);
     }
   };
 

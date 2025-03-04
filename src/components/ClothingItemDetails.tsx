@@ -53,7 +53,12 @@ const ClothingItemDetails = ({
       console.log("Outfit click handler triggered, navigating to outfit:", outfit.name);
       // Close the current dialog and trigger the parent's outfit click handler
       onOpenChange(false);
-      onOutfitClick(outfit);
+      
+      // Important: Add a delay before navigating to the outfit
+      // This ensures the current dialog is fully closed before opening a new one
+      setTimeout(() => {
+        onOutfitClick(outfit);
+      }, 250);
       return;
     }
     
