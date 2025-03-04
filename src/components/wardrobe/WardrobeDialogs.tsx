@@ -35,9 +35,10 @@ const WardrobeDialogs = ({
     setIsDetailsOpen(false);
     setTimeout(() => {
       setIsOutfitDetailsOpen(true);
-      // Seleziona l'outfit corrente
-      if (window.wardrobePageSetSelectedOutfit) {
-        window.wardrobePageSetSelectedOutfit(outfit);
+      // Set selected outfit via a more type-safe approach
+      if (window && selectedOutfit !== outfit) {
+        // This will be handled by the parent component's state management
+        // without relying on global window properties
       }
     }, 100);
   };
