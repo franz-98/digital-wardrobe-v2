@@ -49,7 +49,7 @@ const WardrobeDialogs = ({
       
       // Open the outfit view
       setIsOutfitDetailsOpen(true);
-    }, 250);
+    }, 300); // Increased delay to ensure smooth transition
   };
   
   return (
@@ -90,7 +90,9 @@ const WardrobeDialogs = ({
               onDelete={handleDeleteOutfit}
               onItemClick={(item) => {
                 setIsOutfitDetailsOpen(false);
-                handleOutfitItemClick(item.id);
+                setTimeout(() => {
+                  handleOutfitItemClick(item.id);
+                }, 200);
               }}
             />
           </DialogContent>

@@ -22,7 +22,7 @@ const RelatedOutfits = ({ relatedOutfits, onOutfitClick }: RelatedOutfitsProps) 
             key={`outfit-${outfit.id}`}
             className="overflow-hidden border cursor-pointer hover:shadow-sm transition-shadow"
             onClick={() => {
-              console.log("Outfit clicked:", outfit.id);
+              console.log("Outfit clicked in related outfits:", outfit.id);
               onOutfitClick(outfit);
             }}
           >

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -58,7 +57,7 @@ const ClothingItemDetails = ({
       // This ensures the current dialog is fully closed before opening a new one
       setTimeout(() => {
         onOutfitClick(outfit);
-      }, 250);
+      }, 300);
       return;
     }
     

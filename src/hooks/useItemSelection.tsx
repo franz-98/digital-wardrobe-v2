@@ -28,6 +28,8 @@ export function useItemSelection() {
     if (itemId.startsWith('o')) {
       // Find the outfit in the outfits collection and navigate to it
       console.log("Outfit clicked:", itemId);
+      
+      // This will be handled in the parent component
       return;
     }
     
@@ -35,10 +37,15 @@ export function useItemSelection() {
     const itemToShow = clothingItems.find(item => item.id === itemId);
     
     if (itemToShow) {
-      setSelectedItem(itemToShow);
-      setSelectedOutfit(null);
+      // Ensure we close any open outfit details first
       setIsOutfitDetailsOpen(false);
-      setIsDetailsOpen(true);
+      
+      // Wait a moment for animations to complete
+      setTimeout(() => {
+        setSelectedItem(itemToShow);
+        setSelectedOutfit(null);
+        setIsDetailsOpen(true);
+      }, 200);
     }
   };
 
