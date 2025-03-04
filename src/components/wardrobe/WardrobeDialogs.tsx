@@ -32,15 +32,17 @@ const WardrobeDialogs = ({
 }: WardrobeDialogsProps) => {
   
   const handleOutfitClick = (outfit: Outfit) => {
+    // Close item details dialog
     setIsDetailsOpen(false);
+    
+    // Set the selected outfit and open the outfit details dialog
     setTimeout(() => {
+      // This will be handled by the parent component through useWardrobe hook
+      // which will set the selectedOutfit and then open the outfit details dialog
+      
+      // We don't need to manually set the selected outfit here
+      // as the handleOutfitClick in useWardrobeState will handle it
       setIsOutfitDetailsOpen(true);
-      if (handleDeleteOutfit) {
-        // This will trigger the outfit details dialog with the selected outfit
-        if (window && selectedOutfit !== outfit) {
-          // We'll handle this through the parent component
-        }
-      }
     }, 100);
   };
   

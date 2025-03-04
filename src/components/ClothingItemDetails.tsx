@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -49,14 +48,11 @@ const ClothingItemDetails = ({
 
   const handleOutfitClick = (outfit: Outfit) => {
     if (onOutfitClick) {
-      onOpenChange(false); // Close the item details dialog
-      setTimeout(() => {
-        onOutfitClick(outfit); // Navigate to the outfit
-      }, 100);
+      onOpenChange(false);
+      onOutfitClick(outfit);
       return;
     }
     
-    // Fallback to local state navigation
     setSelectedOutfit(outfit);
     setViewMode("outfit");
   };
