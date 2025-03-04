@@ -32,17 +32,13 @@ const WardrobeDialogs = ({
 }: WardrobeDialogsProps) => {
   
   const handleOutfitClick = (outfit: Outfit) => {
-    // Close the item dialog and open the outfit dialog
-    setIsDetailsOpen(false);
-    setTimeout(() => {
-      handleOutfitClick(outfit);
-    }, 100);
-  };
-  
-  const handleOutfitClickInternal = (outfit: Outfit) => {
     setIsDetailsOpen(false);
     setTimeout(() => {
       setIsOutfitDetailsOpen(true);
+      // Seleziona l'outfit corrente
+      if (window.wardrobePageSetSelectedOutfit) {
+        window.wardrobePageSetSelectedOutfit(outfit);
+      }
     }, 100);
   };
   
@@ -58,7 +54,7 @@ const WardrobeDialogs = ({
               relatedOutfits={findRelatedOutfits(selectedItem.id)}
               onDelete={handleDeleteItem}
               onOutfitDelete={handleDeleteOutfit}
-              onOutfitClick={handleOutfitClickInternal}
+              onOutfitClick={handleOutfitClick}
             />
           </DialogContent>
         </Dialog>

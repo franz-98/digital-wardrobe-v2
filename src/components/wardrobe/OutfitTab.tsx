@@ -64,25 +64,17 @@ const OutfitTab = ({
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        {!showSearchBar && (
-          <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${showSearchBar ? 'w-full' : ''}`}>
+          {!showSearchBar ? (
             <Button 
-              variant="outline" 
-              size="sm"
-              className="h-10"
-              onClick={() => {
-                setIsCreatingOutfit(!isCreatingOutfit);
-                setActiveTab("clothing");
-              }}
+              variant="ghost"
+              size="icon"
+              onClick={toggleSearchBar}
+              className="h-10 w-10"
             >
-              <Plus className="mr-2 h-4 w-4" />
-              Create Outfit
+              <Search className="h-5 w-5" />
             </Button>
-          </div>
-        )}
-        
-        <div className={`flex items-center gap-2 ${showSearchBar ? 'w-full' : 'ml-auto'}`}>
-          {showSearchBar ? (
+          ) : (
             <div className="w-full relative">
               <Input
                 id="search"
@@ -104,17 +96,25 @@ const OutfitTab = ({
                 </svg>
               </Button>
             </div>
-          ) : (
-            <Button 
-              variant="ghost"
-              size="icon"
-              onClick={toggleSearchBar}
-              className="h-10 w-10"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
           )}
         </div>
+        
+        {!showSearchBar && (
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="h-10"
+              onClick={() => {
+                setIsCreatingOutfit(!isCreatingOutfit);
+                setActiveTab("clothing");
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create Outfit
+            </Button>
+          </div>
+        )}
       </div>
       
       {isCreatingOutfit && selectedItemsForOutfit.length > 0 && (

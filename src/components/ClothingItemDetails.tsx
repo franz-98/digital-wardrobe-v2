@@ -48,9 +48,11 @@ const ClothingItemDetails = ({
   if (!item) return null;
 
   const handleOutfitClick = (outfit: Outfit) => {
-    // Always use the prop-based navigation if available
     if (onOutfitClick) {
-      onOutfitClick(outfit);
+      onOpenChange(false); // Close the item details dialog
+      setTimeout(() => {
+        onOutfitClick(outfit); // Navigate to the outfit
+      }, 100);
       return;
     }
     
