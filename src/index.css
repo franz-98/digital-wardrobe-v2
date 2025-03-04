@@ -98,6 +98,15 @@
   .subtle-link {
     @apply transition-opacity duration-200 hover:opacity-80 active:opacity-70;
   }
+  
+  /* Custom toast styles */
+  .compact-toast {
+    @apply p-3 text-sm max-w-xs;
+  }
+  
+  .top-toast {
+    @apply animate-in slide-in-from-top-full;
+  }
 }
 
 /* Remove iPhone tap highlight color */
@@ -105,23 +114,4 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.page-transition-enter {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.page-transition-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-transition-exit {
-  opacity: 1;
-}
-
-.page-transition-exit-active {
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 300ms, transform 300ms;
-}
+/* ... keep existing code (page transitions) */

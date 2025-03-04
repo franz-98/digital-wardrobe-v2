@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
@@ -140,6 +139,8 @@ export const useItemInference = () => {
     toast({
       title: "Item confermato",
       description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
+      duration: 3000, // 3 seconds duration
+      className: "compact-toast top-toast", // Custom class for styling
     });
     
     handleDialogOpenChange(false);
