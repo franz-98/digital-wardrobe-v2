@@ -47,7 +47,16 @@ const DeleteConfirmationDialog = ({
   };
 
   return (
-    <AlertDialog open={showDeleteConfirmation} onOpenChange={setShowDeleteConfirmation}>
+    <AlertDialog 
+      open={showDeleteConfirmation} 
+      onOpenChange={(open) => {
+        // When the dialog is closing, make sure it's because of our button handlers
+        // and not because of clicking outside or Escape key
+        if (!open) {
+          setShowDeleteConfirmation(false);
+        }
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
