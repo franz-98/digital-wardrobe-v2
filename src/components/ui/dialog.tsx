@@ -36,28 +36,28 @@ const DialogContent = React.forwardRef<
 >(({ className, children, enableDismissOnScroll = false, ...props }, ref) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const [scrollStartY, setScrollStartY] = React.useState<number | null>(null);
+  const [isAtTop, setIsAtTop] = React.useState(true);
   const dismissThreshold = 50; // pixels to trigger dismiss
 
   React.useEffect(() => {
     if (!enableDismissOnScroll || !contentRef.current) return;
     
+    // Touch event handlers
     const handleTouchStart = (e: TouchEvent) => {
       setScrollStartY(e.touches[0].clientY);
+      updateIsAtTop();
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (scrollStartY === null) return;
+      if (scrollStartY === null || !isAtTop) return;
       
       const currentY = e.touches[0].clientY;
       const deltaY = currentY - scrollStartY;
       
       // If scrolling down past threshold when already at top of content
-      if (deltaY > dismissThreshold && contentRef.current) {
-        const scrollTop = contentRef.current.scrollTop;
-        if (scrollTop <= 0) {
-          // We're at the top and pulling down, so dismiss
-          props.onPointerDownOutside?.(e as any);
-        }
+      if (deltaY > dismissThreshold) {
+        // We're at the top and pulling down, so dismiss
+        props.onPointerDownOutside?.(e as any);
       }
     };
 
@@ -65,17 +65,44 @@ const DialogContent = React.forwardRef<
       setScrollStartY(null);
     };
 
+    // Mouse wheel handler
+    const handleWheel = (e: WheelEvent) => {
+      updateIsAtTop();
+      
+      // Only process wheel events if we're at the top and scrolling down
+      if (isAtTop && e.deltaY < -dismissThreshold) {
+        props.onPointerDownOutside?.(e as any);
+      }
+    };
+
+    // Check if the content is at the top
+    const updateIsAtTop = () => {
+      if (contentRef.current) {
+        setIsAtTop(contentRef.current.scrollTop <= 0);
+      }
+    };
+
     const content = contentRef.current;
-    content.addEventListener('touchstart', handleTouchStart);
-    content.addEventListener('touchmove', handleTouchMove);
+    
+    // Add event listeners
+    content.addEventListener('touchstart', handleTouchStart, { passive: true });
+    content.addEventListener('touchmove', handleTouchMove, { passive: true });
     content.addEventListener('touchend', handleTouchEnd);
+    content.addEventListener('wheel', handleWheel);
+    content.addEventListener('scroll', updateIsAtTop, { passive: true });
+
+    // Initial check
+    updateIsAtTop();
 
     return () => {
+      // Clean up event listeners
       content.removeEventListener('touchstart', handleTouchStart);
       content.removeEventListener('touchmove', handleTouchMove);
       content.removeEventListener('touchend', handleTouchEnd);
+      content.removeEventListener('wheel', handleWheel);
+      content.removeEventListener('scroll', updateIsAtTop);
     };
-  }, [enableDismissOnScroll, scrollStartY, props]);
+  }, [enableDismissOnScroll, scrollStartY, isAtTop, props]);
 
   return (
     <DialogPortal>
