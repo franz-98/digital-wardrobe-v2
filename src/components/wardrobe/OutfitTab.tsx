@@ -64,42 +64,58 @@ const OutfitTab = ({
   return (
     <>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">My Outfits</h2>
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={toggleSearchBar}
-            className="h-10 w-10"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="h-10"
-            onClick={() => {
-              setIsCreatingOutfit(!isCreatingOutfit);
-              setActiveTab("clothing");
-            }}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Create Outfit
-          </Button>
+        {!showSearchBar && (
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="h-10"
+              onClick={() => {
+                setIsCreatingOutfit(!isCreatingOutfit);
+                setActiveTab("clothing");
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create Outfit
+            </Button>
+          </div>
+        )}
+        
+        <div className={`flex items-center gap-2 ${showSearchBar ? 'w-full' : 'ml-auto'}`}>
+          {showSearchBar ? (
+            <div className="w-full relative">
+              <Input
+                id="search"
+                placeholder="Search outfits..."
+                value={searchTerm}
+                className="w-full pl-9 pr-8"
+                autoFocus
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSearchBar}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 h-8 w-8"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </Button>
+            </div>
+          ) : (
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={toggleSearchBar}
+              className="h-10 w-10"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+          )}
         </div>
       </div>
-      
-      {showSearchBar && (
-        <div className="mb-4">
-          <Input
-            id="search"
-            placeholder="Search outfits..."
-            value={searchTerm}
-            className="w-full"
-            autoFocus
-          />
-        </div>
-      )}
       
       {isCreatingOutfit && selectedItemsForOutfit.length > 0 && (
         <div className="mb-4 p-3 bg-muted/40 rounded-lg">
