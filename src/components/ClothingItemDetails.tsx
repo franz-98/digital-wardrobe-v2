@@ -92,6 +92,8 @@ const ClothingItemDetails = ({
         <DialogContent 
           className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col"
           enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation && viewMode === "item"}
+          dismissThreshold={70}
+          showDismissIndicator={true}
         >
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 

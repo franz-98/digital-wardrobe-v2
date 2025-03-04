@@ -55,7 +55,12 @@ const WardrobeDialogs = ({
     <>
       {selectedItem && (
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none" enableDismissOnScroll={true}>
+          <DialogContent 
+            className="p-0 max-w-none w-full h-full sm:rounded-none" 
+            enableDismissOnScroll={true}
+            dismissThreshold={70}
+            showDismissIndicator={true}
+          >
             <DialogTitle className="sr-only">Item Details</DialogTitle>
             <ClothingItemDetails
               item={selectedItem}
@@ -72,7 +77,12 @@ const WardrobeDialogs = ({
       
       {selectedOutfit && (
         <Dialog open={isOutfitDetailsOpen} onOpenChange={setIsOutfitDetailsOpen}>
-          <DialogContent className="p-0 max-w-none w-full h-full sm:rounded-none" enableDismissOnScroll={true}>
+          <DialogContent 
+            className="p-0 max-w-none w-full h-full sm:rounded-none" 
+            enableDismissOnScroll={true}
+            dismissThreshold={70}
+            showDismissIndicator={true}
+          >
             <DialogTitle className="sr-only">Outfit Details</DialogTitle>
             <OutfitDetails 
               outfit={selectedOutfit} 

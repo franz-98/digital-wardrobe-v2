@@ -10,18 +10,30 @@ import { useDismissOnScroll } from "./use-dismiss-on-scroll"
 export interface DialogContentProps extends 
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
   enableDismissOnScroll?: boolean;
+  dismissThreshold?: number;
+  showDismissIndicator?: boolean;
 }
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, enableDismissOnScroll = false, ...props }, ref) => {
+>(({ 
+  className, 
+  children, 
+  enableDismissOnScroll = false, 
+  dismissThreshold = 50,
+  showDismissIndicator = true,
+  ...props 
+}, ref) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const [dismissProgress, setDismissProgress] = React.useState(0);
   
   // Use our custom hook for dismiss-on-scroll behavior
   useDismissOnScroll(contentRef, {
     enableDismissOnScroll,
-    onDismiss: (e) => props.onPointerDownOutside?.(e as any)
+    dismissThreshold,
+    onDismiss: (e) => props.onPointerDownOutside?.(e as any),
+    onProgressChange: (progress) => setDismissProgress(progress)
   });
 
   return (
@@ -46,6 +58,23 @@ const DialogContent = React.forwardRef<
         {...props}
       >
         {children}
+        
+        {/* Dismiss Indicator */}
+        {enableDismissOnScroll && showDismissIndicator && dismissProgress > 0 && (
+          <div className="absolute top-0 left-0 right-0 flex justify-center pointer-events-none">
+            <div className="relative h-1.5 w-16 bg-muted rounded-full mt-2 overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-100 ease-out"
+                style={{ width: `${dismissProgress}%` }}
+              />
+            </div>
+            {dismissProgress > 60 && (
+              <span className="absolute -bottom-6 text-xs font-medium text-muted-foreground animate-fade-in">
+                Release to close
+              </span>
+            )}
+          </div>
+        )}
       </DialogPrimitive.Content>
     </DialogPortal>
   );
