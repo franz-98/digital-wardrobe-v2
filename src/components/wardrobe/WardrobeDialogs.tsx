@@ -51,7 +51,19 @@ const WardrobeDialogs = ({
       
       // Open the outfit view
       setIsOutfitDetailsOpen(true);
-    }, 500); // Increased delay to ensure smooth transition
+    }, 800); // Increased delay to ensure smooth transition
+  };
+  
+  const handleItemClickFromOutfit = (item: ClothingItem) => {
+    console.log("Item clicked from outfit view:", item.name);
+    
+    // Close outfit details first
+    setIsOutfitDetailsOpen(false);
+    
+    // Wait for the outfit dialog to close before opening item details
+    setTimeout(() => {
+      handleOutfitItemClick(item.id);
+    }, 800);
   };
   
   return (
@@ -90,12 +102,7 @@ const WardrobeDialogs = ({
             <OutfitDetails 
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}
-              onItemClick={(item) => {
-                setIsOutfitDetailsOpen(false);
-                setTimeout(() => {
-                  handleOutfitItemClick(item.id);
-                }, 300);
-              }}
+              onItemClick={handleItemClickFromOutfit}
             />
           </DialogContent>
         </Dialog>

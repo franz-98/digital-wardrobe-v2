@@ -10,6 +10,7 @@ export function useItemSelection() {
   const [selectedItemsForOutfit, setSelectedItemsForOutfit] = useState<ClothingItem[]>([]);
   
   const handleItemClick = (item: ClothingItem) => {
+    console.log("handleItemClick called with item:", item.name);
     setSelectedItem(item);
     setSelectedOutfit(null);
     setIsDetailsOpen(true);
@@ -29,7 +30,7 @@ export function useItemSelection() {
     
     // Check if this is an outfit ID (starts with 'o')
     if (itemId.startsWith('o')) {
-      // This will be handled in the parent component
+      // This will be handled in the parent component that has access to outfits collection
       console.log("Outfit ID detected, handling at parent level");
       return;
     }
@@ -43,12 +44,12 @@ export function useItemSelection() {
       // Ensure we close any open outfit details first
       setIsOutfitDetailsOpen(false);
       
-      // Wait a moment for animations to complete
+      // Wait a moment before opening item details to ensure smooth transition
       setTimeout(() => {
         setSelectedItem(itemToShow);
         setSelectedOutfit(null);
         setIsDetailsOpen(true);
-      }, 300);
+      }, 500);
     } else {
       console.log("Item not found with ID:", itemId);
     }

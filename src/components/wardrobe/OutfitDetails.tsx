@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Shirt, X, Trash2, Calendar, Tag } from "lucide-react";
 import { DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
@@ -29,6 +30,13 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
 
   const handleImageClick = () => {
     setIsImageZoomOpen(true);
+  };
+  
+  const handleItemClick = (item: ClothingItem) => {
+    console.log("Item clicked in OutfitDetails:", item.name);
+    if (onItemClick) {
+      onItemClick(item);
+    }
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
@@ -125,7 +133,7 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
                 <div 
                   key={item.id} 
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                  onClick={() => onItemClick && onItemClick(item)}
+                  onClick={() => handleItemClick(item)}
                 >
                   <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
                     <img 

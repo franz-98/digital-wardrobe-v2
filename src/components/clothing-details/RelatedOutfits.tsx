@@ -23,7 +23,9 @@ const RelatedOutfits = ({ relatedOutfits, onOutfitClick }: RelatedOutfitsProps) 
             className="overflow-hidden border cursor-pointer hover:shadow-sm transition-shadow"
             onClick={() => {
               console.log("Outfit clicked in related outfits:", outfit);
-              onOutfitClick(outfit);
+              setTimeout(() => {
+                onOutfitClick(outfit);
+              }, 100);
             }}
           >
             <div className="aspect-square overflow-hidden bg-secondary/10">

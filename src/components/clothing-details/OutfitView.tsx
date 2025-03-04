@@ -27,6 +27,13 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
     }
   };
 
+  const handleItemClick = (itemId: string) => {
+    console.log("Item clicked in outfit view:", itemId);
+    if (onItemClick) {
+      onItemClick(itemId);
+    }
+  };
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader className="px-4 pt-4 pb-2">
@@ -84,7 +91,7 @@ const OutfitView = ({ outfit, onBackClick, onDeleteClick, onItemClick, onImageCl
               <Card 
                 key={`outfit-item-${outfitItem.id}`}
                 className="overflow-hidden border shadow-sm cursor-pointer"
-                onClick={() => onItemClick && onItemClick(outfitItem.id)}
+                onClick={() => handleItemClick(outfitItem.id)}
               >
                 <div className="flex gap-3 p-3">
                   <div 
