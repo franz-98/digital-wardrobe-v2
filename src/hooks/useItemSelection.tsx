@@ -17,6 +17,7 @@ export function useItemSelection() {
   };
 
   const handleOutfitClick = (outfit: Outfit) => {
+    console.log("handleOutfitClick in useItemSelection called with outfit:", outfit);
     setSelectedOutfit(outfit);
     setSelectedItem(null);
     setIsOutfitDetailsOpen(true);
@@ -24,12 +25,12 @@ export function useItemSelection() {
   };
   
   const handleOutfitItemClick = (itemId: string, clothingItems: ClothingItem[]) => {
+    console.log("handleOutfitItemClick called with:", itemId);
+    
     // Check if this is an outfit ID (starts with 'o')
     if (itemId.startsWith('o')) {
-      // Find the outfit in the outfits collection and navigate to it
-      console.log("Outfit clicked:", itemId);
-      
       // This will be handled in the parent component
+      console.log("Outfit ID detected, handling at parent level");
       return;
     }
     
@@ -37,6 +38,8 @@ export function useItemSelection() {
     const itemToShow = clothingItems.find(item => item.id === itemId);
     
     if (itemToShow) {
+      console.log("Found item to show:", itemToShow.name);
+      
       // Ensure we close any open outfit details first
       setIsOutfitDetailsOpen(false);
       
@@ -45,7 +48,9 @@ export function useItemSelection() {
         setSelectedItem(itemToShow);
         setSelectedOutfit(null);
         setIsDetailsOpen(true);
-      }, 200);
+      }, 300);
+    } else {
+      console.log("Item not found with ID:", itemId);
     }
   };
 

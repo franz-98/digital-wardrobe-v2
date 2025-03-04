@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { X } from "lucide-react";
 import { 
@@ -48,20 +49,23 @@ const ClothingItemDetails = ({
   if (!item) return null;
 
   const handleOutfitClick = (outfit: Outfit) => {
+    console.log("handleOutfitClick called with outfit:", outfit);
+    
     if (onOutfitClick) {
-      console.log("Outfit click handler triggered, navigating to outfit:", outfit.name);
-      // Close the current dialog and trigger the parent's outfit click handler
+      console.log("Using external onOutfitClick handler");
+      // First close the current dialog
       onOpenChange(false);
       
       // Important: Add a delay before navigating to the outfit
       // This ensures the current dialog is fully closed before opening a new one
       setTimeout(() => {
         onOutfitClick(outfit);
-      }, 300);
+      }, 500);
       return;
     }
     
     // Fallback to local state navigation within the component
+    console.log("Using internal outfit navigation");
     setSelectedOutfit(outfit);
     setViewMode("outfit");
   };
