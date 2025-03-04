@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
@@ -128,9 +129,12 @@ export const useItemInference = () => {
       }
     };
     
+    // Add the item to the wardrobe
     setClothingItems([newClothingItem, ...clothingItems]);
     
-    if (selectedItem.id.startsWith("1") || selectedItem.id.startsWith("2") || selectedItem.id.startsWith("3")) {
+    // Remove the item from recent uploads if it's one of them
+    if (selectedItem.id === "1" || selectedItem.id === "2" || selectedItem.id === "3" ||
+        recentUploadItems.some(item => item.id === selectedItem.id)) {
       setRecentUploadItems(prevItems => 
         prevItems.filter(item => item.id !== selectedItem.id)
       );
