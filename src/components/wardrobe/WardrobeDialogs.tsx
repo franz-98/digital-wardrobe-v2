@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Dialog, 
@@ -60,10 +59,8 @@ const WardrobeDialogs = ({
     // Close outfit details first
     setIsOutfitDetailsOpen(false);
     
-    // Wait for the outfit dialog to close before opening item details
-    setTimeout(() => {
-      handleOutfitItemClick(item.id);
-    }, 800);
+    // Call the handler immediately without delay
+    handleOutfitItemClick(item.id);
   };
   
   return (

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 
@@ -35,7 +34,7 @@ export function useItemSelection() {
       return;
     }
     
-    // Altrimenti è un elemento di abbigliamento
+    // Find the clothing item
     const itemToShow = clothingItems.find(item => item.id === itemId);
     
     if (itemToShow) {
@@ -44,12 +43,10 @@ export function useItemSelection() {
       // Ensure we close any open outfit details first
       setIsOutfitDetailsOpen(false);
       
-      // Wait a moment before opening item details to ensure smooth transition
-      setTimeout(() => {
-        setSelectedItem(itemToShow);
-        setSelectedOutfit(null);
-        setIsDetailsOpen(true);
-      }, 500);
+      // Immediately open item details without delay
+      setSelectedItem(itemToShow);
+      setSelectedOutfit(null);
+      setIsDetailsOpen(true);
     } else {
       console.log("Item not found with ID:", itemId);
     }
