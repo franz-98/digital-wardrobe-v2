@@ -11,7 +11,8 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  const minSwipeDistance = 50;
+  // Increase minimum swipe distance to require a stronger swipe
+  const minSwipeDistance = 100; // Changed from 50 to 100
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
