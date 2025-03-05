@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 
 interface OutfitHeaderProps {
   searchTerm: string;
+  setSearchTerm: (term: string) => void;  // Added this prop
   showSearchBar: boolean;
   toggleSearchBar: () => void;
   setIsCreatingOutfit: (value: boolean) => void;
@@ -15,6 +16,7 @@ interface OutfitHeaderProps {
 
 const OutfitHeader = ({
   searchTerm,
+  setSearchTerm,  // Added this prop
   showSearchBar,
   toggleSearchBar,
   setIsCreatingOutfit,
@@ -30,6 +32,7 @@ const OutfitHeader = ({
               id="search"
               placeholder="Search outfits..."
               value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}  // Use the setSearchTerm prop
               className="w-full pl-9 pr-8"
               autoFocus
             />

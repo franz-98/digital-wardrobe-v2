@@ -5,7 +5,7 @@ import WardrobeTabsNav from "@/components/wardrobe/WardrobeTabsNav";
 import WardrobeTabContent from "@/components/wardrobe/WardrobeTabContent";
 import WardrobeDialogs from "@/components/wardrobe/WardrobeDialogs";
 import { Tabs } from "@/components/ui/tabs";
-import { useWardrobe } from "@/hooks/useWardrobeState";
+import { useWardrobe } from "@/context/WardrobeContext";
 
 const WardrobeContainer = () => {
   const {
