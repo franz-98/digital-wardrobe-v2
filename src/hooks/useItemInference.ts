@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
@@ -114,6 +115,7 @@ export const useItemInference = () => {
   const confirmInference = () => {
     if (!selectedItem) return;
     
+    // Create a new clothing item with unique ID
     const newClothingItem: ClothingItem = {
       id: `clothing-${Date.now()}`,
       name: selectedItem.name,
@@ -128,24 +130,31 @@ export const useItemInference = () => {
       }
     };
     
-    // Add the item to the wardrobe
-    setClothingItems([newClothingItem, ...clothingItems]);
+    // Add the item to the wardrobe - ensure it's prepended to the array
+    setClothingItems(prevItems => [newClothingItem, ...prevItems]);
     
-    // Remove the item from recent uploads if it's one of them
-    if (selectedItem.id === "1" || selectedItem.id === "2" || selectedItem.id === "3" ||
-        recentUploadItems.some(item => item.id === selectedItem.id)) {
+    // If the selected item is from recent uploads, remove it from the list
+    const isFromRecentUploads = recentUploadItems.some(item => item.id === selectedItem.id);
+    
+    if (isFromRecentUploads) {
       setRecentUploadItems(prevItems => 
         prevItems.filter(item => item.id !== selectedItem.id)
       );
+      
+      // Log for debugging
+      console.log(`Removed item ${selectedItem.id} from recent uploads`);
+      console.log(`Added item ${newClothingItem.id} to wardrobe`);
     }
     
+    // Show success toast
     toast({
       title: "Item confermato",
       description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
-      duration: 1500, // Reduced from 3000 to 1500 ms (1.5 seconds)
-      className: "compact-toast top-toast", // Custom class for styling
+      duration: 1500,
+      className: "compact-toast top-toast",
     });
     
+    // Close the dialog but don't navigate away from the home page
     handleDialogOpenChange(false);
   };
 
