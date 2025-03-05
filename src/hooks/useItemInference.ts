@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
@@ -148,8 +147,6 @@ export const useItemInference = () => {
     });
     
     handleDialogOpenChange(false);
-    
-    setTimeout(() => navigate("/wardrobe"), 500);
   };
 
   const handleInferenceEdit = (field: keyof ItemInference, value: string) => {
