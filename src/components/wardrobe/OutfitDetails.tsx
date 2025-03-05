@@ -8,17 +8,20 @@ import { Badge } from "@/components/ui/badge";
 import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
 import ImageZoom from "@/components/wardrobe/ImageZoom";
+import OutfitImageUpload from "@/components/wardrobe/outfit/OutfitImageUpload";
 
 interface OutfitDetailsProps {
   outfit: Outfit;
   onDelete?: (id: string) => void;
   onItemClick?: (item: ClothingItem) => void;
+  onImageUpdate?: (outfitId: string, imageUrl: string) => void;
 }
 
-const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) => {
+const OutfitDetails = ({ outfit, onDelete, onItemClick, onImageUpdate }: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [dismissProgress, setDismissProgress] = useState(0);
+  const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(outfit.imageUrl);
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -29,13 +32,22 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
   };
 
   const handleImageClick = () => {
-    setIsImageZoomOpen(true);
+    if (localImageUrl) {
+      setIsImageZoomOpen(true);
+    }
   };
   
   const handleItemClick = (item: ClothingItem) => {
     console.log("Item clicked in OutfitDetails:", item.name);
     if (onItemClick) {
       onItemClick(item);
+    }
+  };
+
+  const handleImageUploaded = (imageUrl: string) => {
+    setLocalImageUrl(imageUrl);
+    if (onImageUpdate) {
+      onImageUpdate(outfit.id, imageUrl);
     }
   };
 
@@ -69,19 +81,30 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
       
       <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
         <div className="space-y-6">
-          <div 
-            className="aspect-square overflow-hidden rounded-lg relative cursor-pointer"
-            onClick={handleImageClick}
-          >
-            {outfit.imageUrl ? (
-              <img 
-                src={outfit.imageUrl} 
-                alt={outfit.name} 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <Shirt className="h-12 w-12 text-muted-foreground" />
+          <div className="relative">
+            <div 
+              className="aspect-square overflow-hidden rounded-lg relative cursor-pointer"
+              onClick={handleImageClick}
+            >
+              {localImageUrl ? (
+                <img 
+                  src={localImageUrl} 
+                  alt={outfit.name} 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-muted flex items-center justify-center">
+                  <Shirt className="h-12 w-12 text-muted-foreground" />
+                </div>
+              )}
+            </div>
+            
+            {onImageUpdate && (
+              <div className="mt-2 flex justify-center">
+                <OutfitImageUpload 
+                  outfitId={outfit.id} 
+                  onImageUploaded={handleImageUploaded} 
+                />
               </div>
             )}
           </div>
@@ -184,7 +207,7 @@ const OutfitDetails = ({ outfit, onDelete, onItemClick }: OutfitDetailsProps) =>
       )}
       
       <ImageZoom 
-        imageUrl={outfit.imageUrl || (outfit.items[0]?.imageUrl || "")}
+        imageUrl={localImageUrl || (outfit.items[0]?.imageUrl || "")}
         alt={outfit.name}
         isOpen={isImageZoomOpen}
         onClose={() => setIsImageZoomOpen(false)}

@@ -60,6 +60,19 @@ export function useWardrobeActions({
     }
   };
 
+  const updateOutfitImage = (outfitId: string, imageUrl: string) => {
+    const updatedOutfits = outfits.map(outfit => {
+      if (outfit.id === outfitId) {
+        return { ...outfit, imageUrl };
+      }
+      return outfit;
+    });
+    
+    setOutfits(updatedOutfits);
+    
+    console.log(`Updated image for outfit ${outfitId}`);
+  };
+
   const handleDeleteItem = (itemId: string) => {
     const updatedItems = clothingItems.filter(item => item.id !== itemId);
     setClothingItems(updatedItems);
@@ -112,6 +125,7 @@ export function useWardrobeActions({
   return {
     findRelatedOutfits,
     createNewOutfit,
+    updateOutfitImage,
     handleDeleteItem,
     handleDeleteOutfit,
     togglePremium,

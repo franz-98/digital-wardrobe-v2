@@ -34,6 +34,7 @@ interface WardrobeContextType {
   togglePremium: () => void;
   toggleItemSelection: (item: ClothingItem) => void;
   createNewOutfit: () => void;
+  updateOutfitImage: (outfitId: string, imageUrl: string) => void;
   updateStatsForTimeRange: (range: string) => void;
   updateStatsForCustomRange: (start: Date, end: Date) => void;
   handleOutfitClick: (outfit: Outfit) => void;

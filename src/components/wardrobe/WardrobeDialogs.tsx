@@ -20,6 +20,7 @@ interface WardrobeDialogsProps {
   handleDeleteItem: (itemId: string) => void;
   handleDeleteOutfit?: (outfitId: string) => void;
   handleOutfitItemClick: (itemId: string) => void;
+  updateOutfitImage?: (outfitId: string, imageUrl: string) => void;
 }
 
 const WardrobeDialogs = ({
@@ -32,7 +33,8 @@ const WardrobeDialogs = ({
   findRelatedOutfits,
   handleDeleteItem,
   handleDeleteOutfit,
-  handleOutfitItemClick
+  handleOutfitItemClick,
+  updateOutfitImage
 }: WardrobeDialogsProps) => {
   
   const handleOutfitClick = (outfit: Outfit) => {
@@ -92,6 +94,7 @@ const WardrobeDialogs = ({
               outfit={selectedOutfit} 
               onDelete={handleDeleteOutfit}
               onItemClick={handleItemClickFromOutfit}
+              onImageUpdate={updateOutfitImage}
             />
           </DialogContent>
         </Dialog>

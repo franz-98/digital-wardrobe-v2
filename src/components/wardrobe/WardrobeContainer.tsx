@@ -1,89 +1,71 @@
 
 import React from "react";
-import { Tabs } from "@/components/ui/tabs";
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import WardrobeHeader from "@/components/wardrobe/WardrobeHeader";
 import WardrobeTabsNav from "@/components/wardrobe/WardrobeTabsNav";
 import WardrobeTabContent from "@/components/wardrobe/WardrobeTabContent";
 import WardrobeDialogs from "@/components/wardrobe/WardrobeDialogs";
-import SwipeHandler from "@/components/wardrobe/SwipeHandler";
-import { useWardrobe } from "@/context/WardrobeContext";
+import { Tabs } from "@/components/ui/tabs";
+import { useWardrobe } from "@/hooks/useWardrobeState";
 
 const WardrobeContainer = () => {
   const {
-    activeTab,
-    setActiveTab,
     clothingItems,
     outfits,
     suggestedOutfits,
-    searchTerm,
+    isPremium,
     isCreatingOutfit,
     selectedItemsForOutfit,
     newOutfitName,
-    isPremium,
+    searchTerm,
+    activeTab,
+    selectedItem,
+    isDetailsOpen,
     timeRange,
-    setTimeRange,
+    showSearchBar,
+    selectedOutfit,
+    isOutfitDetailsOpen,
     setNewOutfitName,
     setSelectedItemsForOutfit,
     setIsCreatingOutfit,
-    createNewOutfit,
-    toggleItemSelection,
-    handleItemClick,
-    handleOutfitClick,
-    togglePremium,
-    handleDeleteItem,
-    updateStatsForTimeRange,
-    updateStatsForCustomRange,
-    showSearchBar,
-    toggleSearchBar,
-    selectedItem,
-    selectedOutfit,
-    isDetailsOpen,
-    isOutfitDetailsOpen,
+    setActiveTab,
+    setTimeRange,
+    setSearchTerm,
     setIsDetailsOpen,
     setIsOutfitDetailsOpen,
+    handleItemClick,
     findRelatedOutfits,
+    toggleSearchBar,
+    togglePremium,
+    toggleItemSelection,
+    createNewOutfit,
+    updateOutfitImage,
+    updateStatsForTimeRange,
+    updateStatsForCustomRange,
+    handleOutfitClick,
     handleOutfitItemClick,
-    handleDeleteOutfit
+    handleDeleteItem,
+    handleDeleteOutfit,
   } = useWardrobe();
 
   return (
-    <SwipeHandler activeTab={activeTab} setActiveTab={setActiveTab}>
-      <WardrobeHeader />
-
-      <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab}>
-        <WardrobeTabsNav activeTab={activeTab} />
+    <div className="container max-w-md mx-auto py-4 px-4 h-full flex flex-col pb-20">
+      <WardrobeHeader 
+        activeTab={activeTab}
+        showSearchBar={showSearchBar}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        toggleSearchBar={toggleSearchBar}
+        setIsCreatingOutfit={setIsCreatingOutfit}
+        isCreatingOutfit={isCreatingOutfit}
+      />
+      
+      <Tabs value={activeTab} className="flex-1 flex flex-col">
+        <WardrobeTabsNav 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+        />
         
-        <div className="mt-4 flex items-center justify-between h-10">
-          {activeTab === "outfits" && (
-            <div className="flex justify-between w-full">
-              <h2 className="text-xl font-semibold">My Outfits</h2>
-              <button 
-                className="ml-auto"
-                onClick={toggleSearchBar}
-              >
-                <Search className="h-5 w-5" />
-              </button>
-            </div>
-          )}
-          
-          {activeTab === "clothing" && (
-            <div className="flex justify-between w-full">
-              <h2 className="text-xl font-semibold">My Clothing</h2>
-              <Button 
-                variant="ghost"
-                size="icon"
-                onClick={toggleSearchBar}
-                className="ml-auto"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
-            </div>
-          )}
-        </div>
-        
-        <WardrobeTabContent
+        <WardrobeTabContent 
           activeTab={activeTab}
           clothingItems={clothingItems}
           outfits={outfits}
@@ -112,7 +94,7 @@ const WardrobeContainer = () => {
         />
       </Tabs>
       
-      <WardrobeDialogs
+      <WardrobeDialogs 
         selectedItem={selectedItem}
         selectedOutfit={selectedOutfit}
         isDetailsOpen={isDetailsOpen}
@@ -123,8 +105,9 @@ const WardrobeContainer = () => {
         handleDeleteItem={handleDeleteItem}
         handleDeleteOutfit={handleDeleteOutfit}
         handleOutfitItemClick={handleOutfitItemClick}
+        updateOutfitImage={updateOutfitImage}
       />
-    </SwipeHandler>
+    </div>
   );
 };
 

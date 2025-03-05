@@ -81,6 +81,7 @@ export function useWardrobeState() {
   const {
     findRelatedOutfits,
     createNewOutfit,
+    updateOutfitImage,
     handleDeleteItem,
     handleDeleteOutfit,
     togglePremium: actionsTogglePremium,
@@ -138,6 +139,7 @@ export function useWardrobeState() {
     togglePremium,
     toggleItemSelection,
     createNewOutfit,
+    updateOutfitImage,
     updateStatsForTimeRange,
     updateStatsForCustomRange,
     handleOutfitClick,
