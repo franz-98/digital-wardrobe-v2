@@ -20,9 +20,11 @@ const RecentUploadsSection = ({
     <div className="mt-10">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">Recent Uploads</h2>
-        <Button variant="ghost" size="sm" className="text-primary">
-          See All
-        </Button>
+        {recentUploads.length > 0 && (
+          <Button variant="ghost" size="sm" className="text-primary">
+            See All
+          </Button>
+        )}
       </div>
 
       {isLoading ? (

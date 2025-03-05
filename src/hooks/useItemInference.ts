@@ -27,6 +27,7 @@ export const useItemInference = () => {
     }
   }, [clothingItems, lastAddedItem]);
 
+  // Store recent uploads in localStorage to persist across page navigations
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([
     {
       id: "inferred-1",
@@ -46,29 +47,54 @@ export const useItemInference = () => {
     }
   ]);
 
-  const [recentUploadItems, setRecentUploadItems] = useState<RecentUpload[]>([
-    {
-      id: "1",
-      name: "Blue T-Shirt",
-      imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
-      category: "Tops",
-      createdAt: "2023-11-01T00:00:00Z",
-    },
-    {
-      id: "2",
-      name: "Black Jeans",
-      imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
-      category: "Bottoms",
-      createdAt: "2023-11-02T00:00:00Z",
-    },
-    {
-      id: "3",
-      name: "White Sneakers",
-      imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
-      category: "Footwear",
-      createdAt: "2023-11-03T00:00:00Z",
-    },
-  ]);
+  // Load recent uploads from localStorage on initial load
+  const loadRecentUploads = (): RecentUpload[] => {
+    try {
+      const savedItems = localStorage.getItem('recentUploadItems');
+      if (savedItems) {
+        return JSON.parse(savedItems);
+      }
+    } catch (e) {
+      console.error("Failed to load recent uploads from localStorage:", e);
+    }
+    
+    // Default items if nothing in localStorage
+    return [
+      {
+        id: "1",
+        name: "Blue T-Shirt",
+        imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3",
+        category: "Tops",
+        createdAt: "2023-11-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        name: "Black Jeans",
+        imageUrl: "https://images.unsplash.com/photo-1582552938357-32b906df40cb?ixlib=rb-4.0.3",
+        category: "Bottoms",
+        createdAt: "2023-11-02T00:00:00Z",
+      },
+      {
+        id: "3",
+        name: "White Sneakers",
+        imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3",
+        category: "Footwear",
+        createdAt: "2023-11-03T00:00:00Z",
+      },
+    ];
+  };
+
+  const [recentUploadItems, setRecentUploadItems] = useState<RecentUpload[]>(loadRecentUploads);
+
+  // Save recent uploads to localStorage whenever they change
+  useEffect(() => {
+    try {
+      localStorage.setItem('recentUploadItems', JSON.stringify(recentUploadItems));
+      console.log("Saved recent uploads to localStorage:", recentUploadItems.length, "items");
+    } catch (e) {
+      console.error("Failed to save recent uploads to localStorage:", e);
+    }
+  }, [recentUploadItems]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -161,12 +187,12 @@ export const useItemInference = () => {
     const isFromRecentUploads = recentUploadItems.some(item => item.id === selectedItem.id);
     
     if (isFromRecentUploads) {
-      setRecentUploadItems(prevItems => 
-        prevItems.filter(item => item.id !== selectedItem.id)
-      );
+      setRecentUploadItems(prevItems => {
+        const filteredItems = prevItems.filter(item => item.id !== selectedItem.id);
+        console.log(`Removed item ${selectedItem.id} from recent uploads`);
+        return filteredItems;
+      });
       
-      // Log for debugging
-      console.log(`Removed item ${selectedItem.id} from recent uploads`);
       console.log(`Added item ${newClothingItem.id} to wardrobe`);
     }
     
