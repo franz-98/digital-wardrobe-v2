@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 interface SwipeHandlerProps {
@@ -11,8 +10,8 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  // Increase minimum swipe distance to require a stronger swipe
-  const minSwipeDistance = 100; // Changed from 50 to 100
+  // Increase minimum swipe distance to require an even stronger swipe
+  const minSwipeDistance = 150; // Changed from 100 to 150
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
