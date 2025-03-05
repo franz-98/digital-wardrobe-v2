@@ -1,12 +1,12 @@
 
 import React from "react";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface OutfitHeaderProps {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;  // Added this prop
+  setSearchTerm: (term: string) => void;
   showSearchBar: boolean;
   toggleSearchBar: () => void;
   setIsCreatingOutfit: (value: boolean) => void;
@@ -16,7 +16,7 @@ interface OutfitHeaderProps {
 
 const OutfitHeader = ({
   searchTerm,
-  setSearchTerm,  // Added this prop
+  setSearchTerm,
   showSearchBar,
   toggleSearchBar,
   setIsCreatingOutfit,
@@ -32,7 +32,7 @@ const OutfitHeader = ({
               id="search"
               placeholder="Search outfits..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}  // Use the setSearchTerm prop
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-8"
               autoFocus
             />
@@ -52,22 +52,7 @@ const OutfitHeader = ({
         )}
       </div>
       
-      {!showSearchBar && (
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="h-10"
-            onClick={() => {
-              setIsCreatingOutfit(!isCreatingOutfit);
-              setActiveTab("clothing");
-            }}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Create Outfit
-          </Button>
-        </div>
-      )}
+      {/* The Create Outfit button has been removed */}
     </div>
   );
 };
