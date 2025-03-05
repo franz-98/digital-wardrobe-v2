@@ -33,6 +33,7 @@ interface WardrobeTabContentProps {
   updateStatsForCustomRange: (start: Date, end: Date) => void;
   showSearchBar: boolean;
   toggleSearchBar: () => void;
+  setSearchTerm: (term: string) => void;  // Added this prop
 }
 
 const WardrobeTabContent = ({
@@ -60,7 +61,8 @@ const WardrobeTabContent = ({
   updateStatsForTimeRange,
   updateStatsForCustomRange,
   showSearchBar,
-  toggleSearchBar
+  toggleSearchBar,
+  setSearchTerm  // Added this prop
 }: WardrobeTabContentProps) => {
   return (
     <>
@@ -91,6 +93,7 @@ const WardrobeTabContent = ({
           outfits={outfits}
           suggestedOutfits={suggestedOutfits}
           searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}  // Pass the prop to OutfitTab
           isPremium={isPremium}
           isCreatingOutfit={isCreatingOutfit}
           selectedItemsForOutfit={selectedItemsForOutfit}

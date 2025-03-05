@@ -10,6 +10,7 @@ interface OutfitTabProps {
   outfits: Outfit[];
   suggestedOutfits: Outfit[];
   searchTerm: string;
+  setSearchTerm: (term: string) => void;  // Added this prop
   isPremium: boolean;
   isCreatingOutfit: boolean;
   selectedItemsForOutfit: ClothingItem[];
@@ -28,6 +29,7 @@ const OutfitTab = ({
   outfits,
   suggestedOutfits,
   searchTerm,
+  setSearchTerm,  // Added this prop
   isPremium,
   isCreatingOutfit,
   selectedItemsForOutfit,
@@ -50,6 +52,7 @@ const OutfitTab = ({
     <>
       <OutfitHeader 
         searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}  // Pass the prop to OutfitHeader
         showSearchBar={showSearchBar}
         toggleSearchBar={toggleSearchBar}
         setIsCreatingOutfit={setIsCreatingOutfit}
