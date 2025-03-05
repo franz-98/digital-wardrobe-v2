@@ -91,6 +91,7 @@ const WardrobeContainer = () => {
           updateStatsForCustomRange={updateStatsForCustomRange}
           showSearchBar={showSearchBar}
           toggleSearchBar={toggleSearchBar}
+          setSearchTerm={setSearchTerm}
         />
       </Tabs>
       
