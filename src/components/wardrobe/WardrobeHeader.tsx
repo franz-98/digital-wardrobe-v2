@@ -60,14 +60,7 @@ const WardrobeHeader = ({
   return (
     <div className="flex items-center justify-between">
       <h1 className="text-2xl font-bold">My Wardrobe</h1>
-      {activeTab === "outfits" && setIsCreatingOutfit ? (
-        <Button onClick={() => {
-          setIsCreatingOutfit(!isCreatingOutfit);
-        }}>
-          <Plus className="mr-2 h-4 w-4" />
-          {isCreatingOutfit ? "Cancel Outfit" : "Create Outfit"}
-        </Button>
-      ) : (
+      {activeTab !== "outfits" && (
         <Button onClick={() => navigate("/add-item")}>
           <Plus className="mr-2 h-4 w-4" />
           Add Item
