@@ -1,101 +1,133 @@
-
 import { useState, useEffect } from "react";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 
 export function useWardrobeData() {
-  const [clothingItems, setClothingItems] = useState<ClothingItem[]>([
-    {
-      id: "1",
-      name: "Blue T-shirt",
-      category: "Tops",
-      color: "Blue",
-      imageUrl: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-03-15",
-        brand: "Nike",
-        material: "Cotton",
-        season: "Spring",
+  // Load items from localStorage if available
+  const loadClothingItems = (): ClothingItem[] => {
+    try {
+      const savedItems = localStorage.getItem('wardrobeClothingItems');
+      if (savedItems) {
+        return JSON.parse(savedItems);
+      }
+    } catch (e) {
+      console.error("Failed to load clothing items from localStorage:", e);
+    }
+    
+    // Default items if nothing in localStorage
+    return [
+      {
+        id: "1",
+        name: "Blue T-shirt",
+        category: "Tops",
+        color: "Blue",
+        imageUrl: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-03-15",
+          brand: "Nike",
+          material: "Cotton",
+          season: "Spring",
+        },
       },
-    },
-    {
-      id: "2",
-      name: "Black Jeans",
-      category: "Bottoms",
-      color: "Black",
-      imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-03-20",
-        brand: "Levi's",
-        material: "Denim",
-        season: "Fall",
+      {
+        id: "2",
+        name: "Black Jeans",
+        category: "Bottoms",
+        color: "Black",
+        imageUrl: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-03-20",
+          brand: "Levi's",
+          material: "Denim",
+          season: "Fall",
+        },
       },
-    },
-    {
-      id: "3",
-      name: "Red Dress",
-      category: "Dresses",
-      color: "Red",
-      imageUrl: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-03-25",
-        brand: "Zara",
-        material: "Silk",
-        season: "Summer",
+      {
+        id: "3",
+        name: "Red Dress",
+        category: "Dresses",
+        color: "Red",
+        imageUrl: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-03-25",
+          brand: "Zara",
+          material: "Silk",
+          season: "Summer",
+        },
       },
-    },
-    {
-      id: "4",
-      name: "White Sneakers",
-      category: "Shoes",
-      color: "White",
-      imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-03-30",
-        brand: "Adidas",
-        material: "Leather",
-        season: "All",
+      {
+        id: "4",
+        name: "White Sneakers",
+        category: "Shoes",
+        color: "White",
+        imageUrl: "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-03-30",
+          brand: "Adidas",
+          material: "Leather",
+          season: "All",
+        },
       },
-    },
-    {
-      id: "5",
-      name: "Green Scarf",
-      category: "Accessories",
-      color: "Green",
-      imageUrl: "https://images.unsplash.com/photo-1520903470926-dca555cd44f4?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-04-05",
-        brand: "Gucci",
-        material: "Wool",
-        season: "Winter",
+      {
+        id: "5",
+        name: "Green Scarf",
+        category: "Accessories",
+        color: "Green",
+        imageUrl: "https://images.unsplash.com/photo-1520903470926-dca555cd44f4?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-04-05",
+          brand: "Gucci",
+          material: "Wool",
+          season: "Winter",
+        },
       },
-    },
-    {
-      id: "6",
-      name: "Brown Jacket",
-      category: "Outerwear",
-      color: "Brown",
-      imageUrl: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-04-10",
-        brand: "The North Face",
-        material: "Leather",
-        season: "Fall",
+      {
+        id: "6",
+        name: "Brown Jacket",
+        category: "Outerwear",
+        color: "Brown",
+        imageUrl: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-04-10",
+          brand: "The North Face",
+          material: "Leather",
+          season: "Fall",
+        },
       },
-    },
-    {
-      id: "7",
-      name: "Yellow Hat",
-      category: "Accessories",
-      color: "Yellow",
-      imageUrl: "https://images.unsplash.com/photo-1533055640609-24b498dfd74c?w=400&h=400&fit=crop",
-      metadata: {
-        dateTaken: "2023-04-15",
-        brand: "Urban Outfitters",
-        material: "Cotton",
-        season: "Summer",
+      {
+        id: "7",
+        name: "Yellow Hat",
+        category: "Accessories",
+        color: "Yellow",
+        imageUrl: "https://images.unsplash.com/photo-1533055640609-24b498dfd74c?w=400&h=400&fit=crop",
+        metadata: {
+          dateTaken: "2023-04-15",
+          brand: "Urban Outfitters",
+          material: "Cotton",
+          season: "Summer",
+        },
       },
-    },
-  ]);
+    ];
+  };
+  
+  const [clothingItems, setClothingItemsState] = useState<ClothingItem[]>(loadClothingItems);
+  
+  // Wrapper for setClothingItems that also updates localStorage
+  const setClothingItems = (itemsOrUpdater: ClothingItem[] | ((prev: ClothingItem[]) => ClothingItem[])) => {
+    setClothingItemsState(prevItems => {
+      const newItems = typeof itemsOrUpdater === 'function' 
+        ? itemsOrUpdater(prevItems) 
+        : itemsOrUpdater;
+        
+      // Save to localStorage
+      try {
+        localStorage.setItem('wardrobeClothingItems', JSON.stringify(newItems));
+      } catch (e) {
+        console.error("Failed to save clothing items to localStorage:", e);
+      }
+      
+      return newItems;
+    });
+  };
   
   const [outfits, setOutfits] = useState<Outfit[]>([]);
   const [suggestedOutfits, setSuggestedOutfits] = useState<Outfit[]>([]);

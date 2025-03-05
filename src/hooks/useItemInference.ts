@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload } from "@/components/home/types";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,19 @@ export const useItemInference = () => {
   
   const { setClothingItems, clothingItems } = useWardrobeData();
   
+  // Track if we've just added an item to help with debugging
+  const [lastAddedItem, setLastAddedItem] = useState<string | null>(null);
+  
+  // Log whenever clothingItems changes to help debug
+  useEffect(() => {
+    if (lastAddedItem) {
+      console.log("Clothing items updated after adding:", lastAddedItem);
+      console.log("Current clothing items count:", clothingItems.length);
+      console.log("First few items:", clothingItems.slice(0, 3).map(item => item.id));
+      setLastAddedItem(null);
+    }
+  }, [clothingItems, lastAddedItem]);
+
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([
     {
       id: "inferred-1",
@@ -115,9 +128,12 @@ export const useItemInference = () => {
   const confirmInference = () => {
     if (!selectedItem) return;
     
+    // Generate a truly unique ID with timestamp and random string
+    const uniqueId = `clothing-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    
     // Create a new clothing item with unique ID
     const newClothingItem: ClothingItem = {
-      id: `clothing-${Date.now()}`,
+      id: uniqueId,
       name: selectedItem.name,
       category: selectedItem.category,
       color: selectedItem.color || "Unknown", // Default if color is not provided
@@ -130,8 +146,16 @@ export const useItemInference = () => {
       }
     };
     
+    // Store ID of the item we're adding for debugging
+    setLastAddedItem(uniqueId);
+    
     // Add the item to the wardrobe - ensure it's prepended to the array
-    setClothingItems(prevItems => [newClothingItem, ...prevItems]);
+    // Using functional update to ensure we have the latest state
+    setClothingItems(prevItems => {
+      console.log("Adding new item to wardrobe:", uniqueId);
+      console.log("Previous items count:", prevItems.length);
+      return [newClothingItem, ...prevItems];
+    });
     
     // If the selected item is from recent uploads, remove it from the list
     const isFromRecentUploads = recentUploadItems.some(item => item.id === selectedItem.id);
