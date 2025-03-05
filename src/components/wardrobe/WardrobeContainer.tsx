@@ -6,6 +6,7 @@ import WardrobeTabContent from "@/components/wardrobe/WardrobeTabContent";
 import WardrobeDialogs from "@/components/wardrobe/WardrobeDialogs";
 import { Tabs } from "@/components/ui/tabs";
 import { useWardrobe } from "@/context/WardrobeContext";
+import SwipeHandler from "@/components/wardrobe/SwipeHandler";
 
 const WardrobeContainer = () => {
   const {
@@ -48,7 +49,7 @@ const WardrobeContainer = () => {
   } = useWardrobe();
 
   return (
-    <div className="container max-w-md mx-auto py-4 px-4 h-full flex flex-col pb-20">
+    <div className="w-full h-full flex flex-col pb-20">
       <WardrobeHeader 
         activeTab={activeTab}
         showSearchBar={showSearchBar}
@@ -65,34 +66,36 @@ const WardrobeContainer = () => {
           setActiveTab={setActiveTab} 
         />
         
-        <WardrobeTabContent 
-          activeTab={activeTab}
-          clothingItems={clothingItems}
-          outfits={outfits}
-          suggestedOutfits={suggestedOutfits}
-          searchTerm={searchTerm}
-          isCreatingOutfit={isCreatingOutfit}
-          selectedItemsForOutfit={selectedItemsForOutfit}
-          newOutfitName={newOutfitName}
-          isPremium={isPremium}
-          timeRange={timeRange}
-          setTimeRange={setTimeRange}
-          setNewOutfitName={setNewOutfitName}
-          setSelectedItemsForOutfit={setSelectedItemsForOutfit}
-          setIsCreatingOutfit={setIsCreatingOutfit}
-          setActiveTab={setActiveTab}
-          createNewOutfit={createNewOutfit}
-          toggleItemSelection={toggleItemSelection}
-          handleItemClick={handleItemClick}
-          handleOutfitClick={handleOutfitClick}
-          togglePremium={togglePremium}
-          handleDeleteItem={handleDeleteItem}
-          updateStatsForTimeRange={updateStatsForTimeRange}
-          updateStatsForCustomRange={updateStatsForCustomRange}
-          showSearchBar={showSearchBar}
-          toggleSearchBar={toggleSearchBar}
-          setSearchTerm={setSearchTerm}
-        />
+        <SwipeHandler activeTab={activeTab} setActiveTab={setActiveTab}>
+          <WardrobeTabContent 
+            activeTab={activeTab}
+            clothingItems={clothingItems}
+            outfits={outfits}
+            suggestedOutfits={suggestedOutfits}
+            searchTerm={searchTerm}
+            isCreatingOutfit={isCreatingOutfit}
+            selectedItemsForOutfit={selectedItemsForOutfit}
+            newOutfitName={newOutfitName}
+            isPremium={isPremium}
+            timeRange={timeRange}
+            setTimeRange={setTimeRange}
+            setNewOutfitName={setNewOutfitName}
+            setSelectedItemsForOutfit={setSelectedItemsForOutfit}
+            setIsCreatingOutfit={setIsCreatingOutfit}
+            setActiveTab={setActiveTab}
+            createNewOutfit={createNewOutfit}
+            toggleItemSelection={toggleItemSelection}
+            handleItemClick={handleItemClick}
+            handleOutfitClick={handleOutfitClick}
+            togglePremium={togglePremium}
+            handleDeleteItem={handleDeleteItem}
+            updateStatsForTimeRange={updateStatsForTimeRange}
+            updateStatsForCustomRange={updateStatsForCustomRange}
+            showSearchBar={showSearchBar}
+            toggleSearchBar={toggleSearchBar}
+            setSearchTerm={setSearchTerm}
+          />
+        </SwipeHandler>
       </Tabs>
       
       <WardrobeDialogs 

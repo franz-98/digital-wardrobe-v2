@@ -19,15 +19,7 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart) return;
     setTouchEnd(e.targetTouches[0].clientX);
-    
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    const bottomReached = Math.ceil(scrollTop + clientHeight) >= scrollHeight - 5;
-    
-    if (bottomReached) {
-      e.preventDefault();
-    }
   };
 
   const onTouchEnd = () => {
@@ -54,7 +46,7 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
 
   return (
     <div 
-      className="space-y-6 pb-20"
+      className="flex-1 overflow-auto"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
