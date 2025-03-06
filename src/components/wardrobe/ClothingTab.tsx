@@ -1,6 +1,7 @@
 
-import React, { useState } from "react";
+import React from "react";
 import ClothingItemCard from "@/components/ClothingItemCard";
+import { Shirt, Check } from "lucide-react";
 
 interface ClothingItem {
   id: string;
@@ -46,16 +47,20 @@ const ClothingTab = ({
         <div key={item.id} className="relative">
           {isCreatingOutfit && (
             <button 
-              className="absolute top-1 left-1 z-10 rounded-full bg-white/90 p-0.5 shadow-sm"
-              onClick={() => toggleItemSelection(item)}
+              className={`absolute top-2 left-2 z-10 rounded-full p-1 shadow-md ${
+                selectedItemsForOutfit.some(i => i.id === item.id) 
+                  ? "bg-primary text-white" 
+                  : "bg-white/90"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleItemSelection(item);
+              }}
             >
               {selectedItemsForOutfit.some(i => i.id === item.id) ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-primary">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+                <Check className="h-5 w-5" />
               ) : (
-                <div className="h-4 w-4 rounded-full border-2" />
+                <Shirt className="h-5 w-5 text-gray-500" />
               )}
             </button>
           )}

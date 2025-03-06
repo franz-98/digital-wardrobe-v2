@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Shirt } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,14 +56,26 @@ const WardrobeHeader = ({
     );
   }
   
-  // Default header with title and add button
+  // Default header with title and create outfit button
   return (
     <div className="flex items-center justify-between">
       <h1 className="text-2xl font-bold">My Wardrobe</h1>
-      {activeTab !== "outfits" && (
-        <Button onClick={() => navigate("/add-item")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Item
+      {activeTab === "clothing" && (
+        <Button 
+          onClick={() => setIsCreatingOutfit(!isCreatingOutfit)}
+          className={isCreatingOutfit ? "bg-amber-500 hover:bg-amber-600" : ""}
+        >
+          {isCreatingOutfit ? (
+            <>
+              <Shirt className="mr-2 h-4 w-4" />
+              Cancel
+            </>
+          ) : (
+            <>
+              <Shirt className="mr-2 h-4 w-4" />
+              Create Outfit
+            </>
+          )}
         </Button>
       )}
     </div>
