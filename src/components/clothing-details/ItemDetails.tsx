@@ -29,11 +29,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
   };
 
   const handleImageClick = () => {
-    if (onImageClick) {
-      onImageClick(item.imageUrl);
-    } else {
-      setIsImageZoomOpen(true);
-    }
+    setIsImageZoomOpen(true);
   };
 
   return (

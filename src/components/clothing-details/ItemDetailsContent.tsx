@@ -57,7 +57,7 @@ const ItemDetailsContent = ({
           item={item}
           onDeleteClick={onDeleteClick}
           onDelete={onDelete}
-          onImageClick={onImageClick}
+          // Remove passing onImageClick to let the component handle zooming internally
         />
         
         <div className="px-4 pb-4">
