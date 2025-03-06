@@ -41,7 +41,7 @@ const ImageZoom = ({ imageUrl, alt, isOpen, onClose }: ImageZoomProps) => {
   }, [isOpen, onClose]);
 
   // Add debugging log to check if the component is being opened
-  console.log("ImageZoom rendering with isOpen:", isOpen);
+  console.log("ImageZoom rendering with isOpen:", isOpen, "and imageUrl:", imageUrl);
   
   return (
     <AnimatePresence>

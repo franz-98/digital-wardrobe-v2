@@ -13,9 +13,14 @@ const OutfitImage = ({ imageUrl, onImageClick }: OutfitImageProps) => {
   
   const handleImageClick = () => {
     if (imageUrl) {
-      // Directly open zoom view instead of calling onImageClick
-      setIsImageZoomOpen(true);
+      if (onImageClick) {
+        onImageClick();
+      } else {
+        // Directly open zoom view
+        setIsImageZoomOpen(true);
+      }
     } else {
+      // If no image, call handler to possibly upload one
       onImageClick();
     }
   };
@@ -28,12 +33,18 @@ const OutfitImage = ({ imageUrl, onImageClick }: OutfitImageProps) => {
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}
       >
-        <img 
-          src={imageUrl} 
-          alt="Outfit" 
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt="Outfit" 
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+            <span className="text-muted-foreground text-sm">No image</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
       </motion.div>
       
