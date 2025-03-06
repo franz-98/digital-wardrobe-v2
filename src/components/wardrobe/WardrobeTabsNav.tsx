@@ -19,44 +19,46 @@ const WardrobeTabsNav = ({
 }: WardrobeTabsNavProps) => {
   return (
     <div className="space-y-3">
-      <TabsList className="w-full">
-        <TabsTrigger 
-          value="clothing" 
-          className="flex-1"
-          onClick={() => setActiveTab("clothing")}
-        >
-          <Grip className="mr-2 h-4 w-4" />
-          Clothing
-        </TabsTrigger>
-        <TabsTrigger 
-          value="outfits" 
-          className="flex-1"
-          onClick={() => setActiveTab("outfits")}
-        >
-          <Shirt className="mr-2 h-4 w-4" />
-          Outfits
-        </TabsTrigger>
-        <TabsTrigger 
-          value="stats" 
-          className="flex-1"
-          onClick={() => setActiveTab("stats")}
-        >
-          <BarChart className="mr-2 h-4 w-4" />
-          Stats
-        </TabsTrigger>
-      </TabsList>
-
-      {activeTab === "clothing" && (
-        <div className="flex justify-center">
-          <Button 
-            onClick={() => setIsCreatingOutfit(!isCreatingOutfit)}
-            className={isCreatingOutfit ? "bg-amber-500 hover:bg-amber-600 w-full max-w-xs" : "w-full max-w-xs"}
+      <div className="flex items-center justify-between gap-2">
+        <TabsList className="flex-1">
+          <TabsTrigger 
+            value="clothing" 
+            className="flex-1"
+            onClick={() => setActiveTab("clothing")}
+          >
+            <Grip className="mr-2 h-4 w-4" />
+            Clothing
+          </TabsTrigger>
+          <TabsTrigger 
+            value="outfits" 
+            className="flex-1"
+            onClick={() => setActiveTab("outfits")}
           >
             <Shirt className="mr-2 h-4 w-4" />
+            Outfits
+          </TabsTrigger>
+          <TabsTrigger 
+            value="stats" 
+            className="flex-1"
+            onClick={() => setActiveTab("stats")}
+          >
+            <BarChart className="mr-2 h-4 w-4" />
+            Stats
+          </TabsTrigger>
+        </TabsList>
+
+        {activeTab === "clothing" && (
+          <Button 
+            onClick={() => setIsCreatingOutfit(!isCreatingOutfit)}
+            className={isCreatingOutfit ? "bg-amber-500 hover:bg-amber-600 h-10 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center" : "h-10 px-3 text-xs font-medium rounded-full bg-background border border-border/50 shadow-sm flex items-center"}
+            variant="outline"
+            size="sm"
+          >
+            <Shirt className="h-3.5 w-3.5 mr-1.5 opacity-70" />
             {isCreatingOutfit ? "Cancel" : "Create Outfit"}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
