@@ -56,14 +56,14 @@ const WardrobeContainer = () => {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         toggleSearchBar={toggleSearchBar}
-        setIsCreatingOutfit={setIsCreatingOutfit}
-        isCreatingOutfit={isCreatingOutfit}
       />
       
       <Tabs value={activeTab} className="flex-1 flex flex-col">
         <WardrobeTabsNav 
           activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
+          setActiveTab={setActiveTab}
+          isCreatingOutfit={isCreatingOutfit}
+          setIsCreatingOutfit={setIsCreatingOutfit}
         />
         
         <SwipeHandler activeTab={activeTab} setActiveTab={setActiveTab}>
