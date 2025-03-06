@@ -13,12 +13,8 @@ const OutfitImage = ({ imageUrl, onImageClick }: OutfitImageProps) => {
   
   const handleImageClick = () => {
     if (imageUrl) {
-      if (onImageClick) {
-        onImageClick();
-      } else {
-        // Directly open zoom view
-        setIsImageZoomOpen(true);
-      }
+      // Always open zoom view directly when there is an image
+      setIsImageZoomOpen(true);
     } else {
       // If no image, call handler to possibly upload one
       onImageClick();
