@@ -28,6 +28,7 @@ const EditableTitle = ({ title, className, titleClassName, onSave }: EditableTit
   }, [title]);
 
   const handleSave = () => {
+    console.log("Saving edited title:", editedTitle);
     if (editedTitle !== title) {
       const success = onSave(editedTitle);
       if (success) {
@@ -40,6 +41,7 @@ const EditableTitle = ({ title, className, titleClassName, onSave }: EditableTit
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       handleSave();
     } else if (e.key === "Escape") {
       setEditedTitle(title);
@@ -56,22 +58,23 @@ const EditableTitle = ({ title, className, titleClassName, onSave }: EditableTit
           onChange={(e) => setEditedTitle(e.target.value)}
           onBlur={handleSave}
           onKeyDown={handleKeyDown}
-          className="min-w-0"
+          className="min-w-0 h-8 py-1 px-2 text-sm"
+          size={10}
         />
       </div>
     );
   }
 
   return (
-    <div className={`flex items-center gap-2 group ${className}`}>
+    <div className={`flex items-center gap-1 group ${className || ""}`}>
       <span className={titleClassName}>{title}</span>
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1"
         onClick={() => setIsEditing(true)}
       >
-        <Pencil className="h-4 w-4" />
+        <Pencil className="h-3 w-3" />
         <span className="sr-only">Edit</span>
       </Button>
     </div>

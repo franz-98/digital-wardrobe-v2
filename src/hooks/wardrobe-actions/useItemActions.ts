@@ -76,6 +76,8 @@ export function useItemActions({
   };
 
   const updateItemMetadata = (itemId: string, field: string, value: string) => {
+    console.log(`Updating item ${itemId}, field: ${field}, value: ${value}`);
+    
     if (!value.trim() && field !== "brand") {
       toast({
         title: "Invalid value",
@@ -87,6 +89,7 @@ export function useItemActions({
 
     const updatedItems = clothingItems.map(item => {
       if (item.id === itemId) {
+        console.log("Found item to update:", item.name);
         return { 
           ...item, 
           metadata: {

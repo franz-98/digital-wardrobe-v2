@@ -39,6 +39,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
   };
 
   const handleBrandUpdate = (newBrand: string) => {
+    console.log("Updating brand to:", newBrand);
     return updateItemMetadata(item.id, "brand", newBrand);
   };
 
