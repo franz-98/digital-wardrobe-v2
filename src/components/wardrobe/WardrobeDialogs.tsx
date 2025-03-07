@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { 
   Dialog, 
   DialogContent, 
@@ -36,6 +36,8 @@ const WardrobeDialogs = ({
   handleOutfitItemClick,
   updateOutfitImage
 }: WardrobeDialogsProps) => {
+  const [itemDismissProgress, setItemDismissProgress] = useState(0);
+  const [outfitDismissProgress, setOutfitDismissProgress] = useState(0);
   
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("WardrobeDialogs - outfit clicked:", outfit);
@@ -66,6 +68,7 @@ const WardrobeDialogs = ({
             enableDismissOnScroll={true}
             dismissThreshold={70}
             showDismissIndicator={true}
+            onProgressChange={setItemDismissProgress}
           >
             <DialogTitle className="sr-only">Item Details</DialogTitle>
             <ClothingItemDetails
@@ -76,6 +79,7 @@ const WardrobeDialogs = ({
               onDelete={handleDeleteItem}
               onOutfitDelete={handleDeleteOutfit}
               onOutfitClick={handleOutfitClick}
+              dismissProgress={itemDismissProgress}
             />
           </DialogContent>
         </Dialog>
@@ -88,6 +92,7 @@ const WardrobeDialogs = ({
             enableDismissOnScroll={true}
             dismissThreshold={70}
             showDismissIndicator={true}
+            onProgressChange={setOutfitDismissProgress}
           >
             <DialogTitle className="sr-only">Outfit Details</DialogTitle>
             <OutfitDetails 
@@ -95,6 +100,7 @@ const WardrobeDialogs = ({
               onDelete={handleDeleteOutfit}
               onItemClick={handleItemClickFromOutfit}
               onImageUpdate={updateOutfitImage}
+              dismissProgress={outfitDismissProgress}
             />
           </DialogContent>
         </Dialog>

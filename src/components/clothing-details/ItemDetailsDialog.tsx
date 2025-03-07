@@ -28,6 +28,7 @@ interface ItemDetailsDialogProps {
   onDelete?: (id: string) => void;
   onOutfitDelete?: (id: string) => void;
   onOutfitClick?: (outfit: Outfit) => void;
+  dismissProgress?: number;
 }
 
 const ItemDetailsDialog = ({ 
@@ -37,7 +38,8 @@ const ItemDetailsDialog = ({
   relatedOutfits = [],
   onDelete,
   onOutfitDelete,
-  onOutfitClick
+  onOutfitClick,
+  dismissProgress = 0
 }: ItemDetailsDialogProps) => {
   const [selectedOutfit, setSelectedOutfit] = useState<Outfit | null>(null);
   const [viewMode, setViewMode] = useState<"item" | "outfit">("item");
@@ -45,7 +47,10 @@ const ItemDetailsDialog = ({
   const [showOutfitDeleteConfirmation, setShowOutfitDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [zoomImageUrl, setZoomImageUrl] = useState("");
-  const [dismissProgress, setDismissProgress] = useState(0);
+  const [localDismissProgress, setLocalDismissProgress] = useState(0);
+  
+  // Use passed in dismissProgress if provided, otherwise use local state
+  const effectiveDismissProgress = dismissProgress || localDismissProgress;
   
   if (!item) return null;
 
@@ -104,7 +109,7 @@ const ItemDetailsDialog = ({
           enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation}
           dismissThreshold={70}
           showDismissIndicator={true}
-          onProgressChange={setDismissProgress}
+          onProgressChange={dismissProgress ? undefined : setLocalDismissProgress}
         >
           {viewMode === "outfit" && selectedOutfit ? (
             <OutfitView 
@@ -121,7 +126,7 @@ const ItemDetailsDialog = ({
               item={item}
               relatedOutfits={relatedOutfits}
               onDelete={onDelete}
-              dismissProgress={dismissProgress}
+              dismissProgress={effectiveDismissProgress}
               onDeleteClick={handleDeleteItem}
               onOutfitClick={handleOutfitClick}
               onImageClick={handleImageClick}

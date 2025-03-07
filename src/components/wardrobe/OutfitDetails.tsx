@@ -16,12 +16,18 @@ interface OutfitDetailsProps {
   onDelete?: (id: string) => void;
   onItemClick?: (item: ClothingItem) => void;
   onImageUpdate?: (outfitId: string, imageUrl: string) => void;
+  dismissProgress?: number;
 }
 
-const OutfitDetails = ({ outfit, onDelete, onItemClick, onImageUpdate }: OutfitDetailsProps) => {
+const OutfitDetails = ({ 
+  outfit, 
+  onDelete, 
+  onItemClick, 
+  onImageUpdate,
+  dismissProgress = 0
+}: OutfitDetailsProps) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
-  const [dismissProgress, setDismissProgress] = useState(0);
   const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(outfit.imageUrl);
   
   const getOutfitColorPalette = (outfit: Outfit) => {

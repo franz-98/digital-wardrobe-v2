@@ -10,6 +10,7 @@ interface ClothingItemDetailsProps {
   onDelete?: (id: string) => void;
   onOutfitDelete?: (id: string) => void;
   onOutfitClick?: (outfit: Outfit) => void;
+  dismissProgress?: number;
 }
 
 const ClothingItemDetails = (props: ClothingItemDetailsProps) => {

@@ -61,13 +61,12 @@ const OutfitView = ({
 
   return (
     <div className="flex flex-col h-[100dvh]">
-      <DialogHeader>
-        <OutfitHeader 
-          outfitName={outfit.name} 
-          itemCount={outfit.items.length}
-          onBackClick={onBackClick}
-        />
-      </DialogHeader>
+      <OutfitHeader 
+        outfitName={outfit.name} 
+        itemCount={outfit.items.length}
+        dismissProgress={dismissProgress}
+        onBackClick={onBackClick}
+      />
       
       <div className="flex-1 overflow-y-auto overscroll-contain">
         <OutfitImage 
