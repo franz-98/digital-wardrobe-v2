@@ -47,7 +47,7 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
 
   return (
     <div 
-      className="flex-1 overflow-y-auto overscroll-contain"
+      className="flex-1 overflow-y-auto"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}

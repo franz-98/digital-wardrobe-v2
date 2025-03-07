@@ -5,7 +5,7 @@ import WardrobeContainer from "@/components/wardrobe/WardrobeContainer";
 
 const WardrobePage = () => {
   return (
-    <div className="h-full flex flex-col">
+    <div className="min-h-[calc(100vh-5rem)] flex flex-col">
       <WardrobeProvider>
         <WardrobeContainer />
       </WardrobeProvider>
