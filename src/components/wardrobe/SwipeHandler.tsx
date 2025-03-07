@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 interface SwipeHandlerProps {
@@ -46,7 +47,7 @@ const SwipeHandler = ({ children, activeTab, setActiveTab }: SwipeHandlerProps) 
 
   return (
     <div 
-      className="flex-1 overflow-auto"
+      className="flex-1 overflow-y-auto overscroll-contain"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}

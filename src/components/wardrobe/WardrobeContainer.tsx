@@ -49,7 +49,7 @@ const WardrobeContainer = () => {
   } = useWardrobe();
 
   return (
-    <div className="w-full h-full flex flex-col pb-20">
+    <div className="w-full flex flex-col pb-20 overflow-y-auto">
       <WardrobeHeader 
         activeTab={activeTab}
         showSearchBar={showSearchBar}
