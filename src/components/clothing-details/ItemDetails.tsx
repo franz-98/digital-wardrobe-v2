@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Info, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
@@ -24,6 +24,12 @@ interface ItemDetailsProps {
 const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetailsProps) => {
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const { updateItemMetadata } = useWardrobe();
+  const [localBrand, setLocalBrand] = useState(item.metadata?.brand || "Add brand");
+  
+  // Update local state when item prop changes
+  useEffect(() => {
+    setLocalBrand(item.metadata?.brand || "Add brand");
+  }, [item]);
   
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Unknown";
@@ -40,7 +46,12 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
 
   const handleBrandUpdate = (newBrand: string) => {
     console.log("Updating brand to:", newBrand);
-    return updateItemMetadata(item.id, "brand", newBrand);
+    const success = updateItemMetadata(item.id, "brand", newBrand);
+    if (success) {
+      // Update local state immediately for UI responsiveness
+      setLocalBrand(newBrand);
+    }
+    return success;
   };
 
   return (
@@ -87,7 +98,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Brand:</span>
                 <EditableTitle
-                  title={item.metadata?.brand || "Add brand"}
+                  title={localBrand}
                   titleClassName="text-xs"
                   className="justify-end"
                   onSave={handleBrandUpdate}

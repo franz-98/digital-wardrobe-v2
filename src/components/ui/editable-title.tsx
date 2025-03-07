@@ -60,6 +60,7 @@ const EditableTitle = ({ title, className, titleClassName, onSave }: EditableTit
           onKeyDown={handleKeyDown}
           className="min-w-0 h-8 py-1 px-2 text-sm"
           size={10}
+          autoFocus
         />
       </div>
     );

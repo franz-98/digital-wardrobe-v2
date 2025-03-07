@@ -87,6 +87,7 @@ export function useItemActions({
       return false;
     }
 
+    // Create new arrays rather than mutating the existing ones
     const updatedItems = clothingItems.map(item => {
       if (item.id === itemId) {
         console.log("Found item to update:", item.name);
@@ -101,8 +102,10 @@ export function useItemActions({
       return item;
     });
     
+    // Update state immediately
     setClothingItems(updatedItems);
     
+    // Also update any instances of this item in outfits
     const updatedOutfits = outfits.map(outfit => {
       if (outfit.items.some(item => item.id === itemId)) {
         return {
@@ -124,6 +127,7 @@ export function useItemActions({
       return outfit;
     });
     
+    // Update outfits state immediately
     setOutfits(updatedOutfits);
     
     toast({
