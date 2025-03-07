@@ -6,7 +6,8 @@ import ImageZoom from "@/components/wardrobe/ImageZoom";
 import { 
   OutfitHeader, 
   OutfitImage, 
-  OutfitItemsList, 
+  OutfitItemsList,
+  OutfitDetails,
   DeleteOutfitButton 
 } from "@/components/clothing-details/outfit-view";
 
@@ -42,6 +43,12 @@ const OutfitView = ({
     }
   };
 
+  const getOutfitColorPalette = () => {
+    return outfit.items.map(item => item.color);
+  };
+
+  const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
+
   return (
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader>
@@ -56,6 +63,12 @@ const OutfitView = ({
         <OutfitImage 
           imageUrl={outfit.imageUrl || outfit.items[0]?.imageUrl}
           onImageClick={handleImageClick}
+        />
+        
+        <OutfitDetails 
+          creationDate={creationDate}
+          season={outfit.season || 'All Seasons'}
+          colorPalette={getOutfitColorPalette()}
         />
         
         <OutfitItemsList 
@@ -79,3 +92,4 @@ const OutfitView = ({
 };
 
 export default OutfitView;
+
