@@ -8,6 +8,7 @@ import CategoryDistribution from './stats/CategoryDistribution';
 import ColorDistribution from './stats/ColorDistribution';
 import OutfitStatistics from './stats/OutfitStatistics';
 import FrequentOutfits from './stats/FrequentOutfits';
+import FrequentItems from './stats/FrequentItems';
 
 interface StatsTabProps {
   timeRange: string;
@@ -43,6 +44,10 @@ const StatsTab = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <FrequentOutfits outfits={outfits} />
         <CategoryDistribution clothingItems={clothingItems} />
+      </div>
+      
+      <div className="grid grid-cols-1 gap-4 mb-4">
+        <FrequentItems clothingItems={clothingItems} outfits={outfits} />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
