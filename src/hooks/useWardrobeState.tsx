@@ -58,7 +58,7 @@ export function useWardrobeState() {
       console.log("Processing outfit ID:", itemId);
       // Find the outfit in our data
       const outfitToShow = outfits.find(outfit => outfit.id === itemId) || 
-                           suggestedOutfits.find(outfit => outfit.id === itemId);
+                          suggestedOutfits.find(outfit => outfit.id === itemId);
       
       if (outfitToShow) {
         console.log("Found outfit to display:", outfitToShow.name);
