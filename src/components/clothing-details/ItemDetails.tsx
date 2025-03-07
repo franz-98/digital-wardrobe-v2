@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Calendar, Info, Tag } from "lucide-react";
 import { format } from "date-fns";
@@ -8,6 +9,10 @@ import { Trash2 } from "lucide-react";
 import { ClothingItem } from "@/components/wardrobe/types";
 import ImageZoom from "@/components/wardrobe/ImageZoom";
 import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EditableTitle } from "@/components/ui/editable-title";
+import { useWardrobe } from "@/context/WardrobeContext";
 
 interface ItemDetailsProps {
   item: ClothingItem;
@@ -18,6 +23,7 @@ interface ItemDetailsProps {
 
 const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetailsProps) => {
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  const { updateItemMetadata } = useWardrobe();
   
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Unknown";
@@ -30,6 +36,10 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
 
   const handleImageClick = () => {
     setIsImageZoomOpen(true);
+  };
+
+  const handleBrandUpdate = (newBrand: string) => {
+    return updateItemMetadata(item.id, "brand", newBrand);
   };
 
   return (
@@ -73,17 +83,17 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
                   <span className="text-xs">{item.color}</span>
                 </div>
               </div>
-            </div>
-          </div>
-          
-          {item.metadata?.brand && (
-            <div className="mt-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Brand:</span>
-                <span className="text-xs font-medium">{item.metadata.brand}</span>
+                <EditableTitle
+                  title={item.metadata?.brand || "Add brand"}
+                  titleClassName="text-xs"
+                  className="justify-end"
+                  onSave={handleBrandUpdate}
+                />
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
       

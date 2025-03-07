@@ -88,7 +88,8 @@ export function useWardrobeState() {
     updateStatsForTimeRange,
     updateStatsForCustomRange,
     updateItemName,
-    updateOutfitName
+    updateOutfitName,
+    updateItemMetadata
   } = useWardrobeActions({
     outfits,
     clothingItems,
@@ -149,7 +150,8 @@ export function useWardrobeState() {
     handleDeleteItem,
     handleDeleteOutfit,
     updateItemName,
-    updateOutfitName
+    updateOutfitName,
+    updateItemMetadata
   };
 }
 

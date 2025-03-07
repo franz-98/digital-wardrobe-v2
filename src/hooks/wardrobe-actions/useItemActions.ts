@@ -75,8 +75,67 @@ export function useItemActions({
     return true;
   };
 
+  const updateItemMetadata = (itemId: string, field: string, value: string) => {
+    if (!value.trim() && field !== "brand") {
+      toast({
+        title: "Invalid value",
+        description: `Please enter a valid ${field} for this item.`,
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    const updatedItems = clothingItems.map(item => {
+      if (item.id === itemId) {
+        return { 
+          ...item, 
+          metadata: {
+            ...item.metadata,
+            [field]: value.trim() || undefined
+          }
+        };
+      }
+      return item;
+    });
+    
+    setClothingItems(updatedItems);
+    
+    const updatedOutfits = outfits.map(outfit => {
+      if (outfit.items.some(item => item.id === itemId)) {
+        return {
+          ...outfit,
+          items: outfit.items.map(item => {
+            if (item.id === itemId) {
+              return { 
+                ...item, 
+                metadata: {
+                  ...item.metadata,
+                  [field]: value.trim() || undefined
+                }
+              };
+            }
+            return item;
+          })
+        };
+      }
+      return outfit;
+    });
+    
+    setOutfits(updatedOutfits);
+    
+    toast({
+      title: "Item updated",
+      description: value.trim() 
+        ? `The item's ${field} has been updated to "${value.trim()}".`
+        : `The item's ${field} has been removed.`,
+    });
+    
+    return true;
+  };
+
   return {
     handleDeleteItem,
-    updateItemName
+    updateItemName,
+    updateItemMetadata
   };
 }
