@@ -27,6 +27,7 @@ interface OutfitViewProps {
   onDeleteClick?: () => void;
   onItemClick?: (itemId: string) => void;
   onImageClick?: (imageUrl: string) => void;
+  dismissProgress?: number;
 }
 
 const OutfitView = ({ 
@@ -34,10 +35,9 @@ const OutfitView = ({
   onBackClick, 
   onDeleteClick,
   onItemClick,
-  onImageClick
+  onImageClick,
+  dismissProgress = 0
 }: OutfitViewProps) => {
-  const [dismissProgress, setDismissProgress] = useState(0);
-
   const handleItemClick = (itemId: string) => {
     console.log("Item clicked in OutfitView:", itemId);
     

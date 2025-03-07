@@ -120,6 +120,7 @@ const ItemDetailsDialog = ({
                 console.log("Item clicked in outfit view:", itemId);
               }}
               onImageClick={handleImageClick}
+              dismissProgress={effectiveDismissProgress}
             />
           ) : (
             <ItemDetailsContent 

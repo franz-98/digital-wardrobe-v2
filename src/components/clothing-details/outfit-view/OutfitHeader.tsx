@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 interface OutfitHeaderProps {
   outfitName: string;
   itemCount: number;
+  dismissProgress?: number;
   onBackClick: () => void;
 }
 
-const OutfitHeader = ({ outfitName, itemCount, onBackClick }: OutfitHeaderProps) => {
+const OutfitHeader = ({ outfitName, itemCount, dismissProgress = 0, onBackClick }: OutfitHeaderProps) => {
   return (
     <div className="px-4 pt-4 pb-2">
       <div className="flex items-center justify-between mb-2">
@@ -39,6 +40,11 @@ const OutfitHeader = ({ outfitName, itemCount, onBackClick }: OutfitHeaderProps)
         <Badge variant="outline" className="bg-primary/10 text-primary">
           {itemCount} items
         </Badge>
+        {dismissProgress > 0 && dismissProgress < 60 && (
+          <span className="ml-2 text-xs opacity-60">
+            Pull down to close ({Math.round(dismissProgress)}%)
+          </span>
+        )}
       </DialogDescription>
     </div>
   );
