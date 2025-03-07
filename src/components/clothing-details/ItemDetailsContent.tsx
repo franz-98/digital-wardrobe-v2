@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import ItemDetails from "./ItemDetails";
 import RelatedOutfits from "./RelatedOutfits";
+import { EditableTitle } from "@/components/ui/editable-title";
+import { useWardrobe } from "@/context/WardrobeContext";
 
 interface ItemDetailsContentProps {
   item: ClothingItem;
@@ -31,11 +33,21 @@ const ItemDetailsContent = ({
   onOutfitClick,
   onImageClick
 }: ItemDetailsContentProps) => {
+  const { updateItemName } = useWardrobe();
+
+  const handleNameUpdate = (newName: string) => {
+    return updateItemName(item.id, newName);
+  };
+
   return (
     <>
       <DialogHeader className="px-4 pt-4 pb-0 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <DialogTitle className="text-lg font-semibold">{item.name}</DialogTitle>
+          <EditableTitle 
+            title={item.name} 
+            titleClassName="text-lg font-semibold"
+            onSave={handleNameUpdate}
+          />
           <DialogClose asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8">
               <X className="h-4 w-4" />
@@ -57,7 +69,6 @@ const ItemDetailsContent = ({
           item={item}
           onDeleteClick={onDeleteClick}
           onDelete={onDelete}
-          // Remove passing onImageClick to let the component handle zooming internally
         />
         
         <div className="px-4 pb-4">

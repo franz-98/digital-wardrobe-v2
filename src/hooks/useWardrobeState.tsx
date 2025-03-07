@@ -86,7 +86,9 @@ export function useWardrobeState() {
     handleDeleteOutfit,
     togglePremium: actionsTogglePremium,
     updateStatsForTimeRange,
-    updateStatsForCustomRange
+    updateStatsForCustomRange,
+    updateItemName,
+    updateOutfitName
   } = useWardrobeActions({
     outfits,
     clothingItems,
@@ -145,7 +147,9 @@ export function useWardrobeState() {
     handleOutfitClick,
     handleOutfitItemClick,
     handleDeleteItem,
-    handleDeleteOutfit
+    handleDeleteOutfit,
+    updateItemName,
+    updateOutfitName
   };
 }
 

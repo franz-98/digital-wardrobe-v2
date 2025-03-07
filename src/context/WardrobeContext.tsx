@@ -41,6 +41,8 @@ interface WardrobeContextType {
   handleOutfitItemClick: (itemId: string) => void;
   handleDeleteItem: (itemId: string) => void;
   handleDeleteOutfit: (outfitId: string) => void;
+  updateItemName: (itemId: string, newName: string) => boolean;
+  updateOutfitName: (outfitId: string, newName: string) => boolean;
 }
 
 // Create the context with a default empty value

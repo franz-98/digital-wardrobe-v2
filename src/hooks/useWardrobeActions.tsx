@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 
@@ -55,7 +54,7 @@ export function useWardrobeActions({
       
       toast({
         title: "Outfit created!",
-        description: `"${newOutfitName}" has been added to your outfits.`,
+        description: `"${newOutfitName}" has been added to your outfits.",
       });
     }
   };
@@ -122,6 +121,77 @@ export function useWardrobeActions({
     console.log(`Updating stats for custom range: ${start.toISOString()} to ${end.toISOString()}`);
   };
 
+  const updateItemName = (itemId: string, newName: string) => {
+    if (!newName.trim()) {
+      toast({
+        title: "Invalid name",
+        description: "Please enter a valid name for this item.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    const updatedItems = clothingItems.map(item => {
+      if (item.id === itemId) {
+        return { ...item, name: newName.trim() };
+      }
+      return item;
+    });
+    
+    setClothingItems(updatedItems);
+    
+    const updatedOutfits = outfits.map(outfit => {
+      if (outfit.items.some(item => item.id === itemId)) {
+        return {
+          ...outfit,
+          items: outfit.items.map(item => {
+            if (item.id === itemId) {
+              return { ...item, name: newName.trim() };
+            }
+            return item;
+          })
+        };
+      }
+      return outfit;
+    });
+    
+    setOutfits(updatedOutfits);
+    
+    toast({
+      title: "Item updated",
+      description: `The item has been renamed to "${newName.trim()}".`,
+    });
+    
+    return true;
+  };
+
+  const updateOutfitName = (outfitId: string, newName: string) => {
+    if (!newName.trim()) {
+      toast({
+        title: "Invalid name",
+        description: "Please enter a valid name for this outfit.",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    const updatedOutfits = outfits.map(outfit => {
+      if (outfit.id === outfitId) {
+        return { ...outfit, name: newName.trim() };
+      }
+      return outfit;
+    });
+    
+    setOutfits(updatedOutfits);
+    
+    toast({
+      title: "Outfit updated",
+      description: `The outfit has been renamed to "${newName.trim()}".`,
+    });
+    
+    return true;
+  };
+
   return {
     findRelatedOutfits,
     createNewOutfit,
@@ -130,6 +200,8 @@ export function useWardrobeActions({
     handleDeleteOutfit,
     togglePremium,
     updateStatsForTimeRange,
-    updateStatsForCustomRange
+    updateStatsForCustomRange,
+    updateItemName,
+    updateOutfitName
   };
 }

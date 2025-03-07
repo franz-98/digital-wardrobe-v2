@@ -62,7 +62,8 @@ const OutfitView = ({
   return (
     <div className="flex flex-col h-[100dvh]">
       <OutfitHeader 
-        outfitName={outfit.name} 
+        outfitName={outfit.name}
+        outfitId={outfit.id}
         itemCount={outfit.items.length}
         dismissProgress={dismissProgress}
         onBackClick={onBackClick}
