@@ -1,8 +1,9 @@
 
 import React, { useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Calendar } from 'lucide-react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import TimeRangeSelector from './TimeRangeSelector';
 import { ClothingItem, Outfit } from '../wardrobe/types';
 
@@ -74,6 +75,58 @@ const StatsTab = ({
         ? Math.round(outfits.reduce((sum, outfit) => sum + outfit.items.length, 0) / outfits.length) 
         : 0
     };
+  }, [outfits]);
+
+  // Calculate most frequently worn outfits
+  const frequentlyWornOutfits = useMemo(() => {
+    // Create a map to count outfit usage frequencies
+    const outfitUsageCounts = new Map<string, number>();
+    const outfitDates = new Map<string, Date[]>();
+    
+    // Count each outfit usage based on metadata.dateTaken
+    outfits.forEach(outfit => {
+      // Check for createdAt as fallback
+      if (outfit.createdAt || outfit.items.some(item => item.metadata?.dateTaken)) {
+        // Count this outfit
+        const currentCount = outfitUsageCounts.get(outfit.id) || 0;
+        outfitUsageCounts.set(outfit.id, currentCount + 1);
+        
+        // Store dates to show when the outfit was worn
+        const dates = outfitDates.get(outfit.id) || [];
+        
+        // Check each item for metadata.dateTaken
+        outfit.items.forEach(item => {
+          if (item.metadata?.dateTaken) {
+            dates.push(new Date(item.metadata.dateTaken));
+          }
+        });
+        
+        // Use createdAt as a fallback if no dateTaken found
+        if (dates.length === 0 && outfit.createdAt) {
+          dates.push(new Date(outfit.createdAt));
+        }
+        
+        // Sort dates and store
+        dates.sort((a, b) => b.getTime() - a.getTime()); // newest first
+        outfitDates.set(outfit.id, dates);
+      }
+    });
+    
+    // Convert to array and sort by frequency
+    return Array.from(outfitUsageCounts.entries())
+      .map(([outfitId, count]) => {
+        const outfit = outfits.find(o => o.id === outfitId);
+        const dates = outfitDates.get(outfitId) || [];
+        
+        return {
+          outfit,
+          count,
+          lastWorn: dates.length > 0 ? dates[0] : null
+        };
+      })
+      .filter(item => item.outfit !== undefined)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3); // Take top 3 most frequently worn outfits
   }, [outfits]);
 
   return (
@@ -184,6 +237,64 @@ const StatsTab = ({
               <span className="text-sm text-muted-foreground">Avg. Items per Outfit</span>
             </div>
           </div>
+        </Card>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-4 mb-4">
+        <Card className="p-4">
+          <h3 className="text-base font-medium mb-4">Outfit usati più spesso</h3>
+          {frequentlyWornOutfits.length > 0 ? (
+            <div className="space-y-4">
+              {frequentlyWornOutfits.map(({ outfit, count, lastWorn }) => (
+                <div key={outfit?.id} className="flex gap-3 items-start">
+                  <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                    <img 
+                      src={outfit?.imageUrl || outfit?.items[0]?.imageUrl || "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=300&h=300&fit=crop"} 
+                      alt={outfit?.name} 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-sm">{outfit?.name}</h4>
+                      <Badge variant="secondary" className="text-xs">
+                        {count} {count === 1 ? 'time' : 'times'}
+                      </Badge>
+                    </div>
+                    {lastWorn && (
+                      <div className="flex items-center text-xs text-muted-foreground mt-1">
+                        <Calendar className="h-3 w-3 mr-1" />
+                        Last worn: {lastWorn.toLocaleDateString()}
+                      </div>
+                    )}
+                    <div className="flex gap-1 mt-1">
+                      {outfit?.items.slice(0, 4).map(item => (
+                        <div 
+                          key={item.id} 
+                          className="w-5 h-5 rounded-sm overflow-hidden border"
+                        >
+                          <img 
+                            src={item.imageUrl} 
+                            alt={item.name} 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                      ))}
+                      {(outfit?.items.length || 0) > 4 && (
+                        <div className="w-5 h-5 rounded-sm bg-muted flex items-center justify-center text-xs">
+                          +{(outfit?.items.length || 0) - 4}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground italic py-4 text-center">
+              No outfit usage data available yet
+            </div>
+          )}
         </Card>
       </div>
     </div>
