@@ -101,7 +101,7 @@ const ItemDetailsDialog = ({
       }}>
         <DialogContent 
           className="p-0 overflow-hidden bg-background max-w-none w-full h-[100dvh] sm:rounded-none flex flex-col"
-          enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation && viewMode === "item"}
+          enableDismissOnScroll={!showDeleteConfirmation && !showOutfitDeleteConfirmation}
           dismissThreshold={70}
           showDismissIndicator={true}
           onProgressChange={setDismissProgress}

@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 interface OutfitHeaderProps {
   outfitName: string;
   itemCount: number;
-  dismissProgress: number;
+  dismissProgress?: number;
 }
 
-const OutfitHeader = ({ outfitName, itemCount, dismissProgress }: OutfitHeaderProps) => {
+const OutfitHeader = ({ outfitName, itemCount, dismissProgress = 0 }: OutfitHeaderProps) => {
   return (
     <DialogHeader className="px-6 pt-6 pb-0">
       <div className="flex items-center justify-between mb-2">

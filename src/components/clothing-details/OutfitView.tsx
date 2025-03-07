@@ -1,8 +1,18 @@
 
 import { useState } from "react";
-import { DialogHeader } from "@/components/ui/dialog";
-import { Outfit } from "@/components/wardrobe/types";
-import ImageZoom from "@/components/wardrobe/ImageZoom";
+import { ChevronLeft } from "lucide-react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogClose 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import { 
   OutfitHeader, 
   OutfitImage, 
@@ -22,24 +32,24 @@ interface OutfitViewProps {
 const OutfitView = ({ 
   outfit, 
   onBackClick, 
-  onDeleteClick, 
-  onItemClick, 
-  onImageClick 
+  onDeleteClick,
+  onItemClick,
+  onImageClick
 }: OutfitViewProps) => {
-  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
-  
-  const handleImageClick = () => {
-    if (onImageClick) {
-      onImageClick(outfit.imageUrl || outfit.items[0]?.imageUrl || "");
-    } else {
-      setIsImageZoomOpen(true);
+  const [dismissProgress, setDismissProgress] = useState(0);
+
+  const handleItemClick = (itemId: string) => {
+    console.log("Item clicked in OutfitView:", itemId);
+    
+    if (onItemClick) {
+      onItemClick(itemId);
     }
   };
 
-  const handleItemClick = (itemId: string) => {
-    console.log("Item clicked in outfit view:", itemId);
-    if (onItemClick) {
-      onItemClick(itemId);
+  const handleImageClick = () => {
+    const imageUrl = outfit.imageUrl || outfit.items[0]?.imageUrl;
+    if (imageUrl && onImageClick) {
+      onImageClick(imageUrl);
     }
   };
 
@@ -53,13 +63,13 @@ const OutfitView = ({
     <div className="flex flex-col h-[100dvh]">
       <DialogHeader>
         <OutfitHeader 
-          outfitName={outfit.name}
+          outfitName={outfit.name} 
           itemCount={outfit.items.length}
           onBackClick={onBackClick}
         />
       </DialogHeader>
       
-      <div className="flex-1 overflow-y-auto overscroll-bounce">
+      <div className="flex-1 overflow-y-auto overscroll-contain">
         <OutfitImage 
           imageUrl={outfit.imageUrl || outfit.items[0]?.imageUrl}
           onImageClick={handleImageClick}
@@ -80,16 +90,8 @@ const OutfitView = ({
       {onDeleteClick && (
         <DeleteOutfitButton onDeleteClick={onDeleteClick} />
       )}
-      
-      <ImageZoom 
-        imageUrl={outfit.imageUrl || outfit.items[0]?.imageUrl || ""}
-        alt={outfit.name}
-        isOpen={isImageZoomOpen}
-        onClose={() => setIsImageZoomOpen(false)}
-      />
     </div>
   );
 };
 
 export default OutfitView;
-
