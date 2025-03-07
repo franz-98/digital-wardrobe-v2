@@ -40,6 +40,10 @@ const StatsTab = ({
         />
       </div>
       
+      <div className="grid grid-cols-1 gap-4 mb-4">
+        <FrequentOutfits outfits={outfits} />
+      </div>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <CategoryDistribution clothingItems={clothingItems} />
         <ColorDistribution clothingItems={clothingItems} />
@@ -47,10 +51,6 @@ const StatsTab = ({
       
       <div className="grid grid-cols-1 gap-4 mb-4">
         <OutfitStatistics outfits={outfits} />
-      </div>
-      
-      <div className="grid grid-cols-1 gap-4 mb-4">
-        <FrequentOutfits outfits={outfits} />
       </div>
     </div>
   );
