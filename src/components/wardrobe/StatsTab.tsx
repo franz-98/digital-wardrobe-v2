@@ -43,11 +43,11 @@ const StatsTab = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <FrequentOutfits outfits={outfits} />
-        <CategoryDistribution clothingItems={clothingItems} />
+        <FrequentItems clothingItems={clothingItems} outfits={outfits} />
       </div>
       
       <div className="grid grid-cols-1 gap-4 mb-4">
-        <FrequentItems clothingItems={clothingItems} outfits={outfits} />
+        <CategoryDistribution clothingItems={clothingItems} />
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
