@@ -1,3 +1,4 @@
+
 import { useToast } from "@/hooks/use-toast";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 
@@ -54,7 +55,7 @@ export function useWardrobeActions({
       
       toast({
         title: "Outfit created!",
-        description: `"${newOutfitName}" has been added to your outfits.",
+        description: `"${newOutfitName}" has been added to your outfits.`,
       });
     }
   };
