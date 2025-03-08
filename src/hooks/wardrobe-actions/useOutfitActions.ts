@@ -93,10 +93,7 @@ export function useOutfitActions({
     
     setOutfits(updatedOutfits);
     
-    toast({
-      title: "Outfit updated",
-      description: `The outfit has been renamed to "${newName.trim()}".`,
-    });
+    // Toast notification for outfit name change has been removed
     
     return true;
   };
