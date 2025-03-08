@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 import { WardrobeActionsProps } from "./types";
 
@@ -67,10 +66,7 @@ export function useItemActions({
     
     setOutfits(updatedOutfits);
     
-    toast({
-      title: "Item updated",
-      description: `The item has been renamed to "${newName.trim()}".`,
-    });
+    // Toast notification for item name change has been removed
     
     return true;
   };
