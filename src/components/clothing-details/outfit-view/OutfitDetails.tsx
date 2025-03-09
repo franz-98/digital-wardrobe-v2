@@ -1,6 +1,6 @@
 
-import React from "react";
-import { Calendar, Tag, Clock, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { Calendar, Tag, Clock, Trash2, Plus } from "lucide-react";
 import { 
   Popover, 
   PopoverContent, 
@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/popover";
 import { colorNameToHex } from "@/components/wardrobe/utils/colorUtils";
 import { Button } from "@/components/ui/button";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 interface OutfitDetailsProps {
   creationDate?: Date;
@@ -15,6 +17,7 @@ interface OutfitDetailsProps {
   colorPalette?: string[];
   wornDates?: Date[];
   onDeleteWornDate?: (date: Date) => void;
+  onAddWornDate?: (date: Date) => void;
 }
 
 const OutfitDetails = ({ 
@@ -22,13 +25,27 @@ const OutfitDetails = ({
   season = 'All Seasons', 
   colorPalette = [],
   wornDates = [],
-  onDeleteWornDate
+  onDeleteWornDate,
+  onAddWornDate
 }: OutfitDetailsProps) => {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
     month: 'short', 
     day: 'numeric' 
   });
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+  };
+
+  const handleAddWornDate = () => {
+    if (selectedDate && onAddWornDate) {
+      onAddWornDate(selectedDate);
+      // Reset selected date after adding
+      setSelectedDate(new Date());
+    }
+  };
 
   return (
     <div className="px-4 pb-4 space-y-3">
@@ -84,14 +101,53 @@ const OutfitDetails = ({
           </div>
         )}
         
-        {wornDates.length > 0 && (
-          <div>
-            <h5 className="text-sm font-medium mb-2 flex items-center">
-              <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
-              Wear history
-            </h5>
-            <div className="space-y-1 max-h-48 overflow-y-auto py-1 px-0.5">
-              {wornDates
+        <div>
+          <h5 className="text-sm font-medium mb-2 flex items-center">
+            <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
+            Wear history
+          </h5>
+          
+          {/* Date picker for adding worn dates */}
+          <div className="mb-3 border border-border/50 rounded-md p-2 bg-background/50">
+            <div className="text-xs text-muted-foreground mb-2">Add a new date:</div>
+            <div className="flex gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-xs h-8 flex-1 justify-start font-normal"
+                  >
+                    <Calendar className="mr-2 h-3.5 w-3.5" />
+                    {selectedDate ? format(selectedDate, 'MMM d, yyyy') : "Select date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={handleDateSelect}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+              
+              <Button 
+                size="sm" 
+                className="h-8" 
+                onClick={handleAddWornDate}
+                disabled={!selectedDate || !onAddWornDate}
+              >
+                <Plus className="h-3.5 w-3.5 mr-1" />
+                Add
+              </Button>
+            </div>
+          </div>
+          
+          <div className="space-y-1 max-h-64 overflow-y-auto py-1 px-0.5">
+            {wornDates.length > 0 ? (
+              wornDates
                 .sort((a, b) => b.getTime() - a.getTime()) // Sort by most recent first
                 .map((date, index) => (
                   <div 
@@ -122,10 +178,13 @@ const OutfitDetails = ({
                     )}
                   </div>
                 ))
-              }
-            </div>
+            ) : (
+              <div className="text-sm text-muted-foreground py-2 text-center">
+                No wear history recorded
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

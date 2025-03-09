@@ -63,6 +63,20 @@ const OutfitView = ({
     // Here we could also update the outfit metadata if there was API integration
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
   };
+  
+  const handleAddWornDate = (newDate: Date) => {
+    // Check if date already exists to prevent duplicates
+    const dateExists = wornDates.some(date => 
+      date.toDateString() === newDate.toDateString()
+    );
+    
+    if (!dateExists) {
+      setWornDates(prevDates => [...prevDates, newDate]);
+      console.log(`Added wear date: ${newDate.toLocaleDateString()}`);
+    } else {
+      console.log(`Date already exists: ${newDate.toLocaleDateString()}`);
+    }
+  };
 
   const getOutfitColorPalette = () => {
     return outfit.items.map(item => item.color);
@@ -115,6 +129,7 @@ const OutfitView = ({
           colorPalette={getOutfitColorPalette()}
           wornDates={wornDates}
           onDeleteWornDate={handleDeleteWornDate}
+          onAddWornDate={handleAddWornDate}
         />
         
         <OutfitItemsList 

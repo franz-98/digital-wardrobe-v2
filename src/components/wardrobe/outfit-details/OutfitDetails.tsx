@@ -1,9 +1,11 @@
 
-import React from 'react';
-import { Calendar, Tag, Clock, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { Calendar, Tag, Clock, Trash2, Plus } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { colorNameToHex } from "../utils/colorUtils";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 interface OutfitDetailsProps {
   creationDate: Date;
@@ -11,6 +13,7 @@ interface OutfitDetailsProps {
   colorPalette: string[];
   wornDates?: Date[];
   onDeleteWornDate?: (date: Date) => void;
+  onAddWornDate?: (date: Date) => void;
 }
 
 const OutfitDetails = ({ 
@@ -18,13 +21,27 @@ const OutfitDetails = ({
   season, 
   colorPalette, 
   wornDates = [],
-  onDeleteWornDate
+  onDeleteWornDate,
+  onAddWornDate
 }: OutfitDetailsProps) => {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
     month: 'short', 
     day: 'numeric' 
   });
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+  };
+
+  const handleAddWornDate = () => {
+    if (selectedDate && onAddWornDate) {
+      onAddWornDate(selectedDate);
+      // Reset selected date after adding
+      setSelectedDate(new Date());
+    }
+  };
 
   return (
     <div className="bg-muted/30 p-4 rounded-lg space-y-3">
@@ -77,48 +94,94 @@ const OutfitDetails = ({
         </div>
       </div>
 
-      {wornDates.length > 0 && (
+      {wornDates.length > 0 || onAddWornDate ? (
         <div>
           <h5 className="text-sm font-medium mb-2 flex items-center">
             <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
             Wear history
           </h5>
-          <div className="space-y-1 max-h-48 overflow-y-auto py-1 px-0.5">
-            {wornDates
-              .sort((a, b) => b.getTime() - a.getTime()) // Sort by most recent first
-              .map((date, index) => (
-                <div 
-                  key={index} 
-                  className="text-sm flex items-center justify-between gap-1.5 py-1.5 px-2 hover:bg-muted/50 rounded-md transition-colors group"
-                >
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
-                    <span>{date.toLocaleDateString('default', { 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}</span>
-                  </div>
-                  
-                  {onDeleteWornDate && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteWornDate(date);
-                      }}
+          
+          {/* Date picker for adding worn dates */}
+          {onAddWornDate && (
+            <div className="mb-3 border border-border/50 rounded-md p-2 bg-background/50">
+              <div className="text-xs text-muted-foreground mb-2">Add a new date:</div>
+              <div className="flex gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-xs h-8 flex-1 justify-start font-normal"
                     >
-                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      <Calendar className="mr-2 h-3.5 w-3.5" />
+                      {selectedDate ? format(selectedDate, 'MMM d, yyyy') : "Select date"}
                     </Button>
-                  )}
-                </div>
-              ))
-            }
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={handleDateSelect}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+                
+                <Button 
+                  size="sm" 
+                  className="h-8" 
+                  onClick={handleAddWornDate}
+                  disabled={!selectedDate}
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  Add
+                </Button>
+              </div>
+            </div>
+          )}
+          
+          <div className="space-y-1 max-h-64 overflow-y-auto py-1 px-0.5">
+            {wornDates.length > 0 ? (
+              wornDates
+                .sort((a, b) => b.getTime() - a.getTime()) // Sort by most recent first
+                .map((date, index) => (
+                  <div 
+                    key={index} 
+                    className="text-sm flex items-center justify-between gap-1.5 py-1.5 px-2 hover:bg-muted/50 rounded-md transition-colors group"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
+                      <span>{date.toLocaleDateString('default', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })}</span>
+                    </div>
+                    
+                    {onDeleteWornDate && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteWornDate(date);
+                        }}
+                      >
+                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    )}
+                  </div>
+                ))
+            ) : (
+              <div className="text-sm text-muted-foreground py-2 text-center">
+                No wear history recorded
+              </div>
+            )}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
