@@ -122,6 +122,7 @@ export function ImageCropCanvas({
     }
   };
   
+  // Mouse event handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!canvasRef.current) return;
     
@@ -142,6 +143,36 @@ export function ImageCropCanvas({
   };
   
   const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  
+  // Touch event handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!canvasRef.current) return;
+    
+    e.preventDefault(); // Prevent scrolling
+    
+    setIsDragging(true);
+    const touch = e.touches[0];
+    setDragStart({
+      x: touch.clientX - position.x,
+      y: touch.clientY - position.y
+    });
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !canvasRef.current) return;
+    
+    e.preventDefault(); // Prevent scrolling
+    
+    const touch = e.touches[0];
+    onPositionChange({
+      x: touch.clientX - dragStart.x,
+      y: touch.clientY - dragStart.y
+    });
+  };
+  
+  const handleTouchEnd = () => {
     setIsDragging(false);
   };
   
@@ -166,6 +197,10 @@ export function ImageCropCanvas({
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       />
       
       {/* Overlay to indicate the circular crop area */}
