@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Outfit } from '@/components/wardrobe/types';
 import { OutfitUsage } from './types';

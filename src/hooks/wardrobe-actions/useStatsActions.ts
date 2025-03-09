@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { calculateTimeRangeDates } from '../wardrobe/wardrobe-storage';
+import { calculateTimeRangeDates } from '../wardrobe/storage/time-range'; // Fixed import path
 
 export interface StatsState {
   timeStart: Date | null;

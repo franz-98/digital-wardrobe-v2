@@ -10,7 +10,7 @@ import { colorNameToHex } from "@/components/wardrobe/utils/colorUtils";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { saveOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
+import { saveOutfitWearDates } from "@/hooks/wardrobe/storage"; // Fixed import path
 
 interface OutfitDetailsProps {
   creationDate?: Date;

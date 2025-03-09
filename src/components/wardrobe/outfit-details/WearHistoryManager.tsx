@@ -7,7 +7,7 @@ import {
   saveOutfitWearDates, 
   loadOutfits, 
   saveOutfits 
-} from "@/hooks/wardrobe/storage";
+} from "@/hooks/wardrobe/storage"; // Fixed import path
 import { toast } from "sonner";
 
 interface WearHistoryManagerProps {
