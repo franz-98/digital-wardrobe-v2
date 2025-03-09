@@ -10,8 +10,9 @@ import {
   DialogTitle,
   DialogDescription
 } from "@/components/ui/dialog";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { ImageCropDialog } from "./ImageCropDialog";
 
 interface UserProfile {
   id: string;
@@ -33,6 +34,8 @@ const UserInfoCard = ({ user: initialUser }: UserInfoCardProps) => {
   const [email, setEmail] = useState("");
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [cropDialogOpen, setCropDialogOpen] = useState(false);
 
   const copyReferralCode = () => {
     if (user?.referralCode) {
@@ -118,11 +121,22 @@ const UserInfoCard = ({ user: initialUser }: UserInfoCardProps) => {
 
     // Create object URL for the image
     const imageUrl = URL.createObjectURL(file);
+    
+    // Set the selected image and open crop dialog
+    setSelectedImage(imageUrl);
+    setCropDialogOpen(true);
 
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleCropComplete = (croppedImageUrl: string) => {
     // Update user with new avatar URL
     setUser(prevUser => ({
       ...prevUser,
-      avatarUrl: imageUrl
+      avatarUrl: croppedImageUrl
     }));
 
     // Show success message
@@ -131,10 +145,19 @@ const UserInfoCard = ({ user: initialUser }: UserInfoCardProps) => {
       description: "La tua foto profilo è stata aggiornata con successo.",
     });
 
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    // Close dialog and reset selected image
+    setCropDialogOpen(false);
+    setSelectedImage(null);
+  };
+
+  const handleCropCancel = () => {
+    // Clean up the object URL to avoid memory leaks
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage);
     }
+    
+    setCropDialogOpen(false);
+    setSelectedImage(null);
   };
 
   return (
@@ -265,9 +288,19 @@ const UserInfoCard = ({ user: initialUser }: UserInfoCardProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Image Crop Dialog */}
+      {selectedImage && (
+        <ImageCropDialog
+          imageUrl={selectedImage}
+          open={cropDialogOpen}
+          onOpenChange={setCropDialogOpen}
+          onComplete={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </Card>
   );
 };
 
 export default UserInfoCard;
-
