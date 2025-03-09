@@ -19,6 +19,11 @@ export function useStatsActions() {
     setSelectedTimeRange("custom");
     setCustomRangeStart(start);
     setCustomRangeEnd(end);
+    
+    // Also update the string representation for components that use it directly
+    const formattedStart = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const formattedEnd = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    setSelectedTimeRange(`${formattedStart} - ${formattedEnd}`);
   };
 
   return {

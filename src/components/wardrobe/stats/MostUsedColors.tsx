@@ -22,7 +22,7 @@ const MostUsedColors: React.FC<MostUsedColorsProps> = ({
   timeRange 
 }) => {
   const [showAllColors, setShowAllColors] = useState(false);
-  const DEFAULT_COLORS_SHOWN = 5;
+  const DEFAULT_COLORS_SHOWN = 8;
 
   // Filter outfits based on time range
   const filteredOutfits = React.useMemo(() => {
@@ -35,11 +35,9 @@ const MostUsedColors: React.FC<MostUsedColorsProps> = ({
     if (timeRange.includes("-")) {
       const [startStr, endStr] = timeRange.split(" - ");
       // This is a simplified approach, in a real app we'd use a more robust date parsing
-      return outfits.filter(outfit => outfit.createdAt);
-    }
-    
-    // Calculate date range based on preset options
-    if (timeRange === "week") {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 30); // Default to last 30 days for custom range
+    } else if (timeRange === "week") {
       startDate = new Date(now);
       startDate.setDate(now.getDate() - 7);
     } else if (timeRange === "month") {
