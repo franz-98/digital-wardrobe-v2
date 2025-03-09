@@ -51,6 +51,11 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
       const allOutfits = loadOutfits();
       saveOutfits(allOutfits);
       
+      // Force global stats update through a custom event
+      window.dispatchEvent(new CustomEvent('wardrobe-update', { 
+        detail: { type: 'wear-date-added', outfitId, date: selectedDate } 
+      }));
+      
       toast.success(`Added ${selectedDate.toLocaleDateString()} to wear history`);
     } else {
       console.log(`Date already exists: ${selectedDate.toLocaleDateString()}`);
@@ -72,6 +77,11 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
     // Force an update to the outfits store to ensure it persists
     const allOutfits = loadOutfits();
     saveOutfits(allOutfits);
+    
+    // Force global stats update through a custom event
+    window.dispatchEvent(new CustomEvent('wardrobe-update', { 
+      detail: { type: 'wear-date-removed', outfitId, date: dateToDelete } 
+    }));
     
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
     toast.success(`Removed ${dateToDelete.toLocaleDateString()} from wear history`);

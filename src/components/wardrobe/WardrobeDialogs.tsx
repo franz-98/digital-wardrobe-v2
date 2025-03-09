@@ -62,6 +62,11 @@ const WardrobeDialogs = ({
       const allOutfits = loadOutfits();
       saveOutfits(allOutfits);
       setCurrentOutfitId(null);
+      
+      // Trigger a global update event when an outfit dialog is closed
+      window.dispatchEvent(new CustomEvent('wardrobe-update', {
+        detail: { type: 'outfit-dialog-closed', outfitId: currentOutfitId }
+      }));
     }
   }, [isOutfitDetailsOpen, currentOutfitId]);
   

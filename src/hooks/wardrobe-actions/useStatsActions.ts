@@ -1,36 +1,49 @@
 
 import { useState } from 'react';
-import { format } from 'date-fns';
+import { calculateTimeRangeDates } from '../wardrobe/wardrobe-storage';
+
+export interface StatsState {
+  timeStart: Date | null;
+  timeEnd: Date | null;
+}
 
 export function useStatsActions() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState("month");
-  const [customRangeStart, setCustomRangeStart] = useState<Date | null>(null);
-  const [customRangeEnd, setCustomRangeEnd] = useState<Date | null>(null);
+  const [statsState, setStatsState] = useState<StatsState>({
+    timeStart: null,
+    timeEnd: null
+  });
 
   const updateStatsForTimeRange = (range: string) => {
-    console.log(`Updating stats for time range: ${range}`);
-    setSelectedTimeRange(range);
-    // Reset custom range when using a preset
-    setCustomRangeStart(null);
-    setCustomRangeEnd(null);
+    console.log("Updating stats for time range:", range);
+    const { start, end } = calculateTimeRangeDates(range);
+    
+    setStatsState({
+      timeStart: start,
+      timeEnd: end
+    });
+    
+    // Trigger a global update event to notify any components that need to refresh
+    window.dispatchEvent(new CustomEvent('wardrobe-stats-update', {
+      detail: { range, start, end }
+    }));
   };
 
   const updateStatsForCustomRange = (start: Date, end: Date) => {
-    console.log(`Updating stats for custom range: ${start.toISOString()} to ${end.toISOString()}`);
-    setSelectedTimeRange("custom");
-    setCustomRangeStart(start);
-    setCustomRangeEnd(end);
+    console.log("Updating stats for custom range:", start, "to", end);
     
-    // Format dates in a consistent way for all components to filter properly
-    const formattedStart = format(start, 'MMM d');
-    const formattedEnd = format(end, 'MMM d');
-    setSelectedTimeRange(`${formattedStart} - ${formattedEnd}`);
+    setStatsState({
+      timeStart: start,
+      timeEnd: end
+    });
+    
+    // Trigger a global update event to notify any components that need to refresh
+    window.dispatchEvent(new CustomEvent('wardrobe-stats-update', {
+      detail: { range: 'custom', start, end }
+    }));
   };
 
   return {
-    selectedTimeRange,
-    customRangeStart,
-    customRangeEnd,
+    statsState,
     updateStatsForTimeRange,
     updateStatsForCustomRange
   };
