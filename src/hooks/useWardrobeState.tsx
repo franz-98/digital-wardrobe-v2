@@ -1,5 +1,4 @@
 
-import { useWardrobe as wardrobeContextHook } from "@/context/WardrobeContext";
 import { useWardrobeData } from "./useWardrobeData";
 import { useWardrobeUI } from "./useWardrobeUI";
 import { useItemSelection } from "./useItemSelection";
@@ -154,6 +153,3 @@ export function useWardrobeState() {
     updateItemMetadata
   };
 }
-
-// Export the context hook for compatibility
-export const useWardrobe = wardrobeContextHook;

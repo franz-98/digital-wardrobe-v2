@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/ThemeProvider";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useWardrobe } from "@/hooks/useWardrobeState";
+import { useWardrobe } from "@/context/WardrobeContext";
 
 const PreferencesCard = () => {
   const { theme, setTheme } = useTheme();
