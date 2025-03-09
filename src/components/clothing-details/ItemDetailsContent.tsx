@@ -1,18 +1,8 @@
 
-import { X } from "lucide-react";
-import { 
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-  DialogDescription
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
-import ItemDetails from "./ItemDetails";
-import RelatedOutfits from "./RelatedOutfits";
-import { EditableTitle } from "@/components/ui/editable-title";
-import { useWardrobe } from "@/context/WardrobeContext";
+import ItemDetailsHeader from "./ItemDetailsHeader";
+import ItemDetailsMainContent from "./ItemDetailsMainContent";
+import DeleteItemButton from "./DeleteItemButton";
 
 interface ItemDetailsContentProps {
   item: ClothingItem;
@@ -33,65 +23,24 @@ const ItemDetailsContent = ({
   onOutfitClick,
   onImageClick
 }: ItemDetailsContentProps) => {
-  const { updateItemName } = useWardrobe();
-
-  const handleNameUpdate = (newName: string) => {
-    return updateItemName(item.id, newName);
-  };
-
   return (
     <>
-      <DialogHeader className="px-4 pt-4 pb-0 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <EditableTitle 
-            title={item.name} 
-            titleClassName="text-lg font-semibold"
-            onSave={handleNameUpdate}
-          />
-          <DialogClose asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <X className="h-4 w-4" />
-            </Button>
-          </DialogClose>
-        </div>
-        <DialogDescription>
-          View details and related outfits
-          {dismissProgress > 0 && dismissProgress < 60 && (
-            <span className="ml-2 text-xs opacity-60">
-              Pull down to close ({Math.round(dismissProgress)}%)
-            </span>
-          )}
-        </DialogDescription>
-      </DialogHeader>
+      <ItemDetailsHeader 
+        item={item}
+        dismissProgress={dismissProgress}
+      />
       
-      <div className="flex-1 overflow-y-auto overscroll-contain">
-        <ItemDetails 
-          item={item}
-          onDeleteClick={onDeleteClick}
-          onDelete={onDelete}
-          relatedOutfits={relatedOutfits}
-        />
-        
-        <div className="px-4 pb-4">
-          <RelatedOutfits 
-            relatedOutfits={relatedOutfits} 
-            onOutfitClick={onOutfitClick}
-          />
-        </div>
-        
-        {onDelete && (
-          <div className="p-4 border-t">
-            <Button 
-              variant="destructive" 
-              className="w-full"
-              onClick={onDeleteClick}
-            >
-              <X className="h-4 w-4 mr-2" />
-              Delete Item
-            </Button>
-          </div>
-        )}
-      </div>
+      <ItemDetailsMainContent
+        item={item}
+        relatedOutfits={relatedOutfits}
+        onDeleteClick={onDeleteClick}
+        onDelete={onDelete}
+        onOutfitClick={onOutfitClick}
+      />
+      
+      {onDelete && (
+        <DeleteItemButton onDeleteClick={onDeleteClick} />
+      )}
     </>
   );
 };
