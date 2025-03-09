@@ -20,4 +20,8 @@ export interface Outfit {
   imageUrl?: string;
   createdAt?: string;
   season?: string;
+  metadata?: {
+    wornDates?: string[];
+    [key: string]: any;
+  };
 }

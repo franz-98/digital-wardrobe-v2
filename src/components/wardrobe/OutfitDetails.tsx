@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
@@ -9,6 +10,7 @@ import {
   OutfitItems,
   DeleteOutfitButton
 } from "@/components/wardrobe/outfit-details";
+import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
 
 interface OutfitDetailsProps {
   outfit: Outfit;
@@ -59,11 +61,17 @@ const OutfitDetails = ({
   };
 
   const handleDeleteWornDate = (dateToDelete: Date) => {
-    setWornDates(prevDates => prevDates.filter(date => 
-      date.getTime() !== dateToDelete.getTime()
-    ));
+    setWornDates(prevDates => {
+      const updatedDates = prevDates.filter(date => 
+        date.getTime() !== dateToDelete.getTime()
+      );
+      
+      // Save to storage
+      saveWornDatesToStorage(updatedDates);
+      
+      return updatedDates;
+    });
     
-    // Here we could also update the outfit metadata if there was API integration
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
   };
   
@@ -74,17 +82,54 @@ const OutfitDetails = ({
     );
     
     if (!dateExists) {
-      setWornDates(prevDates => [...prevDates, newDate]);
+      setWornDates(prevDates => {
+        const updatedDates = [...prevDates, newDate];
+        
+        // Save to storage
+        saveWornDatesToStorage(updatedDates);
+        
+        return updatedDates;
+      });
       console.log(`Added wear date: ${newDate.toLocaleDateString()}`);
     } else {
       console.log(`Date already exists: ${newDate.toLocaleDateString()}`);
     }
+  };
+  
+  const saveWornDatesToStorage = (dates: Date[]) => {
+    // Get all outfits from storage
+    const allOutfits = loadOutfits();
+    
+    // Find and update the current outfit
+    const updatedOutfits = allOutfits.map(existingOutfit => {
+      if (existingOutfit.id === outfit.id) {
+        // Create a metadata object if it doesn't exist
+        const updatedOutfit = { 
+          ...existingOutfit,
+          metadata: existingOutfit.metadata || {} 
+        };
+        
+        // Save the dates as strings
+        updatedOutfit.metadata.wornDates = dates.map(date => date.toISOString());
+        
+        return updatedOutfit;
+      }
+      return existingOutfit;
+    });
+    
+    // Save all outfits back to storage
+    saveOutfits(updatedOutfits);
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
   
   // Extract dates when outfit was worn
   function getWornDates(outfit: Outfit): Date[] {
+    // Load saved worn dates from outfit metadata
+    if (outfit.metadata?.wornDates) {
+      return outfit.metadata.wornDates.map(dateStr => new Date(dateStr));
+    }
+    
     const dates: Date[] = [];
     
     // Add creation date as first worn date
