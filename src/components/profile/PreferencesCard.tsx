@@ -74,7 +74,7 @@ const PreferencesCard = () => {
               <Switch 
                 disabled={!isPremium} 
                 checked={isPremium} 
-                onCheckedChange={isPremium ? undefined : togglePremium}
+                onCheckedChange={togglePremium}
               />
             </div>
           </div>
