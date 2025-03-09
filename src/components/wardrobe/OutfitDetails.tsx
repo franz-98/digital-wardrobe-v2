@@ -29,6 +29,7 @@ const OutfitDetails = ({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(outfit.imageUrl);
+  const [wornDates, setWornDates] = useState<Date[]>(() => getWornDates(outfit));
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -58,10 +59,19 @@ const OutfitDetails = ({
     }
   };
 
+  const handleDeleteWornDate = (dateToDelete: Date) => {
+    setWornDates(prevDates => prevDates.filter(date => 
+      date.getTime() !== dateToDelete.getTime()
+    ));
+    
+    // Here we could also update the outfit metadata if there was API integration
+    console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
+  };
+
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
   
   // Extract dates when outfit was worn
-  const getWornDates = (outfit: Outfit): Date[] => {
+  function getWornDates(outfit: Outfit): Date[] {
     const dates: Date[] = [];
     
     // Add creation date as first worn date
@@ -105,7 +115,8 @@ const OutfitDetails = ({
             creationDate={creationDate}
             season={outfit.season || 'All Seasons'}
             colorPalette={getOutfitColorPalette(outfit)}
-            wornDates={getWornDates(outfit)}
+            wornDates={wornDates}
+            onDeleteWornDate={handleDeleteWornDate}
           />
           
           <OutfitItems 
