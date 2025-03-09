@@ -35,6 +35,22 @@ type CategorySection = {
   isOpen: boolean;
 };
 
+// Define the category order
+const categoryOrder = [
+  "Tops",
+  "Bottoms",
+  "Dresses",
+  "Outerwear",
+  "Accessories",
+  "Shoes"
+];
+
+// Helper function to determine category sort order
+const getCategoryOrder = (category: string): number => {
+  const index = categoryOrder.indexOf(category);
+  return index === -1 ? categoryOrder.length : index; // Categories not in the list go to the end
+};
+
 const ClothingTab = ({
   clothingItems,
   searchTerm,
@@ -61,14 +77,17 @@ const ClothingTab = ({
       categories[category].push(item);
     });
     
-    // Convert to array and sort by category name
+    // Convert to array and sort by predefined category order
     return Object.entries(categories)
       .map(([category, items]) => ({
         category,
         items,
         isOpen: true, // Initially all categories are expanded
       }))
-      .sort((a, b) => a.category.localeCompare(b.category));
+      .sort((a, b) => {
+        // Sort by our predefined category order
+        return getCategoryOrder(a.category) - getCategoryOrder(b.category);
+      });
   }, [filteredClothingItems]);
 
   // State to track which categories are expanded
