@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import SocialLoginButtons from '@/components/auth/SocialLoginButtons';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -116,6 +117,8 @@ const RegisterPage = () => {
                 required
               />
             </div>
+            
+            <SocialLoginButtons />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button 

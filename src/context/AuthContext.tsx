@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
@@ -8,6 +7,8 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (userData: RegisterData) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
+  loginWithApple: () => Promise<void>;
   logout: () => void;
 }
 
@@ -24,18 +25,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if the user is authenticated on mount
   useEffect(() => {
     const checkAuth = async () => {
       const storedToken = localStorage.getItem('auth_token');
       if (storedToken) {
         try {
-          // Fetch user data using the token
           const userData = await fetchUserData(storedToken);
           setUser(userData);
         } catch (error) {
           console.error('Error validating token:', error);
-          // If token is invalid, clear it
           localStorage.removeItem('auth_token');
           setToken(null);
         }
@@ -46,7 +44,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, []);
 
-  // Fetch user data from the API
   const fetchUserData = async (authToken: string) => {
     const response = await fetch('YOUR_FASTAPI_URL/users/me', {
       headers: {
@@ -61,7 +58,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return response.json();
   };
 
-  // Login function
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
@@ -80,11 +76,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       const { access_token } = data;
       
-      // Save token to localStorage
       localStorage.setItem('auth_token', access_token);
       setToken(access_token);
       
-      // Get user data
       const userData = await fetchUserData(access_token);
       setUser(userData);
     } catch (error) {
@@ -95,7 +89,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Register function
+  const loginWithGoogle = async () => {
+    setIsLoading(true);
+    try {
+      window.location.href = 'YOUR_FASTAPI_URL/auth/google/login';
+    } catch (error) {
+      console.error('Google login error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loginWithApple = async () => {
+    setIsLoading(true);
+    try {
+      window.location.href = 'YOUR_FASTAPI_URL/auth/apple/login';
+    } catch (error) {
+      console.error('Apple login error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const register = async (userData: RegisterData) => {
     setIsLoading(true);
     try {
@@ -112,7 +129,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
-      // After registration, log the user in
       await login(userData.email, userData.password);
     } catch (error) {
       console.error('Registration error:', error);
@@ -122,7 +138,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Logout function
   const logout = () => {
     localStorage.removeItem('auth_token');
     setToken(null);
@@ -138,6 +153,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login,
         register,
+        loginWithGoogle,
+        loginWithApple,
         logout
       }}
     >
