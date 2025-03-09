@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import ExpandableSection from './ExpandableSection';
 import { ClothingItem, Outfit } from '../types';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { colorNameToHex } from '../utils/colorUtils';
 
 interface MostUsedColorsProps {
   clothingItems: ClothingItem[];
@@ -107,19 +109,37 @@ const MostUsedColors: React.FC<MostUsedColorsProps> = ({
                           displayColor === 'olive' ? '#808000' : '#777777';
               }
               
+              const hexColor = colorNameToHex(color);
+              
               return (
                 <div key={color} className="mb-2">
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div 
-                        className="w-3 h-3 rounded-full mr-2" 
-                        style={{ 
-                          backgroundColor: bgColor, 
-                          border: displayColor === 'white' ? '1px solid #ddd' : 'none' 
-                        }}
-                      ></div>
-                      <span className="text-sm">{color}</span>
-                    </div>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <div className="flex items-center cursor-pointer">
+                          <div 
+                            className="w-3 h-3 rounded-full mr-2" 
+                            style={{ 
+                              backgroundColor: bgColor, 
+                              border: displayColor === 'white' ? '1px solid #ddd' : 'none' 
+                            }}
+                          ></div>
+                          <span className="text-sm">{color}</span>
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-2">
+                        <div className="space-y-1">
+                          <p className="text-xs font-medium">{color}</p>
+                          <div className="flex items-center gap-2">
+                            <div 
+                              className="w-4 h-4 rounded-full border border-border/50"
+                              style={{ backgroundColor: hexColor }}
+                            />
+                            <code className="text-xs bg-muted px-1 py-0.5 rounded">{hexColor}</code>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                     <div className="flex items-center space-x-2">
                       <span className="text-xs text-muted-foreground">{count} uses</span>
                       <span className="font-medium text-sm">{percentage}%</span>

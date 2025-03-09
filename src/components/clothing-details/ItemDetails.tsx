@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EditableTitle } from "@/components/ui/editable-title";
 import { useWardrobe } from "@/context/WardrobeContext";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { colorNameToHex } from "@/components/wardrobe/utils/colorUtils";
 
 interface ItemDetailsProps {
   item: ClothingItem;
@@ -54,6 +56,8 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
     return success;
   };
 
+  const colorHex = colorNameToHex(item.color);
+
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 gap-4 mb-4">
@@ -84,16 +88,32 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Color:</span>
-                <div className="flex items-center gap-1">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ 
-                      backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
-                      border: item.color.toLowerCase() === "white" ? "1px solid #DDDDDD" : "none"
-                    }}
-                  />
-                  <span className="text-xs">{item.color}</span>
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <div className="flex items-center gap-1 cursor-pointer">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ 
+                          backgroundColor: item.color.toLowerCase() === "white" ? "#EEEEEE" : item.color,
+                          border: item.color.toLowerCase() === "white" ? "1px solid #DDDDDD" : "none"
+                        }}
+                      />
+                      <span className="text-xs">{item.color}</span>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-2">
+                    <div className="space-y-1">
+                      <p className="text-xs font-medium">{item.color}</p>
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-4 h-4 rounded-full border border-border/50"
+                          style={{ backgroundColor: colorHex }}
+                        />
+                        <code className="text-xs bg-muted px-1 py-0.5 rounded">{colorHex}</code>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Brand:</span>
