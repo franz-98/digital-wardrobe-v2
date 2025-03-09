@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { UserPlus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from "@/components/ui/dialog";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 interface UserProfile {
   id: string;
@@ -19,6 +28,9 @@ interface UserInfoCardProps {
 }
 
 const UserInfoCard = ({ user }: UserInfoCardProps) => {
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
+  const [email, setEmail] = useState("");
+
   const copyReferralCode = () => {
     if (user?.referralCode) {
       navigator.clipboard.writeText(user.referralCode)
@@ -36,6 +48,41 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
           });
         });
     }
+  };
+
+  const shareInvite = () => {
+    // Open the invite dialog
+    setInviteDialogOpen(true);
+  };
+
+  const handleSendInvite = () => {
+    if (!email.trim()) {
+      toast({
+        title: "Email richiesta",
+        description: "Inserisci un indirizzo email valido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!email.includes('@') || !email.includes('.')) {
+      toast({
+        title: "Email non valida",
+        description: "Inserisci un indirizzo email valido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Simulate sending invite
+    toast({
+      title: "Invito inviato!",
+      description: `Il tuo amico ${email} riceverà presto un invito.`,
+    });
+    
+    // Clear and close dialog
+    setEmail("");
+    setInviteDialogOpen(false);
   };
 
   return (
@@ -90,6 +137,7 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
               </Button>
               
               <Button 
+                onClick={shareInvite}
                 className="w-full flex items-center justify-center gap-2"
               >
                 <UserPlus className="h-4 w-4" /> Invita Amici
@@ -98,6 +146,49 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
           </Card>
         </div>
       </div>
+
+      {/* Invite Friends Dialog */}
+      <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Invita un amico</DialogTitle>
+            <DialogDescription>
+              Invia un invito ai tuoi amici con il tuo codice referral per ottenere vantaggi.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Il tuo codice referral personale</p>
+              <div className="flex items-center space-x-2">
+                <Input value={user?.referralCode} readOnly className="bg-muted" />
+                <Button onClick={copyReferralCode} variant="outline" size="sm">
+                  Copia
+                </Button>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Email del tuo amico</p>
+              <Input 
+                type="email" 
+                placeholder="amico@example.com" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setInviteDialogOpen(false)}>
+              Annulla
+            </Button>
+            <Button onClick={handleSendInvite}>
+              Invia Invito
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
