@@ -59,6 +59,29 @@ const OutfitDetails = ({
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
+  
+  // Extract dates when outfit was worn
+  const getWornDates = (outfit: Outfit): Date[] => {
+    const dates: Date[] = [];
+    
+    // Add creation date as first worn date
+    if (outfit.createdAt) {
+      dates.push(new Date(outfit.createdAt));
+    }
+    
+    // Add any dates from item metadata
+    outfit.items.forEach(item => {
+      if (item.metadata?.dateTaken) {
+        dates.push(new Date(item.metadata.dateTaken));
+      }
+    });
+    
+    // Remove duplicate dates by converting to string and using Set
+    const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
+    
+    // Convert back to Date objects
+    return uniqueDatesStr.map(dateStr => new Date(dateStr));
+  };
 
   return (
     <div className="flex flex-col h-[100dvh]">
@@ -82,6 +105,7 @@ const OutfitDetails = ({
             creationDate={creationDate}
             season={outfit.season || 'All Seasons'}
             colorPalette={getOutfitColorPalette(outfit)}
+            wornDates={getWornDates(outfit)}
           />
           
           <OutfitItems 

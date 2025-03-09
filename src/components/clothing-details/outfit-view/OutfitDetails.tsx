@@ -1,17 +1,19 @@
 
 import React from "react";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar, Tag, Clock } from "lucide-react";
 
 interface OutfitDetailsProps {
   creationDate?: Date;
   season?: string;
   colorPalette?: string[];
+  wornDates?: Date[];
 }
 
 const OutfitDetails = ({ 
   creationDate = new Date(), 
   season = 'All Seasons', 
-  colorPalette = [] 
+  colorPalette = [],
+  wornDates = []
 }: OutfitDetailsProps) => {
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
@@ -53,10 +55,33 @@ const OutfitDetails = ({
             </div>
           </div>
         )}
+        
+        {wornDates.length > 0 && (
+          <div>
+            <h5 className="text-sm font-medium mb-2 flex items-center">
+              <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
+              Wear history
+            </h5>
+            <div className="space-y-1 max-h-32 overflow-y-auto">
+              {wornDates
+                .sort((a, b) => b.getTime() - a.getTime()) // Sort by most recent first
+                .map((date, index) => (
+                  <div key={index} className="text-xs flex items-center gap-1.5 py-0.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
+                    <span>{date.toLocaleDateString('default', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })}</span>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default OutfitDetails;
-
