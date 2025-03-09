@@ -8,7 +8,7 @@ import CategoryDistribution from './stats/CategoryDistribution';
 import ColorDistribution from './stats/ColorDistribution';
 import OutfitStatistics from './stats/OutfitStatistics';
 import FrequentOutfits from './stats/FrequentOutfits';
-import FrequentItems from './stats/FrequentItems';
+import FrequentItems from './stats/frequent-items';
 import MostUsedColors from './stats/MostUsedColors';
 
 interface StatsTabProps {
