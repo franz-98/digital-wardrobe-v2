@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, Moon, Sun, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,9 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/ThemeProvider";
 import { toast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import PrivacyPolicyDialog from "@/components/profile/PrivacyPolicyDialog";
+import TermsOfServiceDialog from "@/components/profile/TermsOfServiceDialog";
 
 interface UserProfile {
   id: string;
@@ -20,6 +22,8 @@ interface UserProfile {
 
 const ProfilePage = () => {
   const { theme, setTheme } = useTheme();
+  const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
+  const [termsDialogOpen, setTermsDialogOpen] = useState(false);
   
   // Fetch user data
   const { data: user, isLoading } = useQuery({
@@ -114,7 +118,6 @@ const ProfilePage = () => {
                 </Button>
               )}
 
-              {/* Referral Button */}
               <Card className="w-full p-4 border border-primary/20 bg-primary/5 rounded-xl mb-2">
                 <div className="text-center mb-3">
                   <h3 className="font-medium text-sm">Il tuo codice referral</h3>
@@ -200,10 +203,18 @@ const ProfilePage = () => {
             </div>
             
             <div className="mt-6 space-y-2">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => setPrivacyDialogOpen(true)}
+              >
                 Privacy Policy
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => setTermsDialogOpen(true)}
+              >
                 Terms of Service
               </Button>
               <Button variant="ghost" className="w-full text-destructive hover:text-destructive">
@@ -213,6 +224,15 @@ const ProfilePage = () => {
           </div>
         </Card>
       </div>
+
+      <PrivacyPolicyDialog 
+        open={privacyDialogOpen} 
+        onOpenChange={setPrivacyDialogOpen} 
+      />
+      <TermsOfServiceDialog 
+        open={termsDialogOpen} 
+        onOpenChange={setTermsDialogOpen} 
+      />
     </div>
   );
 };
