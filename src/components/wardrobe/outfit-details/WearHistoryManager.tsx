@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { DateEntryForm, DatesList } from "./wear-history";
-import { loadOutfitWearDates, saveOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfitWearDates, saveOutfitWearDates, loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
 import { toast } from "sonner";
 
 interface WearHistoryManagerProps {
@@ -13,15 +13,19 @@ interface WearHistoryManagerProps {
 const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHistoryManagerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [wornDates, setWornDates] = useState<Date[]>([]);
+  const [initialized, setInitialized] = useState(false);
 
   // Load wear history from storage on mount or when initialWornDates changes
   useEffect(() => {
     if (initialWornDates && initialWornDates.length > 0) {
       setWornDates(initialWornDates);
+      // Also save these dates to storage to ensure consistency
+      saveOutfitWearDates(outfitId, initialWornDates);
     } else {
       const dates = loadOutfitWearDates(outfitId);
       setWornDates(dates);
     }
+    setInitialized(true);
   }, [outfitId, initialWornDates]);
   
   const handleDateSelect = (date: Date | undefined) => {
@@ -29,25 +33,32 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
   };
 
   const handleAddWornDate = () => {
-    if (selectedDate) {
-      const dateExists = wornDates.some(date => 
-        date.toDateString() === selectedDate.toDateString()
-      );
+    if (!selectedDate) return;
+    
+    const dateExists = wornDates.some(date => 
+      date.toDateString() === selectedDate.toDateString()
+    );
+    
+    if (!dateExists) {
+      const updatedDates = [...wornDates, selectedDate];
+      setWornDates(updatedDates);
       
-      if (!dateExists) {
-        const updatedDates = [...wornDates, selectedDate];
-        setWornDates(updatedDates);
-        saveOutfitWearDates(outfitId, updatedDates);
-        console.log(`Added wear date: ${selectedDate.toLocaleDateString()}`);
-        toast.success(`Added ${selectedDate.toLocaleDateString()} to wear history`);
-      } else {
-        console.log(`Date already exists: ${selectedDate.toLocaleDateString()}`);
-        toast.error("This date is already in the wear history");
-      }
+      // Make sure we save to storage
+      saveOutfitWearDates(outfitId, updatedDates);
+      console.log(`Added wear date: ${selectedDate.toLocaleDateString()}`);
       
-      // Reset selected date after adding
-      setSelectedDate(new Date());
+      // Force an update to the outfits store to ensure it persists
+      const allOutfits = loadOutfits();
+      saveOutfits(allOutfits);
+      
+      toast.success(`Added ${selectedDate.toLocaleDateString()} to wear history`);
+    } else {
+      console.log(`Date already exists: ${selectedDate.toLocaleDateString()}`);
+      toast.error("This date is already in the wear history");
     }
+    
+    // Reset selected date after adding
+    setSelectedDate(new Date());
   };
   
   const handleDeleteWornDate = (dateToDelete: Date) => {
@@ -57,6 +68,11 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
     
     setWornDates(updatedDates);
     saveOutfitWearDates(outfitId, updatedDates);
+    
+    // Force an update to the outfits store to ensure it persists
+    const allOutfits = loadOutfits();
+    saveOutfits(allOutfits);
+    
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
     toast.success(`Removed ${dateToDelete.toLocaleDateString()} from wear history`);
   };

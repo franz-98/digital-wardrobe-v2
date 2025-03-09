@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
@@ -41,34 +42,38 @@ const WardrobeDialogs = ({
   
   const [currentOutfitId, setCurrentOutfitId] = useState<string | null>(null);
 
+  // On dialog open, store the outfit ID to ensure we save on close
   useEffect(() => {
-    if (selectedOutfit) {
+    if (selectedOutfit && isOutfitDetailsOpen) {
       setCurrentOutfitId(selectedOutfit.id);
+      
+      // Make sure this outfit exists in storage
+      const allOutfits = loadOutfits();
+      if (!allOutfits.some(o => o.id === selectedOutfit.id)) {
+        // Add this outfit to storage if it doesn't exist
+        saveOutfits([...allOutfits, selectedOutfit]);
+      }
     }
-  }, [selectedOutfit]);
+  }, [selectedOutfit, isOutfitDetailsOpen]);
 
+  // On dialog close, ensure we save any changes
   useEffect(() => {
     if (!isOutfitDetailsOpen && currentOutfitId) {
       const allOutfits = loadOutfits();
       saveOutfits(allOutfits);
-      
       setCurrentOutfitId(null);
     }
   }, [isOutfitDetailsOpen, currentOutfitId]);
   
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("WardrobeDialogs - outfit clicked:", outfit);
-    
     setIsDetailsOpen(false);
-    
     handleOutfitItemClick(outfit.id);
   };
   
   const handleItemClickFromOutfit = (item: ClothingItem) => {
     console.log("Item clicked from outfit view:", item.name);
-    
     setIsOutfitDetailsOpen(false);
-    
     handleOutfitItemClick(item.id);
   };
   

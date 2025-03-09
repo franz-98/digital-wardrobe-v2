@@ -66,12 +66,43 @@ export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void =
   try {
     const allOutfits = loadOutfits();
     
-    // If no outfits loaded, log error and return
+    // If no outfits found, create a minimal outfit entry with this ID
     if (!allOutfits || allOutfits.length === 0) {
-      console.error(`No outfits found when trying to save wear dates for outfit ${outfitId}`);
+      const minimalOutfit: Outfit = {
+        id: outfitId,
+        name: "Outfit " + outfitId,
+        items: [],
+        metadata: {
+          wornDates: wearDates.map(date => date.toISOString())
+        }
+      };
+      
+      saveOutfits([minimalOutfit]);
+      console.log(`Created new outfit entry for ID ${outfitId} with wear dates`);
       return;
     }
     
+    // Check if this outfit exists
+    const outfitExists = allOutfits.some(outfit => outfit.id === outfitId);
+    
+    if (!outfitExists) {
+      // Create a minimal outfit structure if it doesn't exist
+      const minimalOutfit: Outfit = {
+        id: outfitId,
+        name: "Outfit " + outfitId,
+        items: [],
+        metadata: {
+          wornDates: wearDates.map(date => date.toISOString())
+        }
+      };
+      
+      const updatedOutfits = [...allOutfits, minimalOutfit];
+      saveOutfits(updatedOutfits);
+      console.log(`Added new outfit entry for ID ${outfitId} with wear dates`);
+      return;
+    }
+    
+    // Update existing outfit
     const updatedOutfits = allOutfits.map(outfit => {
       if (outfit.id === outfitId) {
         // Create metadata object if it doesn't exist
