@@ -2,7 +2,7 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import DatePickerInput from "./DatePickerInput";
+import { DatePickerInput } from "./";
 
 interface DateEntryFormProps {
   selectedDate: Date | undefined;

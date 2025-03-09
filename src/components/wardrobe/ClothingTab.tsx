@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import ClothingItemCard from "@/components/ClothingItemCard";
 import { Shirt, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -71,10 +72,10 @@ const ClothingTab = ({
   }, [filteredClothingItems]);
 
   // State to track which categories are expanded
-  const [categorySections, setCategorySections] = useState<CategorySection[]>(groupedItems);
+  const [categorySections, setCategorySections] = useState<CategorySection[]>([]);
 
-  // Update category sections when groupedItems change
-  React.useEffect(() => {
+  // Initialize category sections when groupedItems changes
+  useEffect(() => {
     setCategorySections(prev => {
       // Keep existing open/closed state for categories that still exist
       const newSections = groupedItems.map(newGroup => {
