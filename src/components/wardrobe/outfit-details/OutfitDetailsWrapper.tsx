@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outfit, ClothingItem } from '../types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
@@ -10,7 +9,7 @@ import {
   OutfitItems,
   DeleteOutfitButton
 } from "@/components/wardrobe/outfit-details";
-import { loadOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfitWearDates } from "@/hooks/wardrobe/storage";
 
 interface OutfitDetailsWrapperProps {
   outfit: Outfit;

@@ -1,63 +1,5 @@
 
-import { ClothingItem, Outfit } from "@/components/wardrobe/types";
-
-/**
- * Load clothing items from localStorage
- */
-export const loadClothingItems = (): ClothingItem[] => {
-  try {
-    const savedItems = localStorage.getItem('wardrobeClothingItems');
-    if (savedItems) {
-      return JSON.parse(savedItems);
-    }
-  } catch (e) {
-    console.error("Failed to load clothing items from localStorage:", e);
-  }
-  
-  // Return default items if nothing in localStorage
-  return [];
-};
-
-/**
- * Save clothing items to localStorage
- */
-export const saveClothingItems = (items: ClothingItem[]): void => {
-  try {
-    localStorage.setItem('wardrobeClothingItems', JSON.stringify(items));
-    console.log("Saved clothing items to localStorage:", items.length, "items");
-  } catch (e) {
-    console.error("Failed to save clothing items to localStorage:", e);
-  }
-};
-
-/**
- * Load outfits from localStorage
- */
-export const loadOutfits = (): Outfit[] => {
-  try {
-    const savedOutfits = localStorage.getItem('wardrobeOutfits');
-    if (savedOutfits) {
-      return JSON.parse(savedOutfits);
-    }
-  } catch (e) {
-    console.error("Failed to load outfits from localStorage:", e);
-  }
-  
-  // Return empty array if nothing in localStorage
-  return [];
-};
-
-/**
- * Save outfits to localStorage
- */
-export const saveOutfits = (outfits: Outfit[]): void => {
-  try {
-    localStorage.setItem('wardrobeOutfits', JSON.stringify(outfits));
-    console.log("Saved outfits to localStorage:", outfits.length, "outfits");
-  } catch (e) {
-    console.error("Failed to save outfits to localStorage:", e);
-  }
-};
+import { loadOutfits, saveOutfits } from './outfit-storage';
 
 /**
  * Save wear dates for a specific outfit
@@ -68,7 +10,7 @@ export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void =
     
     // If no outfits found, create a minimal outfit entry with this ID
     if (!allOutfits || allOutfits.length === 0) {
-      const minimalOutfit: Outfit = {
+      const minimalOutfit = {
         id: outfitId,
         name: "Outfit " + outfitId,
         items: [],
@@ -87,7 +29,7 @@ export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void =
     
     if (!outfitExists) {
       // Create a minimal outfit structure if it doesn't exist
-      const minimalOutfit: Outfit = {
+      const minimalOutfit = {
         id: outfitId,
         name: "Outfit " + outfitId,
         items: [],
@@ -180,60 +122,4 @@ export const getWearDatesInTimeRange = (
     console.error("Failed to get wear dates in time range:", e);
     return [];
   }
-};
-
-/**
- * Calculate time range start and end dates from string format
- */
-export const calculateTimeRangeDates = (timeRange: string): { start: Date, end: Date } => {
-  const now = new Date();
-  const end = new Date(now);
-  let start: Date;
-  
-  // Parse custom date range
-  if (timeRange.includes(" - ")) {
-    const [startStr, endStr] = timeRange.split(" - ");
-    // Simple parsing for MMM d format
-    const parseCustomDate = (dateStr: string) => {
-      const months: Record<string, number> = {
-        'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-        'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
-      };
-      const match = dateStr.match(/([A-Za-z]{3})\s+(\d+)/);
-      if (match) {
-        const month = months[match[1]];
-        const day = parseInt(match[2]);
-        const date = new Date();
-        date.setMonth(month);
-        date.setDate(day);
-        return date;
-      }
-      return new Date(now);
-    };
-    
-    start = parseCustomDate(startStr);
-    const customEnd = parseCustomDate(endStr);
-    
-    // If end date is before start date, it might be in the next year
-    if (customEnd < start) {
-      customEnd.setFullYear(customEnd.getFullYear() + 1);
-    }
-    
-    return { start, end: customEnd };
-  } 
-  
-  // Standard time ranges
-  if (timeRange === "week") {
-    start = new Date(now);
-    start.setDate(now.getDate() - 7);
-  } else if (timeRange === "month") {
-    start = new Date(now);
-    start.setMonth(now.getMonth() - 1);
-  } else {
-    // Default to all time - 1 year back
-    start = new Date(now);
-    start.setFullYear(now.getFullYear() - 1);
-  }
-  
-  return { start, end };
 };

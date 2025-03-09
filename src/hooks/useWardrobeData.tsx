@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ClothingItem } from "@/components/wardrobe/types";
 import { DEFAULT_CLOTHING_ITEMS } from "./wardrobe/default-wardrobe-data";
-import { loadClothingItems, saveClothingItems } from "./wardrobe/wardrobe-storage";
+import { loadClothingItems, saveClothingItems } from "./wardrobe/storage";
 import { useOutfitManager } from "./wardrobe/useOutfitManager";
 
 export function useWardrobeData() {

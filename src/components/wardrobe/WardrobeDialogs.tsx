@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
@@ -8,7 +7,7 @@ import {
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import OutfitDetails from "@/components/wardrobe/OutfitDetails";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
-import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/storage";
 
 interface WardrobeDialogsProps {
   selectedItem: ClothingItem | null;
@@ -42,28 +41,23 @@ const WardrobeDialogs = ({
   
   const [currentOutfitId, setCurrentOutfitId] = useState<string | null>(null);
 
-  // On dialog open, store the outfit ID to ensure we save on close
   useEffect(() => {
     if (selectedOutfit && isOutfitDetailsOpen) {
       setCurrentOutfitId(selectedOutfit.id);
       
-      // Make sure this outfit exists in storage
       const allOutfits = loadOutfits();
       if (!allOutfits.some(o => o.id === selectedOutfit.id)) {
-        // Add this outfit to storage if it doesn't exist
         saveOutfits([...allOutfits, selectedOutfit]);
       }
     }
   }, [selectedOutfit, isOutfitDetailsOpen]);
 
-  // On dialog close, ensure we save any changes
   useEffect(() => {
     if (!isOutfitDetailsOpen && currentOutfitId) {
       const allOutfits = loadOutfits();
       saveOutfits(allOutfits);
       setCurrentOutfitId(null);
       
-      // Trigger a global update event when an outfit dialog is closed
       window.dispatchEvent(new CustomEvent('wardrobe-update', {
         detail: { type: 'outfit-dialog-closed', outfitId: currentOutfitId }
       }));

@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { DateEntryForm, DatesList } from "./wear-history";
-import { loadOutfitWearDates, saveOutfitWearDates, loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
+import { 
+  loadOutfitWearDates, 
+  saveOutfitWearDates, 
+  loadOutfits, 
+  saveOutfits 
+} from "@/hooks/wardrobe/storage";
 import { toast } from "sonner";
 
 interface WearHistoryManagerProps {

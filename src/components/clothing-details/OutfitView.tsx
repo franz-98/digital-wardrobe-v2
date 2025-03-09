@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Dialog, 
@@ -19,7 +18,7 @@ import {
   OutfitDetails,
   DeleteOutfitButton 
 } from "@/components/clothing-details/outfit-view";
-import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/storage";
 
 interface OutfitViewProps {
   outfit: Outfit;
@@ -39,7 +38,6 @@ const OutfitView = ({
   dismissProgress = 0
 }: OutfitViewProps) => {
   const [wornDates, setWornDates] = useState<Date[]>(() => {
-    // We need to ensure we're using the latest outfit data from storage
     const allOutfits = loadOutfits();
     const currentOutfit = allOutfits.find(o => o.id === outfit.id) || outfit;
     
@@ -49,7 +47,6 @@ const OutfitView = ({
     
     const dates: Date[] = [];
     
-    // Fall back to previous behavior if no saved dates
     if (currentOutfit.createdAt) {
       dates.push(new Date(currentOutfit.createdAt));
     }
@@ -86,7 +83,6 @@ const OutfitView = ({
         date.getTime() !== dateToDelete.getTime()
       );
       
-      // Save to storage
       saveWornDatesToStorage(updatedDates);
       
       return updatedDates;
@@ -104,7 +100,6 @@ const OutfitView = ({
       setWornDates(prevDates => {
         const updatedDates = [...prevDates, newDate];
         
-        // Save to storage
         saveWornDatesToStorage(updatedDates);
         
         return updatedDates;
@@ -116,19 +111,15 @@ const OutfitView = ({
   };
   
   const saveWornDatesToStorage = (dates: Date[]) => {
-    // Get all outfits from storage
     const allOutfits = loadOutfits();
     
-    // Find and update the current outfit
     const updatedOutfits = allOutfits.map(existingOutfit => {
       if (existingOutfit.id === outfit.id) {
-        // Create a metadata object if it doesn't exist
         const updatedOutfit = { 
           ...existingOutfit,
           metadata: existingOutfit.metadata || {} 
         };
         
-        // Save the dates as strings
         updatedOutfit.metadata.wornDates = dates.map(date => date.toISOString());
         
         return updatedOutfit;
@@ -136,7 +127,6 @@ const OutfitView = ({
       return existingOutfit;
     });
     
-    // Save all outfits back to storage
     saveOutfits(updatedOutfits);
   };
 

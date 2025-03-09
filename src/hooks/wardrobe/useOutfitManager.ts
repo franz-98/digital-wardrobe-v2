@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import { createDefaultOutfits, createDefaultSuggestedOutfits } from "./default-wardrobe-data";
-import { loadOutfits, saveOutfits } from "./wardrobe-storage";
+import { loadOutfits, saveOutfits } from "./storage";
 
 export function useOutfitManager(clothingItems: ClothingItem[]) {
   const [outfits, setOutfitsState] = useState<Outfit[]>(() => {
