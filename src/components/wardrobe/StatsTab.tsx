@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { ClothingItem, Outfit } from './types';
 import CategoryDistribution from './stats/CategoryDistribution';
 import ColorDistribution from './stats/ColorDistribution';
 import OutfitStatistics from './stats/OutfitStatistics';
-import FrequentOutfits from './stats/FrequentOutfits';
+import FrequentOutfits from './stats/frequent-outfits';
 import FrequentItems from './stats/frequent-items';
 import MostUsedColors from './stats/MostUsedColors';
 
@@ -32,11 +31,9 @@ const StatsTab = ({
   handleItemClick,
   handleOutfitClick
 }: StatsTabProps) => {
-  // Force re-render when wardrobe updates occur
   const [updateCounter, setUpdateCounter] = useState(0);
   
   useEffect(() => {
-    // Listen for wardrobe update events to refresh stats
     const handleWardrobeUpdate = () => {
       console.log("Stats tab detected wardrobe update, refreshing...");
       setUpdateCounter(prev => prev + 1);
@@ -49,7 +46,6 @@ const StatsTab = ({
     };
   }, []);
   
-  // Initial stats update on mount
   useEffect(() => {
     updateStatsForTimeRange(timeRange);
   }, [timeRange, updateStatsForTimeRange, updateCounter]);
