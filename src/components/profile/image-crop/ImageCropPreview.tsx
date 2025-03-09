@@ -10,7 +10,7 @@ export function ImageCropPreview({ previewImageUrl }: ImageCropPreviewProps) {
     <div className="flex items-center space-x-4">
       <div className="text-sm font-medium">Anteprima:</div>
       <div 
-        className="w-[100px] h-[100px] rounded-full bg-center bg-no-repeat bg-cover border-4 border-background shadow-md"
+        className="w-[150px] h-[150px] rounded-full bg-center bg-no-repeat bg-cover border-4 border-background shadow-md"
         style={{ backgroundImage: previewImageUrl ? `url(${previewImageUrl})` : 'none' }}
       ></div>
     </div>

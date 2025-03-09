@@ -19,7 +19,8 @@ export function usePreviewGenerator({
     
     // Create a temporary canvas for the circular crop
     const tempCanvas = document.createElement('canvas');
-    const size = 100; // Size of the preview
+    // Set the size to match the visual guide size (150px)
+    const size = 150;
     tempCanvas.width = size;
     tempCanvas.height = size;
     const tempCtx = tempCanvas.getContext('2d');
