@@ -38,6 +38,7 @@ const TimeRangeSelector = ({
   };
 
   const handleCustomRangeConfirm = (startDate: Date, endDate: Date) => {
+    // Format dates consistently for proper filtering across components
     setTimeRange(`${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d')}`);
     setShowCustomRange(false);
     setShowTimeRangeMenu(false);

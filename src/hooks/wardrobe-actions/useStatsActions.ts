@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 export function useStatsActions() {
   const [selectedTimeRange, setSelectedTimeRange] = useState("month");
@@ -20,9 +21,9 @@ export function useStatsActions() {
     setCustomRangeStart(start);
     setCustomRangeEnd(end);
     
-    // Also update the string representation for components that use it directly
-    const formattedStart = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const formattedEnd = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    // Format dates in a consistent way for all components to filter properly
+    const formattedStart = format(start, 'MMM d');
+    const formattedEnd = format(end, 'MMM d');
     setSelectedTimeRange(`${formattedStart} - ${formattedEnd}`);
   };
 

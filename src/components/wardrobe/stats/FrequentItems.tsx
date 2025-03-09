@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Shirt } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -15,11 +16,65 @@ interface ItemUsage {
 interface FrequentItemsProps {
   clothingItems: ClothingItem[];
   outfits: Outfit[];
+  timeRange: string;
 }
 
-const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits }) => {
+const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, timeRange }) => {
   const [showAllItems, setShowAllItems] = useState(false);
   const DEFAULT_ITEMS_SHOWN = 3;
+
+  // Filter outfits based on time range
+  const filteredOutfits = React.useMemo(() => {
+    if (!timeRange || timeRange === "all") return outfits;
+    
+    const now = new Date();
+    let startDate: Date;
+    let endDate: Date = new Date(now);
+    
+    // Parse custom date range
+    if (timeRange.includes(" - ")) {
+      const [startStr, endStr] = timeRange.split(" - ");
+      // This is a simplified approach, using regex to handle MMM d format
+      const parseCustomDate = (dateStr: string) => {
+        const months: Record<string, number> = {
+          'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+          'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+        };
+        const match = dateStr.match(/([A-Za-z]{3})\s+(\d+)/);
+        if (match) {
+          const month = months[match[1]];
+          const day = parseInt(match[2]);
+          const date = new Date();
+          date.setMonth(month);
+          date.setDate(day);
+          return date;
+        }
+        return new Date(now);
+      };
+      
+      startDate = parseCustomDate(startStr);
+      endDate = parseCustomDate(endStr);
+      
+      // If end date is before start date, it might be in the next year
+      if (endDate < startDate) {
+        endDate.setFullYear(endDate.getFullYear() + 1);
+      }
+    } else if (timeRange === "week") {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 7);
+    } else if (timeRange === "month") {
+      startDate = new Date(now);
+      startDate.setMonth(now.getMonth() - 1);
+    } else {
+      return outfits;
+    }
+    
+    return outfits.filter(outfit => {
+      if (!outfit.createdAt) return false;
+      const outfitDate = new Date(outfit.createdAt);
+      return outfitDate >= startDate && outfitDate <= endDate;
+    });
+  }, [outfits, timeRange]);
 
   // Calculate most frequently used clothing items
   const frequentlyUsedItems = React.useMemo(() => {
@@ -28,7 +83,7 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits })
     const itemDates = new Map<string, Date[]>();
     
     // Go through all outfits to track which items are used most often
-    outfits.forEach(outfit => {
+    filteredOutfits.forEach(outfit => {
       outfit.items.forEach(item => {
         // Count this item
         const currentCount = itemUsageCounts.get(item.id) || 0;
@@ -68,7 +123,7 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits })
       })
       .filter(usage => usage.item !== undefined)
       .sort((a, b) => b.count - a.count);
-  }, [clothingItems, outfits]);
+  }, [clothingItems, filteredOutfits]);
 
   // Get displayed items based on current state
   const displayedItems = showAllItems 
