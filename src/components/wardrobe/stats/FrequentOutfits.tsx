@@ -31,6 +31,7 @@ const FrequentOutfits: React.FC<FrequentOutfitsProps> = ({ outfits, timeRange, o
       
       const now = new Date();
       let startDate: Date;
+      let endDate: Date = new Date(now);
       
       // Parse custom date range
       if (timeRange.includes(" - ")) {
@@ -54,71 +55,75 @@ const FrequentOutfits: React.FC<FrequentOutfitsProps> = ({ outfits, timeRange, o
         };
         
         startDate = parseCustomDate(startStr);
-        const endDate = parseCustomDate(endStr);
+        endDate = parseCustomDate(endStr);
         
         // If end date is before start date, it might be in the next year
         if (endDate < startDate) {
           endDate.setFullYear(endDate.getFullYear() + 1);
         }
-        
-        return outfits.filter(outfit => {
-          if (!outfit.createdAt) return false;
-          const outfitDate = new Date(outfit.createdAt);
-          return outfitDate >= startDate && outfitDate <= endDate;
-        });
       } else if (timeRange === "week") {
         startDate = new Date(now);
         startDate.setDate(now.getDate() - 7);
-        
-        return outfits.filter(outfit => {
-          if (!outfit.createdAt) return false;
-          const outfitDate = new Date(outfit.createdAt);
-          return outfitDate >= startDate && outfitDate <= now;
-        });
       } else if (timeRange === "month") {
         startDate = new Date(now);
         startDate.setMonth(now.getMonth() - 1);
-        
-        return outfits.filter(outfit => {
-          if (!outfit.createdAt) return false;
-          const outfitDate = new Date(outfit.createdAt);
-          return outfitDate >= startDate && outfitDate <= now;
-        });
       } else {
         return outfits;
       }
+      
+      return outfits.filter(outfit => {
+        // Check for wear history dates within the range
+        if (outfit.metadata?.wornDates && outfit.metadata.wornDates.length > 0) {
+          return outfit.metadata.wornDates.some(dateStr => {
+            const wornDate = new Date(dateStr);
+            return wornDate >= startDate && wornDate <= endDate;
+          });
+        }
+        
+        // Fall back to created date if no wear dates
+        if (!outfit.createdAt) return false;
+        const outfitDate = new Date(outfit.createdAt);
+        return outfitDate >= startDate && outfitDate <= endDate;
+      });
     })();
 
-    // Create a map to count outfit usage frequencies
+    // Create a map to count outfit usage frequencies and track wear dates
     const outfitUsageCounts = new Map<string, number>();
     const outfitDates = new Map<string, Date[]>();
     
-    // Count each outfit usage based on metadata.dateTaken
+    // Process each outfit
     filteredOutfits.forEach(outfit => {
-      // Check for createdAt as fallback
-      if (outfit.createdAt || outfit.items.some(item => item.metadata?.dateTaken)) {
-        // Count this outfit
-        const currentCount = outfitUsageCounts.get(outfit.id) || 0;
-        outfitUsageCounts.set(outfit.id, currentCount + 1);
-        
-        // Store dates to show when the outfit was worn
-        const dates = outfitDates.get(outfit.id) || [];
-        
-        // Check each item for metadata.dateTaken
-        outfit.items.forEach(item => {
-          if (item.metadata?.dateTaken) {
-            dates.push(new Date(item.metadata.dateTaken));
-          }
+      // Get all wear dates from metadata
+      const wearDates: Date[] = [];
+      
+      if (outfit.metadata?.wornDates && outfit.metadata.wornDates.length > 0) {
+        outfit.metadata.wornDates.forEach(dateStr => {
+          wearDates.push(new Date(dateStr));
         });
-        
-        // Use createdAt as a fallback if no dateTaken found
-        if (dates.length === 0 && outfit.createdAt) {
-          dates.push(new Date(outfit.createdAt));
+      } else {
+        // Fall back to createdAt if no wear dates
+        if (outfit.createdAt) {
+          wearDates.push(new Date(outfit.createdAt));
         }
         
+        // Check items for dates as another fallback
+        outfit.items.forEach(item => {
+          if (item.metadata?.dateTaken) {
+            wearDates.push(new Date(item.metadata.dateTaken));
+          }
+        });
+      }
+      
+      if (wearDates.length > 0) {
+        // Count this outfit based on number of times worn
+        outfitUsageCounts.set(outfit.id, wearDates.length);
+        
         // Sort dates and store
-        dates.sort((a, b) => b.getTime() - a.getTime()); // newest first
-        outfitDates.set(outfit.id, dates);
+        wearDates.sort((a, b) => b.getTime() - a.getTime()); // newest first
+        outfitDates.set(outfit.id, wearDates);
+      } else {
+        // Default count of 1 if no dates found
+        outfitUsageCounts.set(outfit.id, 1);
       }
     });
     

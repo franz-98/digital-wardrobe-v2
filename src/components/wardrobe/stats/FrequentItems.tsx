@@ -24,88 +24,112 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, t
   const [showAllItems, setShowAllItems] = useState(false);
   const DEFAULT_ITEMS_SHOWN = 3;
 
-  // Filter outfits based on time range
-  const filteredOutfits = React.useMemo(() => {
-    if (!timeRange || timeRange === "all") return outfits;
-    
-    const now = new Date();
-    let startDate: Date;
-    let endDate: Date = new Date(now);
-    
-    // Parse custom date range
-    if (timeRange.includes(" - ")) {
-      const [startStr, endStr] = timeRange.split(" - ");
-      // This is a simplified approach, using regex to handle MMM d format
-      const parseCustomDate = (dateStr: string) => {
-        const months: Record<string, number> = {
-          'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
-          'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
-        };
-        const match = dateStr.match(/([A-Za-z]{3})\s+(\d+)/);
-        if (match) {
-          const month = months[match[1]];
-          const day = parseInt(match[2]);
-          const date = new Date();
-          date.setMonth(month);
-          date.setDate(day);
-          return date;
-        }
-        return new Date(now);
-      };
-      
-      startDate = parseCustomDate(startStr);
-      endDate = parseCustomDate(endStr);
-      
-      // If end date is before start date, it might be in the next year
-      if (endDate < startDate) {
-        endDate.setFullYear(endDate.getFullYear() + 1);
-      }
-    } else if (timeRange === "week") {
-      startDate = new Date(now);
-      startDate.setDate(now.getDate() - 7);
-    } else if (timeRange === "month") {
-      startDate = new Date(now);
-      startDate.setMonth(now.getMonth() - 1);
-    } else {
-      return outfits;
-    }
-    
-    return outfits.filter(outfit => {
-      if (!outfit.createdAt) return false;
-      const outfitDate = new Date(outfit.createdAt);
-      return outfitDate >= startDate && outfitDate <= endDate;
-    });
-  }, [outfits, timeRange]);
-
-  // Calculate most frequently used clothing items
+  // Filter outfits based on time range and prepare item usage data
   const frequentlyUsedItems = React.useMemo(() => {
+    // Filter outfits based on time range
+    const filteredOutfits = (() => {
+      if (!timeRange || timeRange === "all") return outfits;
+      
+      const now = new Date();
+      let startDate: Date;
+      let endDate: Date = new Date(now);
+      
+      // Parse custom date range
+      if (timeRange.includes(" - ")) {
+        const [startStr, endStr] = timeRange.split(" - ");
+        // This is a simplified approach, using regex to handle MMM d format
+        const parseCustomDate = (dateStr: string) => {
+          const months: Record<string, number> = {
+            'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+            'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+          };
+          const match = dateStr.match(/([A-Za-z]{3})\s+(\d+)/);
+          if (match) {
+            const month = months[match[1]];
+            const day = parseInt(match[2]);
+            const date = new Date();
+            date.setMonth(month);
+            date.setDate(day);
+            return date;
+          }
+          return new Date(now);
+        };
+        
+        startDate = parseCustomDate(startStr);
+        endDate = parseCustomDate(endStr);
+        
+        // If end date is before start date, it might be in the next year
+        if (endDate < startDate) {
+          endDate.setFullYear(endDate.getFullYear() + 1);
+        }
+      } else if (timeRange === "week") {
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - 7);
+      } else if (timeRange === "month") {
+        startDate = new Date(now);
+        startDate.setMonth(now.getMonth() - 1);
+      } else {
+        return outfits;
+      }
+      
+      return outfits.filter(outfit => {
+        // Check for wear history dates in the range
+        if (outfit.metadata?.wornDates && outfit.metadata.wornDates.length > 0) {
+          return outfit.metadata.wornDates.some(dateStr => {
+            const wornDate = new Date(dateStr);
+            return wornDate >= startDate && wornDate <= endDate;
+          });
+        }
+        
+        // Fall back to created date if no wear dates
+        if (!outfit.createdAt) return false;
+        const outfitDate = new Date(outfit.createdAt);
+        return outfitDate >= startDate && outfitDate <= endDate;
+      });
+    })();
+
     // Create a map to count item usage frequencies
     const itemUsageCounts = new Map<string, number>();
     const itemDates = new Map<string, Date[]>();
     
     // Go through all outfits to track which items are used most often
     filteredOutfits.forEach(outfit => {
+      // Get wear dates from outfit metadata
+      const outfitWearDates: Date[] = [];
+      if (outfit.metadata?.wornDates && outfit.metadata.wornDates.length > 0) {
+        outfit.metadata.wornDates.forEach(dateStr => {
+          outfitWearDates.push(new Date(dateStr));
+        });
+      } else if (outfit.createdAt) {
+        outfitWearDates.push(new Date(outfit.createdAt));
+      }
+      
+      // Count each item for each time the outfit was worn
       outfit.items.forEach(item => {
-        // Count this item
+        // Get current count for this item
         const currentCount = itemUsageCounts.get(item.id) || 0;
-        itemUsageCounts.set(item.id, currentCount + 1);
+        // Add to count - if outfit has wear dates, use that count, otherwise add 1
+        const addCount = outfitWearDates.length || 1;
+        itemUsageCounts.set(item.id, currentCount + addCount);
         
         // Store dates to show when the item was worn
-        const dates = itemDates.get(item.id) || [];
+        const existingDates = itemDates.get(item.id) || [];
+        const allDates = [...existingDates, ...outfitWearDates];
         
-        // Use item's dateTaken if available
+        // Also consider item-specific dates if available
         if (item.metadata?.dateTaken) {
-          dates.push(new Date(item.metadata.dateTaken));
-        }
-        // Otherwise use outfit's createdAt as fallback
-        else if (outfit.createdAt) {
-          dates.push(new Date(outfit.createdAt));
+          allDates.push(new Date(item.metadata.dateTaken));
         }
         
-        // Sort dates and store
-        if (dates.length > 0) {
-          dates.sort((a, b) => b.getTime() - a.getTime()); // newest first
-          itemDates.set(item.id, dates);
+        // Sort dates and store unique ones
+        if (allDates.length > 0) {
+          // Sort newest first and remove duplicates
+          const uniqueDates = Array.from(new Set(
+            allDates.map(date => date.getTime())
+          )).map(time => new Date(time))
+            .sort((a, b) => b.getTime() - a.getTime());
+            
+          itemDates.set(item.id, uniqueDates);
         }
       });
     });
@@ -124,7 +148,7 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, t
       })
       .filter(usage => usage.item !== undefined)
       .sort((a, b) => b.count - a.count);
-  }, [clothingItems, filteredOutfits]);
+  }, [clothingItems, outfits, timeRange]);
 
   // Get displayed items based on current state
   const displayedItems = showAllItems 
@@ -153,7 +177,7 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, t
                   <div className="flex items-center justify-between">
                     <h4 className="font-medium text-sm">{item.name}</h4>
                     <Badge variant="secondary" className="text-xs">
-                      {count} {count === 1 ? 'outfit' : 'outfits'}
+                      {count} {count === 1 ? 'time' : 'times'}
                     </Badge>
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
