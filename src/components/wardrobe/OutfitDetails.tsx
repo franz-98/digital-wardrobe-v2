@@ -138,11 +138,15 @@ const OutfitDetails = ({
             items={outfit.items}
             onItemClick={handleItemClick}
           />
+          
+          <div className="mb-20"></div> {/* Add padding at the bottom for fixed button */}
         </div>
       </div>
       
       {onDelete && (
-        <DeleteOutfitButton onDeleteClick={handleDeleteClick} />
+        <div className="fixed bottom-0 left-0 right-0 p-4 border-t bg-background">
+          <DeleteOutfitButton onDeleteClick={handleDeleteClick} />
+        </div>
       )}
       
       {onDelete && (
