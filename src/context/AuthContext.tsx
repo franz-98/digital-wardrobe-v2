@@ -20,6 +20,12 @@ interface RegisterData {
   password: string;
 }
 
+// Response type for login endpoint
+interface LoginResponse {
+  access_token: string;
+  token_type?: string;
+}
+
 // Replace with your actual FastAPI backend URL
 const API_BASE_URL = 'http://localhost:8000'; // Update this with your actual FastAPI URL
 
@@ -86,7 +92,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(mockUser);
       } else {
         // Real login with API
-        const data = await apiRequest('/auth/login', {
+        const data = await apiRequest<LoginResponse>('/auth/login', {
           method: 'POST',
           body: { email, password }
         });
