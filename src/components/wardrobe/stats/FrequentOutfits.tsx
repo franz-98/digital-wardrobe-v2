@@ -16,9 +16,10 @@ interface OutfitUsage {
 interface FrequentOutfitsProps {
   outfits: Outfit[];
   timeRange: string;
+  onOutfitClick: (outfit: Outfit) => void;
 }
 
-const FrequentOutfits: React.FC<FrequentOutfitsProps> = ({ outfits, timeRange }) => {
+const FrequentOutfits: React.FC<FrequentOutfitsProps> = ({ outfits, timeRange, onOutfitClick }) => {
   const [showAllOutfits, setShowAllOutfits] = useState(false);
   const DEFAULT_OUTFITS_SHOWN = 3;
 
@@ -148,7 +149,11 @@ const FrequentOutfits: React.FC<FrequentOutfitsProps> = ({ outfits, timeRange })
         {frequentlyWornOutfits.length > 0 ? (
           <div className="space-y-4">
             {displayedOutfits.map(({ outfit, count, lastWorn }) => (
-              <div key={outfit?.id} className="flex gap-3 items-start">
+              <div 
+                key={outfit?.id} 
+                className="flex gap-3 items-start hover:bg-muted/40 p-2 rounded-md cursor-pointer transition-colors"
+                onClick={() => outfit && onOutfitClick(outfit)}
+              >
                 <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                   <img 
                     src={outfit?.imageUrl || outfit?.items[0]?.imageUrl || "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=300&h=300&fit=crop"} 

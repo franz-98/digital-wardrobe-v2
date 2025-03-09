@@ -117,6 +117,8 @@ const WardrobeTabContent = ({
           updateStatsForCustomRange={updateStatsForCustomRange}
           clothingItems={clothingItems}
           outfits={outfits}
+          handleItemClick={handleItemClick}
+          handleOutfitClick={handleOutfitClick}
         />
       </TabsContent>
     </>

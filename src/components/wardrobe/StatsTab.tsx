@@ -18,6 +18,8 @@ interface StatsTabProps {
   updateStatsForCustomRange: (start: Date, end: Date) => void;
   clothingItems: ClothingItem[];
   outfits: Outfit[];
+  handleItemClick: (item: ClothingItem) => void;
+  handleOutfitClick: (outfit: Outfit) => void;
 }
 
 const StatsTab = ({
@@ -26,7 +28,9 @@ const StatsTab = ({
   updateStatsForTimeRange,
   updateStatsForCustomRange,
   clothingItems,
-  outfits
+  outfits,
+  handleItemClick,
+  handleOutfitClick
 }: StatsTabProps) => {
   return (
     <div className="pb-20">
@@ -43,8 +47,17 @@ const StatsTab = ({
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <FrequentOutfits outfits={outfits} timeRange={timeRange} />
-        <FrequentItems clothingItems={clothingItems} outfits={outfits} timeRange={timeRange} />
+        <FrequentOutfits 
+          outfits={outfits} 
+          timeRange={timeRange} 
+          onOutfitClick={handleOutfitClick}
+        />
+        <FrequentItems 
+          clothingItems={clothingItems} 
+          outfits={outfits} 
+          timeRange={timeRange} 
+          onItemClick={handleItemClick}
+        />
       </div>
       
       <div className="grid grid-cols-1 gap-4 mb-4">

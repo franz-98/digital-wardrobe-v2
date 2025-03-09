@@ -17,9 +17,10 @@ interface FrequentItemsProps {
   clothingItems: ClothingItem[];
   outfits: Outfit[];
   timeRange: string;
+  onItemClick: (item: ClothingItem) => void;
 }
 
-const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, timeRange }) => {
+const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, timeRange, onItemClick }) => {
   const [showAllItems, setShowAllItems] = useState(false);
   const DEFAULT_ITEMS_SHOWN = 3;
 
@@ -136,7 +137,11 @@ const FrequentItems: React.FC<FrequentItemsProps> = ({ clothingItems, outfits, t
         {frequentlyUsedItems.length > 0 ? (
           <div className="space-y-4">
             {displayedItems.map(({ item, count, lastWorn }) => (
-              <div key={item.id} className="flex gap-3 items-start">
+              <div 
+                key={item.id} 
+                className="flex gap-3 items-start hover:bg-muted/40 p-2 rounded-md cursor-pointer transition-colors"
+                onClick={() => onItemClick(item)}
+              >
                 <div className="w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                   <img 
                     src={item.imageUrl || "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=300&h=300&fit=crop"} 
