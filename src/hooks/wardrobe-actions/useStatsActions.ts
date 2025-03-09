@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 export function useStatsActions() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState("week");
+  const [selectedTimeRange, setSelectedTimeRange] = useState("month");
   const [customRangeStart, setCustomRangeStart] = useState<Date | null>(null);
   const [customRangeEnd, setCustomRangeEnd] = useState<Date | null>(null);
 
