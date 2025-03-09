@@ -60,12 +60,18 @@ const LoginPage = () => {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Use localStorage to mimic the login process without calling actual API
-      const mockToken = "mock_jwt_token_for_testing_purposes_only";
-      localStorage.setItem('auth_token', mockToken);
+      // Create a mock user object
+      const mockUser = {
+        id: "mock-user-id",
+        name: "Mock User",
+        email: "mockuser@example.com",
+        role: "user"
+      };
       
-      // Update auth context (we're directly accessing window.location to force a reload)
-      // This will trigger the useEffect in AuthContext to pick up the token
+      // Use the login method from AuthContext to properly update the state
+      // This ensures all the necessary state updates happen in one place
+      await login("mockuser@example.com", "password", true, mockUser);
+      
       toast({
         title: "Mock Login",
         description: "Successfully logged in with mock credentials",
