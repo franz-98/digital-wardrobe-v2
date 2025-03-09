@@ -79,7 +79,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
         <div className="flex flex-col justify-between">
           <div>
             <h3 className="text-sm font-medium mb-1">Details</h3>
-            <div className="space-y-1">
+            <div className="space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">Category:</span>
                 <Badge variant="outline" className="text-xs">
@@ -134,7 +134,7 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
           <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
             <Info className="h-3.5 w-3.5" /> Specifications
           </h3>
-          <div className="grid grid-cols-2 gap-y-2 text-sm">
+          <div className="grid grid-cols-2 gap-y-3 text-sm">
             {item.metadata.dateTaken && (
               <>
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
