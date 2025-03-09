@@ -39,7 +39,32 @@ const OutfitView = ({
   onImageClick,
   dismissProgress = 0
 }: OutfitViewProps) => {
-  const [wornDates, setWornDates] = useState<Date[]>(() => getWornDates());
+  const [wornDates, setWornDates] = useState<Date[]>(() => {
+    // We need to ensure we're using the latest outfit data from storage
+    const allOutfits = loadOutfits();
+    const currentOutfit = allOutfits.find(o => o.id === outfit.id) || outfit;
+    
+    if (currentOutfit.metadata?.wornDates) {
+      return currentOutfit.metadata.wornDates.map(dateStr => new Date(dateStr));
+    }
+    
+    const dates: Date[] = [];
+    
+    // Fall back to previous behavior if no saved dates
+    if (currentOutfit.createdAt) {
+      dates.push(new Date(currentOutfit.createdAt));
+    }
+    
+    currentOutfit.items.forEach(item => {
+      if (item.metadata?.dateTaken) {
+        dates.push(new Date(item.metadata.dateTaken));
+      }
+    });
+    
+    const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
+    
+    return uniqueDatesStr.map(dateStr => new Date(dateStr));
+  });
   
   const handleItemClick = (itemId: string) => {
     console.log("Item clicked in OutfitView:", itemId);
@@ -121,30 +146,6 @@ const OutfitView = ({
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
-  
-  function getWornDates(): Date[] {
-    const dates: Date[] = [];
-    
-    // Load saved worn dates from outfit metadata
-    if (outfit.metadata?.wornDates) {
-      return outfit.metadata.wornDates.map(dateStr => new Date(dateStr));
-    }
-    
-    // Fall back to previous behavior if no saved dates
-    if (outfit.createdAt) {
-      dates.push(new Date(outfit.createdAt));
-    }
-    
-    outfit.items.forEach(item => {
-      if (item.metadata?.dateTaken) {
-        dates.push(new Date(item.metadata.dateTaken));
-      }
-    });
-    
-    const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
-    
-    return uniqueDatesStr.map(dateStr => new Date(dateStr));
-  };
 
   return (
     <div className="flex flex-col h-[100dvh]">

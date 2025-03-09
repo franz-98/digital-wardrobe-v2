@@ -30,7 +30,35 @@ const OutfitDetails = ({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [localImageUrl, setLocalImageUrl] = useState<string | undefined>(outfit.imageUrl);
-  const [wornDates, setWornDates] = useState<Date[]>(() => getWornDates(outfit));
+  const [wornDates, setWornDates] = useState<Date[]>(() => {
+    // We need to ensure we're using the latest outfit data from storage
+    const allOutfits = loadOutfits();
+    const currentOutfit = allOutfits.find(o => o.id === outfit.id) || outfit;
+    
+    if (currentOutfit.metadata?.wornDates) {
+      return currentOutfit.metadata.wornDates.map(dateStr => new Date(dateStr));
+    }
+    
+    const dates: Date[] = [];
+    
+    // Add creation date as first worn date
+    if (currentOutfit.createdAt) {
+      dates.push(new Date(currentOutfit.createdAt));
+    }
+    
+    // Add any dates from item metadata
+    currentOutfit.items.forEach(item => {
+      if (item.metadata?.dateTaken) {
+        dates.push(new Date(item.metadata.dateTaken));
+      }
+    });
+    
+    // Remove duplicate dates by converting to string and using Set
+    const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
+    
+    // Convert back to Date objects
+    return uniqueDatesStr.map(dateStr => new Date(dateStr));
+  });
   
   const getOutfitColorPalette = (outfit: Outfit) => {
     return outfit.items.map(item => item.color);
@@ -122,34 +150,6 @@ const OutfitDetails = ({
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
-  
-  // Extract dates when outfit was worn
-  function getWornDates(outfit: Outfit): Date[] {
-    // Load saved worn dates from outfit metadata
-    if (outfit.metadata?.wornDates) {
-      return outfit.metadata.wornDates.map(dateStr => new Date(dateStr));
-    }
-    
-    const dates: Date[] = [];
-    
-    // Add creation date as first worn date
-    if (outfit.createdAt) {
-      dates.push(new Date(outfit.createdAt));
-    }
-    
-    // Add any dates from item metadata
-    outfit.items.forEach(item => {
-      if (item.metadata?.dateTaken) {
-        dates.push(new Date(item.metadata.dateTaken));
-      }
-    });
-    
-    // Remove duplicate dates by converting to string and using Set
-    const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
-    
-    // Convert back to Date objects
-    return uniqueDatesStr.map(dateStr => new Date(dateStr));
-  };
 
   return (
     <div className="flex flex-col h-[100dvh]">
