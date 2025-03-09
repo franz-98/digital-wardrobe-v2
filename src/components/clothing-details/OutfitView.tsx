@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { 
@@ -60,12 +59,10 @@ const OutfitView = ({
       date.getTime() !== dateToDelete.getTime()
     ));
     
-    // Here we could also update the outfit metadata if there was API integration
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
   };
   
   const handleAddWornDate = (newDate: Date) => {
-    // Check if date already exists to prevent duplicates
     const dateExists = wornDates.some(date => 
       date.toDateString() === newDate.toDateString()
     );
@@ -84,26 +81,21 @@ const OutfitView = ({
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
   
-  // Extract dates when outfit was worn
   function getWornDates(): Date[] {
     const dates: Date[] = [];
     
-    // Add creation date as first worn date
     if (outfit.createdAt) {
       dates.push(new Date(outfit.createdAt));
     }
     
-    // Add any dates from item metadata
     outfit.items.forEach(item => {
       if (item.metadata?.dateTaken) {
         dates.push(new Date(item.metadata.dateTaken));
       }
     });
     
-    // Remove duplicate dates by converting to string and using Set
     const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
     
-    // Convert back to Date objects
     return uniqueDatesStr.map(dateStr => new Date(dateStr));
   };
 
@@ -117,7 +109,7 @@ const OutfitView = ({
         onBackClick={onBackClick}
       />
       
-      <div className="flex-1 overflow-y-auto overscroll-contain">
+      <div className="flex-1 overflow-y-auto overscroll-contain pb-4">
         <OutfitImage 
           imageUrl={outfit.imageUrl || outfit.items[0]?.imageUrl}
           onImageClick={handleImageClick}
@@ -137,14 +129,12 @@ const OutfitView = ({
           onItemClick={handleItemClick}
         />
         
-        <div className="mb-20"></div> {/* Add padding at the bottom for fixed button */}
+        {onDeleteClick && (
+          <div className="px-4 pb-6 mt-4">
+            <DeleteOutfitButton onDeleteClick={onDeleteClick} />
+          </div>
+        )}
       </div>
-      
-      {onDeleteClick && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 border-t bg-background">
-          <DeleteOutfitButton onDeleteClick={onDeleteClick} />
-        </div>
-      )}
     </div>
   );
 };

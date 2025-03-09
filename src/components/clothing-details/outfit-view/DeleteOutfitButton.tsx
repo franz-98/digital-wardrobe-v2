@@ -9,16 +9,14 @@ interface DeleteOutfitButtonProps {
 
 const DeleteOutfitButton = ({ onDeleteClick }: DeleteOutfitButtonProps) => {
   return (
-    <div className="p-4 border-t">
-      <Button 
-        variant="destructive" 
-        className="w-full"
-        onClick={onDeleteClick}
-      >
-        <X className="h-4 w-4 mr-2" />
-        Delete Outfit
-      </Button>
-    </div>
+    <Button 
+      variant="destructive" 
+      className="w-full"
+      onClick={onDeleteClick}
+    >
+      <X className="h-4 w-4 mr-2" />
+      Delete Outfit
+    </Button>
   );
 };
 

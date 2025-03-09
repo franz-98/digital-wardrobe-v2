@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Outfit, ClothingItem } from './types';
 import DeleteOutfitDialog from "@/components/clothing-details/DeleteOutfitDialog";
@@ -116,7 +115,7 @@ const OutfitDetails = ({
         dismissProgress={dismissProgress}
       />
       
-      <div className="flex-1 overflow-y-auto overscroll-bounce p-6">
+      <div className="flex-1 overflow-y-auto overscroll-bounce p-6 pb-4">
         <div className="space-y-6">
           <OutfitImage 
             imageUrl={localImageUrl} 
@@ -139,15 +138,13 @@ const OutfitDetails = ({
             onItemClick={handleItemClick}
           />
           
-          <div className="mb-20"></div> {/* Add padding at the bottom for fixed button */}
+          {onDelete && (
+            <div className="mt-6 mb-4">
+              <DeleteOutfitButton onDeleteClick={handleDeleteClick} />
+            </div>
+          )}
         </div>
       </div>
-      
-      {onDelete && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 border-t bg-background">
-          <DeleteOutfitButton onDeleteClick={handleDeleteClick} />
-        </div>
-      )}
       
       {onDelete && (
         <DeleteOutfitDialog
