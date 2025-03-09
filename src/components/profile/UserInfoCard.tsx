@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Camera, X } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { 
   Dialog,
@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogDescription
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 
 interface UserProfile {
@@ -27,9 +27,12 @@ interface UserInfoCardProps {
   user: UserProfile;
 }
 
-const UserInfoCard = ({ user }: UserInfoCardProps) => {
+const UserInfoCard = ({ user: initialUser }: UserInfoCardProps) => {
+  const [user, setUser] = useState(initialUser);
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const copyReferralCode = () => {
     if (user?.referralCode) {
@@ -85,16 +88,89 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
     setInviteDialogOpen(false);
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check if file is an image
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Tipo di file non valido",
+        description: "Carica un'immagine (JPG, PNG, etc.).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File troppo grande",
+        description: "L'immagine deve essere inferiore a 5MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create object URL for the image
+    const imageUrl = URL.createObjectURL(file);
+
+    // Update user with new avatar URL
+    setUser(prevUser => ({
+      ...prevUser,
+      avatarUrl: imageUrl
+    }));
+
+    // Show success message
+    toast({
+      title: "Immagine profilo aggiornata",
+      description: "La tua foto profilo è stata aggiornata con successo.",
+    });
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <Card className="overflow-hidden border">
       <div className="flex flex-col items-center p-6">
-        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-background shadow-md mb-4">
+        <div 
+          className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-background shadow-md mb-4"
+          onMouseEnter={() => setIsHoveringAvatar(true)}
+          onMouseLeave={() => setIsHoveringAvatar(false)}
+          onClick={handleAvatarClick}
+        >
           <img
             src={user?.avatarUrl}
             alt={user?.name}
             className="w-full h-full object-cover"
           />
+          
+          {/* Overlay for profile picture edit */}
+          <div 
+            className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-200 cursor-pointer ${
+              isHoveringAvatar ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <Camera className="w-6 h-6 text-white" />
+          </div>
+          
+          {/* Hidden file input */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
         </div>
+        
         <h2 className="text-2xl font-bold">{user?.name}</h2>
         <p className="text-muted-foreground">{user?.email}</p>
         
@@ -194,3 +270,4 @@ const UserInfoCard = ({ user }: UserInfoCardProps) => {
 };
 
 export default UserInfoCard;
+
