@@ -2,7 +2,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import TimeRangeSelector from './TimeRangeSelector';
+import { TimeRangeSelector } from './time-range';
 import { ClothingItem, Outfit } from './types';
 import CategoryDistribution from './stats/CategoryDistribution';
 import ColorDistribution from './stats/ColorDistribution';
