@@ -1,6 +1,7 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { ClothingItem, Outfit } from '@/components/wardrobe/types';
+import { useWardrobeState } from '@/hooks/useWardrobeState';
 
 // Create a type for the context values
 interface WardrobeContextType {
@@ -48,10 +49,8 @@ interface WardrobeContextType {
 // Create the context with a default empty value
 const WardrobeContext = createContext<WardrobeContextType | undefined>(undefined);
 
-// Import the useWardrobeState hook dynamically to avoid circular dependency
+// Create a provider component that directly imports the useWardrobeState hook
 export const WardrobeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // We'll import and use the hook inside the component to avoid circular dependencies
-  const { useWardrobeState } = require('@/hooks/useWardrobeState');
   const wardrobeState = useWardrobeState();
   
   return (

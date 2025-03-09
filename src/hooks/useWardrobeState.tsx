@@ -6,7 +6,8 @@ import { useWardrobeActions } from "./useWardrobeActions";
 import { useNavigationEffects } from "./useNavigationEffects";
 import { Outfit } from "@/components/wardrobe/types";
 
-export function useWardrobeState() {
+// Rename the function to _useWardrobeState to avoid conflict with export
+function _useWardrobeState() {
   const {
     clothingItems,
     setClothingItems,
@@ -154,5 +155,5 @@ export function useWardrobeState() {
   };
 }
 
-// Export a named object to avoid circular dependencies
-export const { useWardrobeState } = { useWardrobeState };
+// Export the hook with the name useWardrobeState for external use
+export const useWardrobeState = _useWardrobeState;
