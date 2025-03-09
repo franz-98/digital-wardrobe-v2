@@ -45,29 +45,218 @@ interface WardrobeContextType {
   updateItemMetadata: (itemId: string, field: string, value: string) => boolean;
 }
 
-// Create context with default undefined value
-const WardrobeContext = createContext<WardrobeContextType | undefined>(undefined);
-
-// Import the hook here - not at the top to avoid circular dependencies
-import { useWardrobeState } from '@/hooks/useWardrobeState';
-
-// Create a provider component
-export const WardrobeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Use the hook directly
-  const wardrobeState = useWardrobeState();
-  
-  return (
-    <WardrobeContext.Provider value={wardrobeState}>
-      {children}
-    </WardrobeContext.Provider>
-  );
+// Create an initial state object with default values
+const initialWardrobeContext: WardrobeContextType = {
+  clothingItems: [],
+  outfits: [],
+  suggestedOutfits: [],
+  isPremium: false,
+  selectedItemsForOutfit: [],
+  isCreatingOutfit: false,
+  newOutfitName: "",
+  searchTerm: "",
+  activeTab: "clothing",
+  selectedItem: null,
+  isDetailsOpen: false,
+  timeRange: "month",
+  showSearchBar: false,
+  selectedOutfit: null,
+  isOutfitDetailsOpen: false,
+  setNewOutfitName: () => {},
+  setSelectedItemsForOutfit: () => {},
+  setIsCreatingOutfit: () => {},
+  setActiveTab: () => {},
+  setTimeRange: () => {},
+  setSearchTerm: () => {},
+  setIsDetailsOpen: () => {},
+  setIsOutfitDetailsOpen: () => {},
+  handleItemClick: () => {},
+  findRelatedOutfits: () => [],
+  toggleSearchBar: () => {},
+  togglePremium: () => {},
+  toggleItemSelection: () => {},
+  createNewOutfit: () => {},
+  updateOutfitImage: () => {},
+  updateStatsForTimeRange: () => {},
+  updateStatsForCustomRange: () => {},
+  handleOutfitClick: () => {},
+  handleOutfitItemClick: () => {},
+  handleDeleteItem: () => {},
+  handleDeleteOutfit: () => {},
+  updateItemName: () => false,
+  updateOutfitName: () => false,
+  updateItemMetadata: () => false
 };
+
+// Create the context with the initial state
+const WardrobeContext = createContext<WardrobeContextType>(initialWardrobeContext);
 
 // Create a custom hook to use the context
 export const useWardrobe = () => {
-  const context = useContext(WardrobeContext);
-  if (context === undefined) {
-    throw new Error('useWardrobe must be used within a WardrobeProvider');
-  }
-  return context;
+  return useContext(WardrobeContext);
+};
+
+// Create a provider component
+export const WardrobeProvider = ({ children }: { children: React.ReactNode }) => {
+  // Import hooks directly inside the component function to avoid circular dependencies
+  // This is a common pattern for breaking dependency cycles
+  const { 
+    useWardrobeData,
+    useWardrobeUI, 
+    useItemSelection,
+    useWardrobeActions,
+    useNavigationEffects 
+  } = require('../hooks/wardrobeHooks');
+  
+  const {
+    clothingItems,
+    setClothingItems,
+    outfits,
+    setOutfits,
+    suggestedOutfits
+  } = useWardrobeData();
+
+  const {
+    isPremium,
+    setIsPremium,
+    isCreatingOutfit,
+    setIsCreatingOutfit,
+    newOutfitName,
+    setNewOutfitName,
+    searchTerm,
+    setSearchTerm,
+    activeTab,
+    setActiveTab,
+    showSearchBar,
+    timeRange,
+    setTimeRange,
+    toggleSearchBar,
+    togglePremium: uiTogglePremium
+  } = useWardrobeUI();
+
+  const {
+    selectedItem,
+    setSelectedItem,
+    isDetailsOpen,
+    setIsDetailsOpen,
+    selectedOutfit,
+    setSelectedOutfit,
+    isOutfitDetailsOpen,
+    setIsOutfitDetailsOpen,
+    selectedItemsForOutfit,
+    setSelectedItemsForOutfit,
+    handleItemClick,
+    handleOutfitClick: baseHandleOutfitClick,
+    handleOutfitItemClick: baseHandleOutfitItemClick,
+    toggleItemSelection
+  } = useItemSelection();
+
+  // Enhanced handleOutfitItemClick function that can find outfits by ID
+  const handleOutfitItemClick = (itemId: string) => {
+    // Check if this is an outfit ID
+    if (itemId.startsWith('o')) {
+      console.log("Processing outfit ID:", itemId);
+      // Find the outfit in our data
+      const outfitToShow = outfits.find(outfit => outfit.id === itemId) || 
+                          suggestedOutfits.find(outfit => outfit.id === itemId);
+      
+      if (outfitToShow) {
+        console.log("Found outfit to display:", outfitToShow.name);
+        // Use the outfit click handler to show the outfit details
+        handleOutfitClick(outfitToShow);
+      } else {
+        console.log("Outfit not found with ID:", itemId);
+      }
+    } else {
+      // Handle normal item clicks
+      baseHandleOutfitItemClick(itemId, clothingItems);
+    }
+  };
+
+  // Explicitly handle outfit clicks
+  const handleOutfitClick = (outfit: Outfit) => {
+    baseHandleOutfitClick(outfit);
+  };
+
+  const {
+    findRelatedOutfits,
+    createNewOutfit,
+    updateOutfitImage,
+    handleDeleteItem,
+    handleDeleteOutfit,
+    togglePremium: actionsTogglePremium,
+    updateStatsForTimeRange,
+    updateStatsForCustomRange,
+    updateItemName,
+    updateOutfitName,
+    updateItemMetadata
+  } = useWardrobeActions({
+    outfits,
+    clothingItems,
+    setOutfits,
+    setClothingItems,
+    selectedItemsForOutfit,
+    newOutfitName,
+    setNewOutfitName,
+    setSelectedItemsForOutfit,
+    setIsCreatingOutfit,
+    isPremium,
+    setIsPremium
+  });
+
+  useNavigationEffects();
+
+  // Combine toggle premium functions
+  const togglePremium = () => {
+    uiTogglePremium();
+    actionsTogglePremium();
+  };
+
+  const value = {
+    clothingItems,
+    outfits,
+    suggestedOutfits,
+    isPremium,
+    selectedItemsForOutfit,
+    isCreatingOutfit,
+    newOutfitName,
+    searchTerm,
+    activeTab,
+    selectedItem,
+    isDetailsOpen,
+    timeRange,
+    showSearchBar,
+    selectedOutfit,
+    isOutfitDetailsOpen,
+    setNewOutfitName,
+    setSelectedItemsForOutfit,
+    setIsCreatingOutfit,
+    setActiveTab,
+    setTimeRange,
+    setSearchTerm,
+    setIsDetailsOpen,
+    setIsOutfitDetailsOpen,
+    handleItemClick,
+    findRelatedOutfits,
+    toggleSearchBar,
+    togglePremium,
+    toggleItemSelection,
+    createNewOutfit,
+    updateOutfitImage,
+    updateStatsForTimeRange,
+    updateStatsForCustomRange,
+    handleOutfitClick,
+    handleOutfitItemClick,
+    handleDeleteItem,
+    handleDeleteOutfit,
+    updateItemName,
+    updateOutfitName,
+    updateItemMetadata
+  };
+  
+  return (
+    <WardrobeContext.Provider value={value}>
+      {children}
+    </WardrobeContext.Provider>
+  );
 };
