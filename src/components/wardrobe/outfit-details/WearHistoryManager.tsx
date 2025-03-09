@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { DateEntryForm, DatesList } from "./wear-history";
 import { loadOutfitWearDates, saveOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
+import { toast } from "sonner";
 
 interface WearHistoryManagerProps {
   outfitId: string;
@@ -38,8 +39,10 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
         setWornDates(updatedDates);
         saveOutfitWearDates(outfitId, updatedDates);
         console.log(`Added wear date: ${selectedDate.toLocaleDateString()}`);
+        toast.success(`Added ${selectedDate.toLocaleDateString()} to wear history`);
       } else {
         console.log(`Date already exists: ${selectedDate.toLocaleDateString()}`);
+        toast.error("This date is already in the wear history");
       }
       
       // Reset selected date after adding
@@ -55,6 +58,7 @@ const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHisto
     setWornDates(updatedDates);
     saveOutfitWearDates(outfitId, updatedDates);
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
+    toast.success(`Removed ${dateToDelete.toLocaleDateString()} from wear history`);
   };
 
   return (

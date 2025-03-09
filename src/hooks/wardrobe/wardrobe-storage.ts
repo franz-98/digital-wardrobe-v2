@@ -66,6 +66,12 @@ export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void =
   try {
     const allOutfits = loadOutfits();
     
+    // If no outfits loaded, log error and return
+    if (!allOutfits || allOutfits.length === 0) {
+      console.error(`No outfits found when trying to save wear dates for outfit ${outfitId}`);
+      return;
+    }
+    
     const updatedOutfits = allOutfits.map(outfit => {
       if (outfit.id === outfitId) {
         // Create metadata object if it doesn't exist
@@ -92,11 +98,19 @@ export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void =
 export const loadOutfitWearDates = (outfitId: string): Date[] => {
   try {
     const allOutfits = loadOutfits();
+    
+    if (!allOutfits || allOutfits.length === 0) {
+      console.log(`No outfits found when trying to load wear dates for outfit ${outfitId}`);
+      return [];
+    }
+    
     const outfit = allOutfits.find(o => o.id === outfitId);
     
     if (outfit?.metadata?.wornDates) {
       return outfit.metadata.wornDates.map(dateStr => new Date(dateStr));
     }
+    
+    console.log(`No wear dates found for outfit ${outfitId}`);
   } catch (e) {
     console.error(`Failed to load wear dates for outfit ${outfitId}:`, e);
   }
