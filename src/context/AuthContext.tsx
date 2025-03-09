@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiRequest } from '@/utils/api';
 
 interface AuthContextType {
   token: string | null;
@@ -62,17 +63,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const fetchUserData = async (authToken: string) => {
-    const response = await fetch(`${API_BASE_URL}/users/me`, {
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch user data');
+    try {
+      return await apiRequest('/users/me', {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      throw error;
     }
-    
-    return response.json();
   };
 
   const login = async (email: string, password: string, isMock = false, mockUser = null) => {
@@ -86,19 +86,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(mockUser);
       } else {
         // Real login with API
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        const data = await apiRequest('/auth/login', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password }),
+          body: { email, password }
         });
-
-        if (!response.ok) {
-          throw new Error('Login failed');
-        }
-
-        const data = await response.json();
+        
         const { access_token } = data;
         
         localStorage.setItem('auth_token', access_token);
@@ -142,19 +134,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (userData: RegisterData) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      await apiRequest('/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
+        body: userData
       });
-
-      if (!response.ok) {
-        throw new Error('Registration failed');
-      }
-
-      const data = await response.json();
+      
       await login(userData.email, userData.password);
     } catch (error) {
       console.error('Registration error:', error);
