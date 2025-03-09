@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Calendar, Clock, Trash2, Plus } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -9,17 +8,22 @@ import { loadOutfitWearDates, saveOutfitWearDates } from "@/hooks/wardrobe/wardr
 
 interface WearHistoryManagerProps {
   outfitId: string;
+  wornDates?: Date[];
 }
 
-const WearHistoryManager = ({ outfitId }: WearHistoryManagerProps) => {
+const WearHistoryManager = ({ outfitId, wornDates: initialWornDates }: WearHistoryManagerProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [wornDates, setWornDates] = useState<Date[]>([]);
 
-  // Load wear history from storage on mount
+  // Load wear history from storage on mount or when initialWornDates changes
   useEffect(() => {
-    const dates = loadOutfitWearDates(outfitId);
-    setWornDates(dates);
-  }, [outfitId]);
+    if (initialWornDates && initialWornDates.length > 0) {
+      setWornDates(initialWornDates);
+    } else {
+      const dates = loadOutfitWearDates(outfitId);
+      setWornDates(dates);
+    }
+  }, [outfitId, initialWornDates]);
   
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);

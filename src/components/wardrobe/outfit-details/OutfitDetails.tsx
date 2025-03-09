@@ -9,13 +9,15 @@ interface OutfitDetailsProps {
   season: string;
   colorPalette: string[];
   outfitId: string;
+  wornDates?: Date[]; // Added wornDates as an optional prop
 }
 
 const OutfitDetails = ({ 
   creationDate, 
   season, 
   colorPalette,
-  outfitId
+  outfitId,
+  wornDates = [] // Provide a default empty array
 }: OutfitDetailsProps) => {
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
@@ -39,7 +41,7 @@ const OutfitDetails = ({
       
       <ColorPaletteDisplay colors={colorPalette} />
       
-      <WearHistoryManager outfitId={outfitId} />
+      <WearHistoryManager outfitId={outfitId} wornDates={wornDates} />
     </div>
   );
 };
