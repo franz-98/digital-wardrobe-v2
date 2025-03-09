@@ -26,8 +26,9 @@ const PrivacyPolicyDialog = ({ open, onOpenChange }: PrivacyPolicyDialogProps) =
             <span className="sr-only">Close</span>
           </DialogClose>
         </DialogHeader>
-        <ScrollArea className="flex-1 px-1">
-          <div className="space-y-4 py-4 text-sm">
+        
+        <ScrollArea className="flex-1 mt-4 max-h-[60vh]">
+          <div className="space-y-4 pr-4">
             <h2 className="text-lg font-semibold">Virtual Wardrobe Privacy Policy</h2>
             <p className="text-muted-foreground">Last Updated: March 2025</p>
 
@@ -108,7 +109,8 @@ const PrivacyPolicyDialog = ({ open, onOpenChange }: PrivacyPolicyDialogProps) =
             </div>
           </div>
         </ScrollArea>
-        <div className="flex justify-end pt-4">
+        
+        <div className="flex justify-end pt-4 mt-2 border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
