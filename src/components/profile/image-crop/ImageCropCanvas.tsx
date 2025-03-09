@@ -48,6 +48,7 @@ export function ImageCropCanvas({
   const { mouseHandlers, touchHandlers } = ImageGestureHandler({
     canvasRef,
     position,
+    scale,
     onPositionChange,
     onScaleChange
   });
