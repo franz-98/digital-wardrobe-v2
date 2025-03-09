@@ -153,3 +153,6 @@ export function useWardrobeState() {
     updateItemMetadata
   };
 }
+
+// Export a named object to avoid circular dependencies
+export const { useWardrobeState } = { useWardrobeState };
