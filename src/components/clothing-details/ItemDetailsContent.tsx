@@ -77,20 +77,20 @@ const ItemDetailsContent = ({
             onOutfitClick={onOutfitClick}
           />
         </div>
+        
+        {onDelete && (
+          <div className="p-4 border-t">
+            <Button 
+              variant="destructive" 
+              className="w-full"
+              onClick={onDeleteClick}
+            >
+              <X className="h-4 w-4 mr-2" />
+              Delete Item
+            </Button>
+          </div>
+        )}
       </div>
-
-      {onDelete && (
-        <div className="p-4 border-t flex-shrink-0">
-          <Button 
-            variant="destructive" 
-            className="w-full"
-            onClick={onDeleteClick}
-          >
-            <X className="h-4 w-4 mr-2" />
-            Delete Item
-          </Button>
-        </div>
-      )}
     </>
   );
 };
