@@ -69,6 +69,7 @@ const ItemDetailsContent = ({
           item={item}
           onDeleteClick={onDeleteClick}
           onDelete={onDelete}
+          relatedOutfits={relatedOutfits}
         />
         
         <div className="px-4 pb-4">

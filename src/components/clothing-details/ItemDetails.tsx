@@ -1,12 +1,12 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Info, Tag } from "lucide-react";
+import { Calendar, Info, Tag, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { ClothingItem } from "@/components/wardrobe/types";
+import { ClothingItem, Outfit } from "@/components/wardrobe/types";
 import ImageZoom from "@/components/wardrobe/ImageZoom";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -21,9 +21,10 @@ interface ItemDetailsProps {
   onDeleteClick: () => void;
   onDelete?: (id: string) => void;
   onImageClick?: (imageUrl: string) => void;
+  relatedOutfits?: Outfit[];
 }
 
-const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetailsProps) => {
+const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick, relatedOutfits = [] }: ItemDetailsProps) => {
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const { updateItemMetadata } = useWardrobe();
   const [localBrand, setLocalBrand] = useState(item.metadata?.brand || "Add brand");
@@ -57,6 +58,22 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
   };
 
   const colorHex = colorNameToHex(item.color);
+
+  // Extract and sort all wear dates from related outfits
+  const wearDates: { date: Date; outfitName: string }[] = [];
+  relatedOutfits?.forEach(outfit => {
+    if (outfit.metadata?.wornDates) {
+      outfit.metadata.wornDates.forEach(dateStr => {
+        wearDates.push({
+          date: new Date(dateStr),
+          outfitName: outfit.name
+        });
+      });
+    }
+  });
+  
+  // Sort by most recent first
+  wearDates.sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
     <div className="p-4">
@@ -162,6 +179,32 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick }: ItemDetail
                 <div className="text-xs">{item.metadata.season}</div>
               </>
             )}
+          </div>
+        </Card>
+      )}
+      
+      {/* New wear history section */}
+      {wearDates.length > 0 && (
+        <Card className="p-3 mb-4">
+          <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" /> Wear History
+          </h3>
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+            {wearDates.map((wearInfo, index) => (
+              <div key={index} className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
+                  <span>{wearInfo.date.toLocaleDateString('default', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })}</span>
+                </div>
+                <Badge variant="outline" className="text-xs truncate max-w-[120px]">
+                  {wearInfo.outfitName}
+                </Badge>
+              </div>
+            ))}
           </div>
         </Card>
       )}
