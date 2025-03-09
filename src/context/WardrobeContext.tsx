@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ClothingItem, Outfit } from '@/components/wardrobe/types';
 import { useWardrobeState } from '@/hooks/useWardrobeState';
 
