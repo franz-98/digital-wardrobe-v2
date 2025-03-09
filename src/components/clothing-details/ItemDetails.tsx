@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, Info, Tag, Clock } from "lucide-react";
+import { Calendar, Info, Tag, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,7 @@ interface ItemDetailsProps {
 
 const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick, relatedOutfits = [] }: ItemDetailsProps) => {
   const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
   const { updateItemMetadata } = useWardrobe();
   const [localBrand, setLocalBrand] = useState(item.metadata?.brand || "Add brand");
   
@@ -74,6 +75,15 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick, relatedOutfi
   
   // Sort by most recent first
   wearDates.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+  // Determine which dates to show based on expanded state
+  const visibleWearDates = isHistoryExpanded 
+    ? wearDates 
+    : wearDates.slice(0, 3);
+
+  const toggleHistoryExpanded = () => {
+    setIsHistoryExpanded(!isHistoryExpanded);
+  };
 
   return (
     <div className="p-4">
@@ -183,14 +193,30 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick, relatedOutfi
         </Card>
       )}
       
-      {/* New wear history section */}
+      {/* Modified wear history section with expandable functionality */}
       {wearDates.length > 0 && (
         <Card className="p-3 mb-4">
-          <h3 className="text-sm font-medium mb-2 flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" /> Wear History
-          </h3>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" /> Wear History
+            </h3>
+            {wearDates.length > 3 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-6 px-2" 
+                onClick={toggleHistoryExpanded}
+              >
+                {isHistoryExpanded ? (
+                  <ChevronUp className="h-3.5 w-3.5" />
+                ) : (
+                  <ChevronDown className="h-3.5 w-3.5" />
+                )}
+              </Button>
+            )}
+          </div>
           <div className="space-y-2 max-h-40 overflow-y-auto">
-            {wearDates.map((wearInfo, index) => (
+            {visibleWearDates.map((wearInfo, index) => (
               <div key={index} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
@@ -205,6 +231,14 @@ const ItemDetails = ({ item, onDeleteClick, onDelete, onImageClick, relatedOutfi
                 </Badge>
               </div>
             ))}
+            {!isHistoryExpanded && wearDates.length > 3 && (
+              <div 
+                className="text-xs text-muted-foreground text-center mt-1 cursor-pointer hover:underline"
+                onClick={toggleHistoryExpanded}
+              >
+                Show {wearDates.length - 3} more {wearDates.length - 3 === 1 ? 'date' : 'dates'}
+              </div>
+            )}
           </div>
         </Card>
       )}
