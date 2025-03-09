@@ -1,9 +1,8 @@
-
 import { useState, useRef } from "react";
 import { Camera } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useImageCrop } from "@/hooks/item-selection";
-import { ImageCropDialog } from "./ImageCropDialog";
+import { ImageCropDialog } from "./image-crop";
 
 interface UserAvatarProps {
   avatarUrl: string;
@@ -25,7 +24,6 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check if file is an image
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Tipo di file non valido",
@@ -35,7 +33,6 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
       return;
     }
 
-    // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "File troppo grande",
@@ -45,36 +42,29 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
       return;
     }
 
-    // Create object URL for the image
     const imageUrl = URL.createObjectURL(file);
     
-    // Set the selected image and open crop dialog
     setSelectedImage(imageUrl);
     setCropDialogOpen(true);
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
   const handleCropComplete = (croppedImageUrl: string) => {
-    // Update user with new avatar URL
     onAvatarChange(croppedImageUrl);
 
-    // Show success message
     toast({
       title: "Immagine profilo aggiornata",
       description: "La tua foto profilo è stata aggiornata con successo.",
     });
 
-    // Close dialog and reset selected image
     setCropDialogOpen(false);
     setSelectedImage(null);
   };
 
   const handleCropCancel = () => {
-    // Clean up the object URL to avoid memory leaks
     if (selectedImage) {
       URL.revokeObjectURL(selectedImage);
     }
@@ -97,7 +87,6 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
           className="w-full h-full object-cover"
         />
         
-        {/* Overlay for profile picture edit */}
         <div 
           className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-200 cursor-pointer ${
             isHoveringAvatar ? 'opacity-100' : 'opacity-0'
@@ -106,7 +95,6 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
           <Camera className="w-6 h-6 text-white" />
         </div>
         
-        {/* Hidden file input */}
         <input
           type="file"
           ref={fileInputRef}
@@ -116,7 +104,6 @@ const UserAvatar = ({ avatarUrl, name, onAvatarChange }: UserAvatarProps) => {
         />
       </div>
 
-      {/* Image Crop Dialog */}
       {selectedImage && (
         <ImageCropDialog
           imageUrl={selectedImage}
