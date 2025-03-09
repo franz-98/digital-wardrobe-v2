@@ -53,6 +53,37 @@ const LoginPage = () => {
     }
   };
 
+  const handleMockLogin = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Use localStorage to mimic the login process without calling actual API
+      const mockToken = "mock_jwt_token_for_testing_purposes_only";
+      localStorage.setItem('auth_token', mockToken);
+      
+      // Update auth context (we're directly accessing window.location to force a reload)
+      // This will trigger the useEffect in AuthContext to pick up the token
+      toast({
+        title: "Mock Login",
+        description: "Successfully logged in with mock credentials",
+      });
+      
+      navigate(from, { replace: true });
+      
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Mock login failed",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen p-4 bg-background">
       <Card className="w-full max-w-md">
@@ -95,6 +126,25 @@ const LoginPage = () => {
             </div>
             
             <SocialLoginButtons />
+            
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-300"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="px-2 bg-background text-muted-foreground">Testing Only</span>
+              </div>
+            </div>
+            
+            <Button 
+              type="button" 
+              className="w-full" 
+              variant="secondary"
+              onClick={handleMockLogin}
+              disabled={isSubmitting}
+            >
+              Try Mock Login
+            </Button>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button 
