@@ -1,6 +1,12 @@
-
 import React, { createContext, useContext } from 'react';
 import { ClothingItem, Outfit } from '@/components/wardrobe/types';
+import { 
+  useWardrobeData,
+  useWardrobeUI, 
+  useItemSelection,
+  useWardrobeActions,
+  useNavigationEffects 
+} from '../hooks/wardrobeHooks';
 
 // Create a type for the context values
 interface WardrobeContextType {
@@ -98,16 +104,7 @@ export const useWardrobe = () => {
 
 // Create a provider component
 export const WardrobeProvider = ({ children }: { children: React.ReactNode }) => {
-  // Import hooks directly inside the component function to avoid circular dependencies
-  // This is a common pattern for breaking dependency cycles
-  const { 
-    useWardrobeData,
-    useWardrobeUI, 
-    useItemSelection,
-    useWardrobeActions,
-    useNavigationEffects 
-  } = require('../hooks/wardrobeHooks');
-  
+  // Use hooks directly - no require statement
   const {
     clothingItems,
     setClothingItems,
