@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, Tag, Clock, Trash2, Plus } from "lucide-react";
 import { 
   Popover, 
@@ -10,12 +10,14 @@ import { colorNameToHex } from "@/components/wardrobe/utils/colorUtils";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { saveOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
 
 interface OutfitDetailsProps {
   creationDate?: Date;
   season?: string;
   colorPalette?: string[];
   wornDates?: Date[];
+  outfitId?: string;
   onDeleteWornDate?: (date: Date) => void;
   onAddWornDate?: (date: Date) => void;
 }
@@ -25,10 +27,25 @@ const OutfitDetails = ({
   season = 'All Seasons', 
   colorPalette = [],
   wornDates = [],
+  outfitId,
   onDeleteWornDate,
   onAddWornDate
 }: OutfitDetailsProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [localWornDates, setLocalWornDates] = useState<Date[]>(wornDates);
+  
+  // Update local dates when prop changes
+  useEffect(() => {
+    setLocalWornDates(wornDates);
+  }, [wornDates]);
+  
+  // Save wear dates when they change
+  useEffect(() => {
+    if (outfitId && localWornDates.length > 0) {
+      saveOutfitWearDates(outfitId, localWornDates);
+    }
+  }, [localWornDates, outfitId]);
+
   const formattedDate = creationDate.toLocaleDateString('default', { 
     year: 'numeric', 
     month: 'short', 
@@ -40,10 +57,44 @@ const OutfitDetails = ({
   };
 
   const handleAddWornDate = () => {
-    if (selectedDate && onAddWornDate) {
-      onAddWornDate(selectedDate);
+    if (selectedDate) {
+      if (onAddWornDate) {
+        onAddWornDate(selectedDate);
+      } else if (outfitId) {
+        // Handle adding date locally if no callback provided
+        const dateExists = localWornDates.some(date => 
+          date.toDateString() === selectedDate.toDateString()
+        );
+        
+        if (!dateExists) {
+          const updatedDates = [...localWornDates, selectedDate];
+          setLocalWornDates(updatedDates);
+          console.log(`Added wear date: ${selectedDate.toLocaleDateString()}`);
+          
+          // Save directly to storage
+          saveOutfitWearDates(outfitId, updatedDates);
+        }
+      }
+      
       // Reset selected date after adding
       setSelectedDate(new Date());
+    }
+  };
+  
+  const handleDeleteWornDate = (dateToDelete: Date) => {
+    if (onDeleteWornDate) {
+      onDeleteWornDate(dateToDelete);
+    } else if (outfitId) {
+      // Handle deleting date locally if no callback provided
+      const updatedDates = localWornDates.filter(date => 
+        date.getTime() !== dateToDelete.getTime()
+      );
+      
+      setLocalWornDates(updatedDates);
+      console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
+      
+      // Save directly to storage
+      saveOutfitWearDates(outfitId, updatedDates);
     }
   };
 
@@ -137,7 +188,7 @@ const OutfitDetails = ({
                 size="sm" 
                 className="h-8" 
                 onClick={handleAddWornDate}
-                disabled={!selectedDate || !onAddWornDate}
+                disabled={!selectedDate}
               >
                 <Plus className="h-3.5 w-3.5 mr-1" />
                 Add
@@ -146,8 +197,8 @@ const OutfitDetails = ({
           </div>
           
           <div className="space-y-1 max-h-64 overflow-y-auto py-1 px-0.5">
-            {wornDates.length > 0 ? (
-              wornDates
+            {localWornDates.length > 0 ? (
+              localWornDates
                 .sort((a, b) => b.getTime() - a.getTime()) // Sort by most recent first
                 .map((date, index) => (
                   <div 
@@ -163,19 +214,17 @@ const OutfitDetails = ({
                       })}</span>
                     </div>
                     
-                    {onDeleteWornDate && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDeleteWornDate(date);
-                        }}
-                      >
-                        <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteWornDate(date);
+                      }}
+                    >
+                      <Trash2 className="h-3.5 w-3.5 text-muted-foreground" />
+                    </Button>
                   </div>
                 ))
             ) : (

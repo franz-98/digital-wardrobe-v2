@@ -58,3 +58,48 @@ export const saveOutfits = (outfits: Outfit[]): void => {
     console.error("Failed to save outfits to localStorage:", e);
   }
 };
+
+/**
+ * Save wear dates for a specific outfit
+ */
+export const saveOutfitWearDates = (outfitId: string, wearDates: Date[]): void => {
+  try {
+    const allOutfits = loadOutfits();
+    
+    const updatedOutfits = allOutfits.map(outfit => {
+      if (outfit.id === outfitId) {
+        // Create metadata object if it doesn't exist
+        const metadata = outfit.metadata || {};
+        
+        // Save dates as ISO strings
+        metadata.wornDates = wearDates.map(date => date.toISOString());
+        
+        return { ...outfit, metadata };
+      }
+      return outfit;
+    });
+    
+    saveOutfits(updatedOutfits);
+    console.log(`Saved wear dates for outfit ${outfitId}:`, wearDates.length, "dates");
+  } catch (e) {
+    console.error(`Failed to save wear dates for outfit ${outfitId}:`, e);
+  }
+};
+
+/**
+ * Load wear dates for a specific outfit
+ */
+export const loadOutfitWearDates = (outfitId: string): Date[] => {
+  try {
+    const allOutfits = loadOutfits();
+    const outfit = allOutfits.find(o => o.id === outfitId);
+    
+    if (outfit?.metadata?.wornDates) {
+      return outfit.metadata.wornDates.map(dateStr => new Date(dateStr));
+    }
+  } catch (e) {
+    console.error(`Failed to load wear dates for outfit ${outfitId}:`, e);
+  }
+  
+  return [];
+};

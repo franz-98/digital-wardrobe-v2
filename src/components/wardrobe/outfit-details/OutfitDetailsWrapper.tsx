@@ -10,7 +10,7 @@ import {
   OutfitItems,
   DeleteOutfitButton
 } from "@/components/wardrobe/outfit-details";
-import { loadOutfits } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
 
 interface OutfitDetailsWrapperProps {
   outfit: Outfit;
@@ -60,6 +60,7 @@ const OutfitDetailsWrapper = ({
   };
 
   const creationDate = outfit.createdAt ? new Date(outfit.createdAt) : new Date();
+  const wornDates = loadOutfitWearDates(outfit.id);
 
   return (
     <div className="flex flex-col h-[100dvh]">
@@ -84,6 +85,7 @@ const OutfitDetailsWrapper = ({
             season={outfit.season || 'All Seasons'}
             colorPalette={getOutfitColorPalette(outfit)}
             outfitId={outfit.id}
+            wornDates={wornDates}
           />
           
           <OutfitItems 

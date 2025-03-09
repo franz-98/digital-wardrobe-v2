@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
   DialogContent, 
@@ -8,6 +7,7 @@ import {
 import ClothingItemDetails from "@/components/ClothingItemDetails";
 import OutfitDetails from "@/components/wardrobe/OutfitDetails";
 import { ClothingItem, Outfit } from "@/components/wardrobe/types";
+import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
 
 interface WardrobeDialogsProps {
   selectedItem: ClothingItem | null;
@@ -39,23 +39,36 @@ const WardrobeDialogs = ({
   const [itemDismissProgress, setItemDismissProgress] = useState(0);
   const [outfitDismissProgress, setOutfitDismissProgress] = useState(0);
   
+  const [currentOutfitId, setCurrentOutfitId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedOutfit) {
+      setCurrentOutfitId(selectedOutfit.id);
+    }
+  }, [selectedOutfit]);
+
+  useEffect(() => {
+    if (!isOutfitDetailsOpen && currentOutfitId) {
+      const allOutfits = loadOutfits();
+      saveOutfits(allOutfits);
+      
+      setCurrentOutfitId(null);
+    }
+  }, [isOutfitDetailsOpen, currentOutfitId]);
+  
   const handleOutfitClick = (outfit: Outfit) => {
     console.log("WardrobeDialogs - outfit clicked:", outfit);
     
-    // First close item details dialog to avoid UI conflicts
     setIsDetailsOpen(false);
     
-    // Process the outfit click immediately
     handleOutfitItemClick(outfit.id);
   };
   
   const handleItemClickFromOutfit = (item: ClothingItem) => {
     console.log("Item clicked from outfit view:", item.name);
     
-    // Close outfit details
     setIsOutfitDetailsOpen(false);
     
-    // Process the item click
     handleOutfitItemClick(item.id);
   };
   

@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { loadOutfits, saveOutfits } from "@/hooks/wardrobe/wardrobe-storage";
+import { loadOutfitWearDates, saveOutfitWearDates } from "@/hooks/wardrobe/wardrobe-storage";
 
 interface WearHistoryManagerProps {
   outfitId: string;
@@ -17,33 +17,8 @@ const WearHistoryManager = ({ outfitId }: WearHistoryManagerProps) => {
 
   // Load wear history from storage on mount
   useEffect(() => {
-    const allOutfits = loadOutfits();
-    const currentOutfit = allOutfits.find(o => o.id === outfitId);
-    
-    if (currentOutfit?.metadata?.wornDates) {
-      setWornDates(currentOutfit.metadata.wornDates.map(dateStr => new Date(dateStr)));
-    } else {
-      // Initialize with defaults if no saved dates
-      const dates: Date[] = [];
-      
-      if (currentOutfit?.createdAt) {
-        dates.push(new Date(currentOutfit.createdAt));
-      }
-      
-      currentOutfit?.items.forEach(item => {
-        if (item.metadata?.dateTaken) {
-          dates.push(new Date(item.metadata.dateTaken));
-        }
-      });
-      
-      const uniqueDatesStr = [...new Set(dates.map(date => date.toISOString()))];
-      setWornDates(uniqueDatesStr.map(dateStr => new Date(dateStr)));
-      
-      // Save these initial dates to storage
-      if (dates.length > 0) {
-        saveWornDatesToStorage(dates);
-      }
-    }
+    const dates = loadOutfitWearDates(outfitId);
+    setWornDates(dates);
   }, [outfitId]);
   
   const handleDateSelect = (date: Date | undefined) => {
@@ -59,7 +34,7 @@ const WearHistoryManager = ({ outfitId }: WearHistoryManagerProps) => {
       if (!dateExists) {
         const updatedDates = [...wornDates, selectedDate];
         setWornDates(updatedDates);
-        saveWornDatesToStorage(updatedDates);
+        saveOutfitWearDates(outfitId, updatedDates);
         console.log(`Added wear date: ${selectedDate.toLocaleDateString()}`);
       } else {
         console.log(`Date already exists: ${selectedDate.toLocaleDateString()}`);
@@ -76,33 +51,8 @@ const WearHistoryManager = ({ outfitId }: WearHistoryManagerProps) => {
     );
     
     setWornDates(updatedDates);
-    saveWornDatesToStorage(updatedDates);
+    saveOutfitWearDates(outfitId, updatedDates);
     console.log(`Deleted wear date: ${dateToDelete.toLocaleDateString()}`);
-  };
-  
-  const saveWornDatesToStorage = (dates: Date[]) => {
-    // Get all outfits from storage
-    const allOutfits = loadOutfits();
-    
-    // Find and update the current outfit
-    const updatedOutfits = allOutfits.map(existingOutfit => {
-      if (existingOutfit.id === outfitId) {
-        // Create a metadata object if it doesn't exist
-        const updatedOutfit = { 
-          ...existingOutfit,
-          metadata: existingOutfit.metadata || {} 
-        };
-        
-        // Save the dates as strings
-        updatedOutfit.metadata.wornDates = dates.map(date => date.toISOString());
-        
-        return updatedOutfit;
-      }
-      return existingOutfit;
-    });
-    
-    // Save all outfits back to storage
-    saveOutfits(updatedOutfits);
   };
 
   return (
