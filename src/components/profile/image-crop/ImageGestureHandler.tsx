@@ -78,7 +78,7 @@ export function ImageGestureHandler({
       
       // Adjust sensitivity for zoom
       const scaleFactor = deltaDistance * 0.01;
-      const newScale = Math.max(0.5, Math.min(3, scale + scaleFactor));
+      const newScale = Math.max(0.1, Math.min(10, scale + scaleFactor));
       
       onScaleChange(newScale);
       setLastTouchDistance(newDistance);
@@ -104,8 +104,8 @@ export function ImageGestureHandler({
     e.preventDefault();
     
     // Adjust scale with wheel (zoom in/out)
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    const newScale = Math.max(0.5, Math.min(3, scale + delta));
+    const delta = e.deltaY > 0 ? -0.2 : 0.2;
+    const newScale = Math.max(0.1, Math.min(10, scale + delta));
     onScaleChange(newScale);
   };
   
