@@ -1,51 +1,44 @@
 
-import { useState, useEffect } from "react";
+import { 
+  usePremiumState,
+  useOutfitCreation,
+  useSearchState,
+  useTabState,
+  useTimeRange
+} from "./wardrobe-ui";
 
 export function useWardrobeUI() {
-  const [isPremium, setIsPremium] = useState(false);
-  const [isCreatingOutfit, setIsCreatingOutfit] = useState(false);
-  const [newOutfitName, setNewOutfitName] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem("activeWardrobeTab") || "clothing";
-  });
-  const [showSearchBar, setShowSearchBar] = useState(false);
-  const [timeRange, setTimeRange] = useState("month");
-  
-  useEffect(() => {
-    localStorage.setItem("activeWardrobeTab", activeTab);
-  }, [activeTab]);
-
-  const toggleSearchBar = () => {
-    setShowSearchBar(!showSearchBar);
-    if (!showSearchBar) {
-      setTimeout(() => {
-        const searchInput = document.getElementById('search');
-        if (searchInput) searchInput.focus();
-      }, 100);
-    } else {
-      setSearchTerm("");
-    }
-  };
-
-  const togglePremium = () => {
-    setIsPremium(!isPremium);
-  };
+  const { isPremium, setIsPremium, togglePremium } = usePremiumState();
+  const { isCreatingOutfit, setIsCreatingOutfit, newOutfitName, setNewOutfitName } = useOutfitCreation();
+  const { searchTerm, setSearchTerm, showSearchBar, toggleSearchBar } = useSearchState();
+  const { activeTab, setActiveTab } = useTabState();
+  const { timeRange, setTimeRange } = useTimeRange();
 
   return {
+    // Premium state
     isPremium,
     setIsPremium,
+    
+    // Outfit creation state
     isCreatingOutfit,
     setIsCreatingOutfit,
     newOutfitName,
     setNewOutfitName,
+    
+    // Search state
     searchTerm,
     setSearchTerm,
+    showSearchBar,
+    
+    // Tab state
     activeTab,
     setActiveTab,
-    showSearchBar,
+    
+    // Time range state
     timeRange,
     setTimeRange,
+    
+    // Actions
     toggleSearchBar,
     togglePremium
   };
