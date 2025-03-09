@@ -1,14 +1,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { RecentUpload } from "@/components/home/types";
+import { get } from "@/utils/api";
 
 export const useRecentUploads = () => {
   return useQuery({
     queryKey: ["recentUploads"],
     queryFn: async () => {
-      const response = await fetch("/api/recent");
-      if (!response.ok) throw new Error("Failed to fetch recent uploads");
-      return response.json() as Promise<RecentUpload[]>;
+      return get<RecentUpload[]>("/api/recent");
     },
     placeholderData: [
       {

@@ -19,6 +19,9 @@ interface RegisterData {
   password: string;
 }
 
+// Replace with your actual FastAPI backend URL
+const API_BASE_URL = 'http://localhost:8000'; // Update this with your actual FastAPI URL
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -59,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const fetchUserData = async (authToken: string) => {
-    const response = await fetch('YOUR_FASTAPI_URL/users/me', {
+    const response = await fetch(`${API_BASE_URL}/users/me`, {
       headers: {
         'Authorization': `Bearer ${authToken}`
       }
@@ -83,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(mockUser);
       } else {
         // Real login with API
-        const response = await fetch('YOUR_FASTAPI_URL/auth/login', {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -115,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async () => {
     setIsLoading(true);
     try {
-      window.location.href = 'YOUR_FASTAPI_URL/auth/google/login';
+      window.location.href = `${API_BASE_URL}/auth/google/login`;
     } catch (error) {
       console.error('Google login error:', error);
       throw error;
@@ -127,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithApple = async () => {
     setIsLoading(true);
     try {
-      window.location.href = 'YOUR_FASTAPI_URL/auth/apple/login';
+      window.location.href = `${API_BASE_URL}/auth/apple/login`;
     } catch (error) {
       console.error('Apple login error:', error);
       throw error;
@@ -139,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (userData: RegisterData) => {
     setIsLoading(true);
     try {
-      const response = await fetch('YOUR_FASTAPI_URL/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

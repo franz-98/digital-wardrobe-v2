@@ -1,6 +1,6 @@
 
 /**
- * Utility functions for making authenticated API requests
+ * Utility functions for making authenticated API requests to your FastAPI backend
  */
 
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -12,7 +12,7 @@ interface RequestOptions {
 }
 
 // Base API URL - replace with your FastAPI endpoint
-const API_BASE_URL = 'YOUR_FASTAPI_URL';
+const API_BASE_URL = 'http://localhost:8000'; // Update this with your actual FastAPI URL
 
 /**
  * Makes an authenticated request to the API
