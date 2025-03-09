@@ -6,8 +6,7 @@ import { useWardrobeActions } from "./useWardrobeActions";
 import { useNavigationEffects } from "./useNavigationEffects";
 import { Outfit } from "@/components/wardrobe/types";
 
-// Define the function with a different name internally
-function _useWardrobeState() {
+export function useWardrobeState() {
   const {
     clothingItems,
     setClothingItems,
@@ -154,6 +153,3 @@ function _useWardrobeState() {
     updateItemMetadata
   };
 }
-
-// Export the function with the expected name
-export const useWardrobeState = _useWardrobeState;
