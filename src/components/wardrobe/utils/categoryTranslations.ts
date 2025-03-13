@@ -1,22 +1,22 @@
 
 /**
- * Maps English category names to their Italian translations
+ * Maps English category names to their Italian translations (in singular form)
  */
 export const englishToItalianCategories: Record<string, string> = {
-  "Tops": "Maglie",
-  "Bottoms": "Pantaloni",
-  "Dresses": "Vestiti",
-  "Outerwear": "Capispalla",
-  "Footwear": "Calzature",
-  "Accessories": "Accessori",
+  "Tops": "Maglia",
+  "Bottoms": "Pantalone",
+  "Dresses": "Vestito",
+  "Outerwear": "Capospalla",
+  "Footwear": "Calzatura",
+  "Accessories": "Accessorio",
   "Underwear": "Intimo",
-  "Swimwear": "Costumi da bagno",
+  "Swimwear": "Costume da bagno",
   "Sportswear": "Abbigliamento sportivo",
-  "Sleepwear": "Pigiami",
+  "Sleepwear": "Pigiama",
   "Formal": "Formale",
   "Casual": "Casual",
   "Business": "Business",
-  "Shoes": "Scarpe",
+  "Shoes": "Scarpa",
   "Uncategorized": "Non categorizzato"
 };
 
