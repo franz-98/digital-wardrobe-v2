@@ -2,6 +2,7 @@
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
 import { ClothingItem } from '@/components/wardrobe/types';
+import { translateCategoryToItalian } from '@/components/wardrobe/utils/categoryTranslations';
 
 interface OutfitItemsProps {
   items: ClothingItem[];
@@ -31,7 +32,7 @@ const OutfitItems = ({ items, onItemClick }: OutfitItemsProps) => {
             <div>
               <p className="font-medium">{item.name}</p>
               <div className="flex items-center gap-2">
-                <p className="text-xs text-muted-foreground">{item.category}</p>
+                <p className="text-xs text-muted-foreground">{translateCategoryToItalian(item.category)}</p>
                 <Badge 
                   variant="outline" 
                   className="text-xs h-4 px-1.5 bg-secondary/10"

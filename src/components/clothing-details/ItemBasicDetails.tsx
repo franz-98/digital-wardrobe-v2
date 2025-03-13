@@ -6,6 +6,7 @@ import { EditableTitle } from "@/components/ui/editable-title";
 import { useWardrobe } from "@/context/WardrobeContext";
 import { colorNameToHex } from "@/components/wardrobe/utils/colorUtils";
 import { ClothingItem } from "@/components/wardrobe/types";
+import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 
 interface ItemBasicDetailsProps {
   item: ClothingItem;
@@ -31,6 +32,7 @@ const ItemBasicDetails = ({ item }: ItemBasicDetailsProps) => {
   };
 
   const colorHex = colorNameToHex(item.color);
+  const translatedCategory = translateCategoryToItalian(item.category);
   
   return (
     <div className="flex flex-col justify-between h-full">
@@ -40,7 +42,7 @@ const ItemBasicDetails = ({ item }: ItemBasicDetailsProps) => {
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Category:</span>
             <Badge variant="outline" className="text-xs">
-              {item.category}
+              {translatedCategory}
             </Badge>
           </div>
           <div className="flex items-center justify-between">

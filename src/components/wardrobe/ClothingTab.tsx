@@ -4,6 +4,7 @@ import ClothingItemCard from "@/components/ClothingItemCard";
 import { Shirt, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { translateCategoryToItalian } from "./utils/categoryTranslations";
 
 interface ClothingItem {
   id: string;
@@ -31,6 +32,7 @@ interface ClothingTabProps {
 
 type CategorySection = {
   category: string;
+  displayCategory: string;
   items: ClothingItem[];
   isOpen: boolean;
 };
@@ -81,6 +83,7 @@ const ClothingTab = ({
     return Object.entries(categories)
       .map(([category, items]) => ({
         category,
+        displayCategory: translateCategoryToItalian(category),
         items,
         isOpen: true, // Initially all categories are expanded
       }))
@@ -121,7 +124,7 @@ const ClothingTab = ({
 
   return (
     <div className="space-y-6 pb-20">
-      {categorySections.map(({ category, items, isOpen }) => (
+      {categorySections.map(({ category, displayCategory, items, isOpen }) => (
         <div key={category} className="space-y-3">
           <div 
             className="flex items-center justify-between bg-background p-2 rounded-md shadow-sm cursor-pointer"
@@ -129,7 +132,7 @@ const ClothingTab = ({
           >
             <div className="flex items-center gap-2">
               <Shirt className="h-4 w-4 text-muted-foreground" />
-              <h3 className="font-medium">{category}</h3>
+              <h3 className="font-medium">{displayCategory}</h3>
               <Badge variant="outline" className="ml-2">{items.length}</Badge>
             </div>
             {isOpen ? (

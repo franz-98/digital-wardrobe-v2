@@ -4,6 +4,7 @@ import { Shirt } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ClothingItem } from "@/components/wardrobe/types";
+import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 
 interface OutfitItemsListProps {
   items: ClothingItem[];
@@ -38,7 +39,7 @@ const OutfitItemsList = ({ items, onItemClick }: OutfitItemsListProps) => {
                 <h4 className="font-medium text-sm">{outfitItem.name}</h4>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <Badge variant="outline" className="text-xs bg-secondary/10">
-                    {outfitItem.category}
+                    {translateCategoryToItalian(outfitItem.category)}
                   </Badge>
                   <div className="flex items-center gap-1">
                     <div 

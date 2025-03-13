@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ExpandableSection from './ExpandableSection';
 import { ClothingItem } from '../types';
+import { translateCategoryToItalian } from '../utils/categoryTranslations';
 
 interface CategoryStat {
   category: string;
+  displayCategory: string;
   count: number;
   percentage: number;
 }
@@ -34,6 +36,7 @@ const CategoryDistribution: React.FC<CategoryDistributionProps> = ({ clothingIte
     return Object.entries(categories)
       .map(([category, count]) => ({
         category,
+        displayCategory: translateCategoryToItalian(category),
         count,
         percentage: total > 0 ? Math.round((count / total) * 100) : 0
       }))
@@ -49,10 +52,10 @@ const CategoryDistribution: React.FC<CategoryDistributionProps> = ({ clothingIte
     <Card className="p-4">
       <ExpandableSection title="Wardrobe Composition">
         <div className="space-y-3">
-          {displayedCategories.map(({ category, percentage }) => (
-            <div key={category}>
+          {displayedCategories.map(({ displayCategory, percentage }) => (
+            <div key={displayCategory}>
               <div className="flex justify-between items-center">
-                <span className="text-sm">{category}</span>
+                <span className="text-sm">{displayCategory}</span>
                 <span className="font-medium text-sm">{percentage}%</span>
               </div>
               <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
