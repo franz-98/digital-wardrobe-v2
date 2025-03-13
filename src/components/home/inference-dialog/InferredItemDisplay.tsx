@@ -76,16 +76,16 @@ const InferredItemDisplay = ({
               value={item.category || ""}
               onValueChange={(value) => onFieldChange('category', value)}
             >
-              <SelectTrigger id="category" className="touch-manipulation">
+              <SelectTrigger id="category" className="touch-manipulation h-12">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent className="touch-manipulation" position="popper" sideOffset={5}>
-                <ScrollArea className="h-[180px] touch-manipulation">
+                <ScrollArea className="h-[200px] touch-manipulation">
                   {clothingCategories.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
-                      className="py-3 touch-manipulation"
+                      className="py-4 px-3 touch-manipulation"
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>
@@ -103,7 +103,7 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('color', e.target.value)}
               placeholder="Inserisci colore"
               autoFocus={false}
-              className="touch-manipulation"
+              className="touch-manipulation h-12"
             />
           </div>
         </div>

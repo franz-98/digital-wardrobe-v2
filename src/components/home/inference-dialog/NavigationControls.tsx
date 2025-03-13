@@ -16,6 +16,16 @@ const NavigationControls = ({
 }: NavigationControlsProps) => {
   if (totalItems <= 1) return null;
   
+  const handlePrev = () => {
+    console.log("Navigation: previous clicked");
+    onNavigate('prev');
+  };
+  
+  const handleNext = () => {
+    console.log("Navigation: next clicked");
+    onNavigate('next');
+  };
+  
   return (
     <div className="flex items-center justify-between text-sm">
       <span>Articolo {currentIndex + 1} di {totalItems}</span>
@@ -23,22 +33,22 @@ const NavigationControls = ({
         <Button 
           variant="outline" 
           size="icon"
-          onClick={() => onNavigate('prev')}
+          onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
-          className="h-9 w-9 touch-manipulation"
+          className="h-10 w-10 touch-manipulation"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-6 w-6" />
         </Button>
         <Button 
           variant="outline" 
           size="icon"
-          onClick={() => onNavigate('next')}
+          onClick={handleNext}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
-          className="h-9 w-9 touch-manipulation"
+          className="h-10 w-10 touch-manipulation"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-6 w-6" />
         </Button>
       </div>
     </div>

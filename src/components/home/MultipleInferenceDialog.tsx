@@ -55,10 +55,10 @@ const MultipleInferenceDialog = ({
 
   const handleNavigate = (direction: 'prev' | 'next') => {
     console.log(`Navigation triggered: ${direction}`);
-    if (direction === 'prev') {
-      setCurrentIndex(prev => Math.max(0, prev - 1));
-    } else {
-      setCurrentIndex(prev => Math.min(totalItems - 1, prev + 1));
+    if (direction === 'prev' && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    } else if (direction === 'next' && currentIndex < totalItems - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -130,19 +130,19 @@ const MultipleInferenceDialog = ({
         </DialogHeader>
 
         <ScrollArea className="max-h-[60vh] touch-manipulation">
-          <div 
-            className="space-y-4 py-2"
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-          >
+          <div className="space-y-4 py-2">
             <NavigationControls 
               currentIndex={currentIndex}
               totalItems={totalItems}
               onNavigate={handleNavigate}
             />
 
-            <div className="opacity-100 transition-opacity duration-150">
+            <div 
+              className="opacity-100 transition-opacity duration-150"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
               <InferredItemDisplay 
                 item={currentItem}
                 onFieldChange={handleCurrentItemChange}
