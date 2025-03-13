@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 
 interface ItemInference {
   id: string;
@@ -107,7 +108,7 @@ const InferenceDialog = ({
                     <SelectContent>
                       {clothingCategories.map((category) => (
                         <SelectItem key={category} value={category}>
-                          {category}
+                          {translateCategoryToItalian(category)}
                         </SelectItem>
                       ))}
                     </SelectContent>

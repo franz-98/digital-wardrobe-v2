@@ -11,6 +11,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { ItemInference } from "../types";
+import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 
 interface InferredItemDisplayProps {
   item: ItemInference;
@@ -59,7 +60,7 @@ const InferredItemDisplay = ({
               <SelectContent>
                 {clothingCategories.map((category) => (
                   <SelectItem key={category} value={category}>
-                    {category}
+                    {translateCategoryToItalian(category)}
                   </SelectItem>
                 ))}
               </SelectContent>
