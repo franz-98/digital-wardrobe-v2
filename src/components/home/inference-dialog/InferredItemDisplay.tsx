@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemInference } from "../types";
 import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 import { translateColorToItalianFashion } from "@/components/wardrobe/utils/italianColorTranslations";
@@ -77,12 +78,14 @@ const InferredItemDisplay = ({
               <SelectTrigger id="category">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
-              <SelectContent>
-                {clothingCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {translateCategoryToItalian(category)}
-                  </SelectItem>
-                ))}
+              <SelectContent className="max-h-[200px]">
+                <ScrollArea className="h-[200px]">
+                  {clothingCategories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {translateCategoryToItalian(category)}
+                    </SelectItem>
+                  ))}
+                </ScrollArea>
               </SelectContent>
             </Select>
           </div>
