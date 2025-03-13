@@ -1,10 +1,12 @@
 
 import { ItemInference, RecentUpload, ClothingItem } from "./types";
-import { createFileUploadHandlers } from "./handlers/file-upload-handlers";
-import { createItemClickHandlers } from "./handlers/item-click-handlers";
-import { createInferenceConfirmationHandlers } from "./handlers/inference-confirmation-handlers";
-import { createInferenceEditHandlers } from "./handlers/inference-edit-handlers";
-import { createDialogHandlers } from "./handlers/dialog-handlers";
+import { 
+  createFileUploadHandlers,
+  createItemClickHandlers,
+  createInferenceConfirmationHandlers,
+  createInferenceEditHandlers,
+  createDialogHandlers 
+} from "./handlers";
 
 /**
  * Create handlers for item inference operations
