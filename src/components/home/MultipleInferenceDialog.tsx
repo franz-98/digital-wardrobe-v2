@@ -34,12 +34,7 @@ const MultipleInferenceDialog = ({
 }: MultipleInferenceDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>(inferredItems);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
-  // Minimum distance required for swipe to register
-  const minSwipeDistance = 50;
-
   // Reset state when dialog opens with new items
   useEffect(() => {
     if (open && inferredItems.length > 0) {
@@ -60,35 +55,6 @@ const MultipleInferenceDialog = ({
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
       setCurrentIndex(currentIndex + 1);
     }
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe && currentIndex < totalItems - 1) {
-      handleNavigate('next');
-    }
-    
-    if (isRightSwipe && currentIndex > 0) {
-      handleNavigate('prev');
-    }
-    
-    // Reset touch coordinates
-    setTouchStart(null);
-    setTouchEnd(null);
   };
 
   const handleCancel = () => {
@@ -137,12 +103,7 @@ const MultipleInferenceDialog = ({
               onNavigate={handleNavigate}
             />
 
-            <div 
-              className="opacity-100 transition-opacity duration-150"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-            >
+            <div className="opacity-100 transition-opacity duration-150">
               <InferredItemDisplay 
                 item={currentItem}
                 onFieldChange={handleCurrentItemChange}

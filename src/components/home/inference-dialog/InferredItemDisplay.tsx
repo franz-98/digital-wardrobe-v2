@@ -66,7 +66,7 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('name', e.target.value)}
               placeholder="Inserisci nome"
               autoFocus={false}
-              className="touch-manipulation"
+              className="touch-manipulation h-12"
             />
           </div>
           
@@ -80,12 +80,12 @@ const InferredItemDisplay = ({
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent className="touch-manipulation" position="popper" sideOffset={5}>
-                <ScrollArea className="h-[200px] touch-manipulation">
+                <ScrollArea className="h-[240px] touch-manipulation">
                   {clothingCategories.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
-                      className="py-4 px-3 touch-manipulation"
+                      className="py-5 px-4 touch-manipulation text-base"
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>
