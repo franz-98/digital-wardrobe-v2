@@ -61,6 +61,7 @@ const NavigationControls = ({
           size="sm"
           onClick={() => onNavigate('prev')}
           disabled={currentIndex === 0}
+          aria-label="Articolo precedente"
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
@@ -69,6 +70,7 @@ const NavigationControls = ({
           size="sm"
           onClick={() => onNavigate('next')}
           disabled={currentIndex === totalItems - 1}
+          aria-label="Articolo successivo"
         >
           <ArrowRight className="h-4 w-4" />
         </Button>
