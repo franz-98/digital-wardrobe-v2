@@ -34,16 +34,10 @@ const InferredItemDisplay = ({
       // Format: "[Category] [Color]" in Italian
       const generatedName = `${italianCategory} ${italianColor}`;
       
-      // Only update if the name is empty or matches a previous auto-generated format
-      const shouldUpdateName = !item.name || 
-        (item.name.includes(translateCategoryToItalian(item.category)) || 
-         clothingCategories.some(cat => item.name.includes(translateCategoryToItalian(cat))));
-      
-      if (shouldUpdateName) {
-        onFieldChange('name', generatedName);
-      }
+      // Always update the name when category or color changes
+      onFieldChange('name', generatedName);
     }
-  }, [item.category, item.color, onFieldChange, clothingCategories, item.name]);
+  }, [item.category, item.color, onFieldChange]);
 
   return (
     <div className="space-y-2 bg-secondary/10 p-3 rounded-md">
