@@ -34,15 +34,33 @@ const MultipleInferenceDialog = ({
 }: MultipleInferenceDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>(inferredItems);
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  
-  // Touch handling for swiping between items
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
   // Minimum distance required for swipe to register
   const minSwipeDistance = 50;
+
+  // Reset state when dialog opens with new items
+  useEffect(() => {
+    if (open && inferredItems.length > 0) {
+      setItemsToAdd(inferredItems);
+      setCurrentIndex(0);
+    }
+  }, [open, inferredItems]);
+
+  if (!inferredItems.length) return null;
+  
+  const currentItem = itemsToAdd[currentIndex];
+  const totalItems = itemsToAdd.length;
+
+  const handleNavigate = (direction: 'prev' | 'next') => {
+    console.log(`Navigation triggered: ${direction}`);
+    if (direction === 'prev') {
+      setCurrentIndex(prev => Math.max(0, prev - 1));
+    } else {
+      setCurrentIndex(prev => Math.min(totalItems - 1, prev + 1));
+    }
+  };
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -71,37 +89,6 @@ const MultipleInferenceDialog = ({
     // Reset touch coordinates
     setTouchStart(null);
     setTouchEnd(null);
-  };
-  
-  // Reset state when dialog opens with new items
-  useEffect(() => {
-    if (open && inferredItems.length > 0) {
-      setItemsToAdd(inferredItems);
-      setCurrentIndex(0);
-      setSwipeDirection(null);
-    }
-  }, [open, inferredItems]);
-
-  if (!inferredItems.length) return null;
-  
-  const currentItem = itemsToAdd[currentIndex];
-  const totalItems = itemsToAdd.length;
-
-  const handleNavigate = (direction: 'prev' | 'next') => {
-    if (isTransitioning) return;
-    
-    setIsTransitioning(true);
-    setSwipeDirection(direction === 'prev' ? 'right' : 'left');
-    
-    // Short delay to allow animation to complete
-    setTimeout(() => {
-      const newIndex = direction === 'prev' 
-        ? Math.max(0, currentIndex - 1)
-        : Math.min(totalItems - 1, currentIndex + 1);
-      
-      setCurrentIndex(newIndex);
-      setIsTransitioning(false);
-    }, 200);
   };
 
   const handleCancel = () => {
@@ -142,7 +129,7 @@ const MultipleInferenceDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[60vh]">
+        <ScrollArea className="max-h-[60vh] touch-manipulation">
           <div 
             className="space-y-4 py-2"
             onTouchStart={onTouchStart}
@@ -155,15 +142,7 @@ const MultipleInferenceDialog = ({
               onNavigate={handleNavigate}
             />
 
-            <div 
-              className={`transition-all duration-200 ease-in-out ${
-                isTransitioning 
-                  ? swipeDirection === 'left' 
-                    ? 'opacity-0 translate-x-4' 
-                    : 'opacity-0 -translate-x-4'
-                  : 'opacity-100 translate-x-0'
-              }`}
-            >
+            <div className="opacity-100 transition-opacity duration-150">
               <InferredItemDisplay 
                 item={currentItem}
                 onFieldChange={handleCurrentItemChange}

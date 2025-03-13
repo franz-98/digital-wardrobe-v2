@@ -66,6 +66,7 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('name', e.target.value)}
               placeholder="Inserisci nome"
               autoFocus={false}
+              className="touch-manipulation"
             />
           </div>
           
@@ -75,13 +76,17 @@ const InferredItemDisplay = ({
               value={item.category || ""}
               onValueChange={(value) => onFieldChange('category', value)}
             >
-              <SelectTrigger id="category">
+              <SelectTrigger id="category" className="touch-manipulation">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
-              <SelectContent className="max-h-[200px]">
-                <ScrollArea className="h-[200px]">
+              <SelectContent className="touch-manipulation" position="popper" sideOffset={5}>
+                <ScrollArea className="h-[180px] touch-manipulation">
                   {clothingCategories.map((category) => (
-                    <SelectItem key={category} value={category}>
+                    <SelectItem 
+                      key={category} 
+                      value={category}
+                      className="py-3 touch-manipulation"
+                    >
                       {translateCategoryToItalian(category)}
                     </SelectItem>
                   ))}
@@ -98,6 +103,7 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('color', e.target.value)}
               placeholder="Inserisci colore"
               autoFocus={false}
+              className="touch-manipulation"
             />
           </div>
         </div>
