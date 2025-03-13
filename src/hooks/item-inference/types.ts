@@ -5,6 +5,12 @@ import { ClothingItem } from "@/components/wardrobe/types";
 // Re-export types that are used in this feature
 export type { RecentUpload, ItemInference, ClothingItem };
 
+// New type for the inference response with multiple items
+export interface InferenceResponse {
+  items: ItemInference[];
+  imageUrl: string;
+}
+
 // Constants for local storage keys
 export const STORAGE_KEYS = {
   RECENT_UPLOADS: 'recentUploadItems',

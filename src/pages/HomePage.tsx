@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 // Import hooks
@@ -10,6 +11,7 @@ import UploadArea from "@/components/home/UploadArea";
 import HowItWorksGuide from "@/components/home/HowItWorksGuide";
 import RecentUploadsSection from "@/components/home/RecentUploadsSection";
 import InferenceDialog from "@/components/home/InferenceDialog";
+import MultipleInferenceDialog from "@/components/home/MultipleInferenceDialog";
 
 const CLOTHING_CATEGORIES = [
   "Tops",
@@ -34,14 +36,23 @@ const HomePage = () => {
   // Use custom hooks for state management and item inference
   const {
     isUploading,
+    // Single item inference
     selectedItem,
     inferenceDialogOpen,
+    // Multiple items inference
+    inferredItems,
+    multipleInferenceDialogOpen,
+    // Recent uploads
     recentUploadItems,
+    // Handlers
     handleFileChange,
     handleRecentItemClick,
-    confirmInference,
-    handleInferenceEdit,
-    handleDialogOpenChange,
+    confirmSingleInference,
+    confirmMultipleInference,
+    handleSingleInferenceEdit,
+    handleMultipleInferenceEdit,
+    handleSingleDialogOpenChange,
+    handleMultipleDialogOpenChange,
   } = useItemInference();
 
   return (
@@ -63,12 +74,23 @@ const HomePage = () => {
         />
       </div>
 
+      {/* Single item inference dialog */}
       <InferenceDialog 
         open={inferenceDialogOpen}
-        onOpenChange={handleDialogOpenChange}
+        onOpenChange={handleSingleDialogOpenChange}
         selectedItem={selectedItem}
-        onConfirm={confirmInference}
-        onFieldChange={handleInferenceEdit}
+        onConfirm={confirmSingleInference}
+        onFieldChange={handleSingleInferenceEdit}
+        clothingCategories={CLOTHING_CATEGORIES}
+      />
+
+      {/* Multiple items inference dialog */}
+      <MultipleInferenceDialog
+        open={multipleInferenceDialogOpen}
+        onOpenChange={handleMultipleDialogOpenChange}
+        inferredItems={inferredItems}
+        onConfirm={confirmMultipleInference}
+        onFieldChange={handleMultipleInferenceEdit}
         clothingCategories={CLOTHING_CATEGORIES}
       />
     </div>

@@ -12,8 +12,14 @@ import { createInferenceHandlers } from "./item-inference/inference-handlers";
 export const useItemInference = () => {
   const navigate = useNavigate();
   const [isUploading, setIsUploading] = useState(false);
+  
+  // State for single item inference
   const [selectedItem, setSelectedItem] = useState<ItemInference | null>(null);
   const [inferenceDialogOpen, setInferenceDialogOpen] = useState(false);
+  
+  // State for multiple items inference
+  const [inferredItems, setInferredItems] = useState<ItemInference[]>([]);
+  const [multipleInferenceDialogOpen, setMultipleInferenceDialogOpen] = useState(false);
   
   const { setClothingItems, clothingItems } = useWardrobeData();
   
@@ -30,9 +36,6 @@ export const useItemInference = () => {
     }
   }, [clothingItems, lastAddedItem]);
 
-  // Store inferred items
-  const [inferredItems, setInferredItems] = useState<ItemInference[]>(DEFAULT_INFERRED_ITEMS);
-
   // Load and manage recent uploads
   const [recentUploadItems, setRecentUploadItems] = useState(loadRecentUploads);
 
@@ -45,6 +48,8 @@ export const useItemInference = () => {
   const handlers = createInferenceHandlers(
     setSelectedItem,
     setInferenceDialogOpen,
+    setMultipleInferenceDialogOpen,
+    setInferredItems,
     setIsUploading,
     setRecentUploadItems,
     setClothingItems,
@@ -52,32 +57,53 @@ export const useItemInference = () => {
   );
 
   // Wrap handlers to use the current state
-  const confirmInference = () => {
-    handlers.confirmInference(selectedItem);
-    handlers.handleDialogOpenChange(false, setInferenceDialogOpen, setSelectedItem);
+  const confirmSingleInference = () => {
+    handlers.confirmSingleInference(selectedItem);
+    handlers.handleSingleDialogOpenChange(false, setInferenceDialogOpen, setSelectedItem);
   };
 
-  const handleInferenceEdit = (field: keyof ItemInference, value: string) => {
+  const confirmMultipleInference = (items: ItemInference[]) => {
+    handlers.confirmMultipleInference(items);
+  };
+
+  const handleSingleInferenceEdit = (field: keyof ItemInference, value: string) => {
     const updatedItem = handlers.handleInferenceEdit(selectedItem, field, value);
     if (updatedItem) {
       setSelectedItem(updatedItem);
     }
   };
 
-  const handleDialogOpenChange = (open: boolean) => {
-    handlers.handleDialogOpenChange(open, setInferenceDialogOpen, setSelectedItem);
+  const handleMultipleInferenceEdit = (itemIndex: number, field: keyof ItemInference, value: string) => {
+    const updatedItems = handlers.handleMultipleInferenceEdit(inferredItems, itemIndex, field, value);
+    setInferredItems(updatedItems);
+  };
+
+  const handleSingleDialogOpenChange = (open: boolean) => {
+    handlers.handleSingleDialogOpenChange(open, setInferenceDialogOpen, setSelectedItem);
+  };
+
+  const handleMultipleDialogOpenChange = (open: boolean) => {
+    handlers.handleMultipleDialogOpenChange(open, setMultipleInferenceDialogOpen, setInferredItems);
   };
 
   return {
     isUploading,
+    // Single item inference
     selectedItem,
     inferenceDialogOpen,
+    // Multiple items inference
     inferredItems,
+    multipleInferenceDialogOpen,
+    // Recent uploads
     recentUploadItems,
+    // Handlers
     handleFileChange: handlers.handleFileChange,
     handleRecentItemClick: handlers.handleRecentItemClick,
-    confirmInference,
-    handleInferenceEdit,
-    handleDialogOpenChange,
+    confirmSingleInference,
+    confirmMultipleInference,
+    handleSingleInferenceEdit,
+    handleMultipleInferenceEdit,
+    handleSingleDialogOpenChange,
+    handleMultipleDialogOpenChange,
   };
 };
