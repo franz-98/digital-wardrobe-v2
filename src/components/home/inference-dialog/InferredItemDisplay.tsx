@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { ItemInference } from "../types";
 import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
+import { translateColorToItalianFashion } from "@/components/wardrobe/utils/italianColorTranslations";
 
 interface InferredItemDisplayProps {
   item: ItemInference;
@@ -24,6 +25,26 @@ const InferredItemDisplay = ({
   onFieldChange, 
   clothingCategories 
 }: InferredItemDisplayProps) => {
+  // Generate item name whenever category or color changes
+  useEffect(() => {
+    if (item.category && item.color) {
+      const italianCategory = translateCategoryToItalian(item.category);
+      const italianColor = translateColorToItalianFashion(item.color);
+      
+      // Format: "[Category] [Color]" in Italian
+      const generatedName = `${italianCategory} ${italianColor}`;
+      
+      // Only update if the name is empty or matches a previous auto-generated format
+      const shouldUpdateName = !item.name || 
+        (item.name.includes(translateCategoryToItalian(item.category)) || 
+         clothingCategories.some(cat => item.name.includes(translateCategoryToItalian(cat))));
+      
+      if (shouldUpdateName) {
+        onFieldChange('name', generatedName);
+      }
+    }
+  }, [item.category, item.color, onFieldChange, clothingCategories, item.name]);
+
   return (
     <div className="space-y-2 bg-secondary/10 p-3 rounded-md">
       <h4 className="font-medium">Indumento</h4>
