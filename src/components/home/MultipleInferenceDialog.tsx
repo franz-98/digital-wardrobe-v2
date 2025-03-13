@@ -36,6 +36,42 @@ const MultipleInferenceDialog = ({
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   
+  // Touch handling for swiping between items
+  const [touchStart, setTouchStart] = React.useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = React.useState<number | null>(null);
+  
+  // Minimum distance required for swipe to register
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe && currentIndex < totalItems - 1) {
+      handleNavigate('next');
+    }
+    
+    if (isRightSwipe && currentIndex > 0) {
+      handleNavigate('prev');
+    }
+    
+    // Reset touch coordinates
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
+  
   // Reset state when dialog opens with new items
   useEffect(() => {
     if (open && inferredItems.length > 0) {
@@ -105,7 +141,12 @@ const MultipleInferenceDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
+        <div 
+          className="space-y-4 py-2"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <NavigationControls 
             currentIndex={currentIndex}
             totalItems={totalItems}

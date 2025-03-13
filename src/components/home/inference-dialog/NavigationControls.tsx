@@ -53,12 +53,7 @@ const NavigationControls = ({
   if (totalItems <= 1) return null;
   
   return (
-    <div 
-      className="flex items-center justify-between text-sm"
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
+    <div className="flex items-center justify-between text-sm">
       <span>Articolo {currentIndex + 1} di {totalItems}</span>
       <div className="flex space-x-2">
         <Button 
