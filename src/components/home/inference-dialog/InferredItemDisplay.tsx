@@ -27,7 +27,7 @@ const InferredItemDisplay = ({
 }: InferredItemDisplayProps) => {
   // Generate item name whenever category or color changes
   useEffect(() => {
-    if (item.category && item.color) {
+    if (item && item.category && item.color) {
       const italianCategory = translateCategoryToItalian(item.category);
       const italianColor = translateColorToItalianFashion(item.color);
       
@@ -37,7 +37,12 @@ const InferredItemDisplay = ({
       // Always update the name when category or color changes
       onFieldChange('name', generatedName);
     }
-  }, [item.category, item.color, onFieldChange]);
+  }, [item?.category, item?.color, onFieldChange]);
+
+  // Early return if item is undefined or null
+  if (!item) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-2 bg-secondary/10 p-3 rounded-md">
@@ -56,7 +61,7 @@ const InferredItemDisplay = ({
             <Label htmlFor="name">Nome</Label>
             <Input 
               id="name"
-              value={item.name}
+              value={item.name || ""}
               onChange={(e) => onFieldChange('name', e.target.value)}
               placeholder="Inserisci nome"
               autoFocus={false}
@@ -66,7 +71,7 @@ const InferredItemDisplay = ({
           <div>
             <Label htmlFor="category">Categoria</Label>
             <Select 
-              value={item.category}
+              value={item.category || ""}
               onValueChange={(value) => onFieldChange('category', value)}
             >
               <SelectTrigger id="category">
@@ -86,7 +91,7 @@ const InferredItemDisplay = ({
             <Label htmlFor="color">Colore</Label>
             <Input 
               id="color"
-              value={item.color}
+              value={item.color || ""}
               onChange={(e) => onFieldChange('color', e.target.value)}
               placeholder="Inserisci colore"
               autoFocus={false}

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Dialog, 
   DialogContent,
@@ -33,12 +33,15 @@ const MultipleInferenceDialog = ({
 }: MultipleInferenceDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>(inferredItems);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
   // Reset state when dialog opens with new items
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && inferredItems.length > 0) {
       setItemsToAdd(inferredItems);
       setCurrentIndex(0);
+      setSwipeDirection(null);
     }
   }, [open, inferredItems]);
 
@@ -48,11 +51,20 @@ const MultipleInferenceDialog = ({
   const totalItems = itemsToAdd.length;
 
   const handleNavigate = (direction: 'prev' | 'next') => {
-    const newIndex = direction === 'prev' 
-      ? Math.max(0, currentIndex - 1)
-      : Math.min(totalItems - 1, currentIndex + 1);
+    if (isTransitioning) return;
     
-    setCurrentIndex(newIndex);
+    setIsTransitioning(true);
+    setSwipeDirection(direction === 'prev' ? 'right' : 'left');
+    
+    // Short delay to allow animation to complete
+    setTimeout(() => {
+      const newIndex = direction === 'prev' 
+        ? Math.max(0, currentIndex - 1)
+        : Math.min(totalItems - 1, currentIndex + 1);
+      
+      setCurrentIndex(newIndex);
+      setIsTransitioning(false);
+    }, 200);
   };
 
   const handleCancel = () => {
@@ -100,11 +112,21 @@ const MultipleInferenceDialog = ({
             onNavigate={handleNavigate}
           />
 
-          <InferredItemDisplay 
-            item={currentItem}
-            onFieldChange={handleCurrentItemChange}
-            clothingCategories={clothingCategories}
-          />
+          <div 
+            className={`transition-all duration-200 ease-in-out ${
+              isTransitioning 
+                ? swipeDirection === 'left' 
+                  ? 'opacity-0 translate-x-4' 
+                  : 'opacity-0 -translate-x-4'
+                : 'opacity-100 translate-x-0'
+            }`}
+          >
+            <InferredItemDisplay 
+              item={currentItem}
+              onFieldChange={handleCurrentItemChange}
+              clothingCategories={clothingCategories}
+            />
+          </div>
         </div>
 
         <DialogActions 
