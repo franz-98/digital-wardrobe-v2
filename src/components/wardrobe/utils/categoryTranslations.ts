@@ -3,6 +3,7 @@
  * Maps English category names to their Italian translations (in singular form)
  */
 export const englishToItalianCategories: Record<string, string> = {
+  // Original categories
   "Tops": "Maglia",
   "Bottoms": "Pantalone",
   "Dresses": "Vestito",
@@ -17,7 +18,38 @@ export const englishToItalianCategories: Record<string, string> = {
   "Casual": "Casual",
   "Business": "Business",
   "Shoes": "Scarpa",
-  "Uncategorized": "Non categorizzato"
+  "Uncategorized": "Non categorizzato",
+  
+  // New specific clothing categories
+  "T-shirt": "Maglietta",
+  "Shirt": "Camicia",
+  "Sweater": "Maglione",
+  "Hoodie": "Felpa",
+  "Sweatshirt": "Felpa",
+  "Top": "Top",
+  "Jacket": "Giacca",
+  "Coat": "Cappotto",
+  "Blazer": "Blazer",
+  "Pants": "Pantaloni",
+  "Jeans": "Jeans",
+  "Shorts": "Pantaloncini",
+  "Skirt": "Gonna",
+  "Leggings": "Leggings",
+  "Dress": "Vestito",
+  "Suit": "Completo",
+  "Boots": "Stivali",
+  "Hat": "Cappello",
+  "Cap": "Berretto",
+  "Scarf": "Sciarpa",
+  "Tie": "Cravatta",
+  "Belt": "Cintura",
+  "Handbag": "Borsa",
+  "Watch": "Orologio",
+  "Jewelry": "Gioielli",
+  "Necklace": "Collana",
+  "Bracelet": "Braccialetto",
+  "Sunglasses": "Occhiali da sole",
+  "Other": "Altro"
 };
 
 /**

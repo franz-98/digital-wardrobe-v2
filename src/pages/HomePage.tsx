@@ -14,6 +14,7 @@ import InferenceDialog from "@/components/home/InferenceDialog";
 import MultipleInferenceDialog from "@/components/home/MultipleInferenceDialog";
 
 const CLOTHING_CATEGORIES = [
+  // General categories
   "Tops",
   "Bottoms",
   "Dresses",
@@ -26,7 +27,39 @@ const CLOTHING_CATEGORIES = [
   "Sleepwear",
   "Formal",
   "Casual",
-  "Business"
+  "Business",
+  
+  // Specific clothing items
+  "T-shirt",
+  "Shirt",
+  "Sweater",
+  "Hoodie",
+  "Sweatshirt",
+  "Top",
+  "Jacket",
+  "Coat",
+  "Blazer",
+  "Pants",
+  "Jeans",
+  "Shorts",
+  "Skirt",
+  "Leggings",
+  "Dress",
+  "Suit",
+  "Shoes",
+  "Boots",
+  "Hat",
+  "Cap",
+  "Scarf",
+  "Tie",
+  "Belt",
+  "Handbag",
+  "Watch",
+  "Jewelry",
+  "Necklace",
+  "Bracelet",
+  "Sunglasses",
+  "Other"
 ];
 
 const HomePage = () => {
