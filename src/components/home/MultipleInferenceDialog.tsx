@@ -62,8 +62,9 @@ const MultipleInferenceDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
         className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] flex flex-col p-3 sm:p-6 overflow-hidden"
-        enableDismissOnScroll={false} // Disabled dismiss-on-scroll to fix scrolling issues
-        dismissThreshold={100} // Increased threshold to make it harder to dismiss accidentally
+        enableDismissOnScroll={false} // Completely disable dismiss-on-scroll
+        dismissThreshold={500} // Set a very high threshold to effectively disable it
+        showDismissIndicator={false} // Don't show the dismiss indicator
       >
         <DialogHeaderSection totalItems={totalItems} />
 

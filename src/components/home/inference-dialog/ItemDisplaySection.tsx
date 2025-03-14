@@ -33,11 +33,11 @@ const ItemDisplaySection = ({
         ref={scrollAreaRef}
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'auto', /* Changed from 'contain' to 'auto' to improve scroll */
+          overscrollBehavior: 'contain', 
           touchAction: 'pan-y', 
-          scrollBehavior: 'smooth',
-          msOverflowStyle: 'auto',  /* For IE and Edge */
-          scrollbarWidth: 'auto'    /* For Firefox */
+          scrollBehavior: 'auto', // Changed from 'smooth' to 'auto' to improve scroll performance
+          msOverflowStyle: '-ms-autohiding-scrollbar',
+          scrollbarWidth: 'thin'
         }}
       >
         <div className="space-y-6 py-2 pb-6">
