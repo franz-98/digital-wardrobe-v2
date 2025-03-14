@@ -1,20 +1,17 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { 
   Dialog, 
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/use-toast";
 import { ItemInference } from "./types";
 import { 
-  InferredItemDisplay, 
   NavigationControls, 
   DialogActions 
 } from "./inference-dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMultipleInferenceDialog } from "@/hooks/useMultipleInferenceDialog";
+import DialogHeaderSection from "./inference-dialog/DialogHeaderSection";
+import ItemDisplaySection from "./inference-dialog/ItemDisplaySection";
 
 interface MultipleInferenceDialogProps {
   open: boolean;
@@ -33,132 +30,34 @@ const MultipleInferenceDialog = ({
   onFieldChange,
   clothingCategories
 }: MultipleInferenceDialogProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>([]);
-  const [confirmedItems, setConfirmedItems] = useState<Set<number>>(new Set());
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  
-  // Reset state when dialog opens with new items
-  useEffect(() => {
-    if (open && inferredItems.length > 0) {
-      setItemsToAdd([...inferredItems]);
-      setCurrentIndex(0);
-      setConfirmedItems(new Set());
-      
-      // Reset scroll position
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
-    }
-  }, [open, inferredItems]);
+  const {
+    currentIndex,
+    currentItem,
+    totalItems,
+    confirmedItems,
+    scrollAreaRef,
+    handleNavigate,
+    handleCancel,
+    handleSave,
+    handleConfirmSingleItem,
+    handleFieldChange
+  } = useMultipleInferenceDialog({
+    open,
+    onOpenChange,
+    inferredItems,
+    onConfirm
+  });
 
   if (!inferredItems.length) return null;
-  
-  const currentItem = itemsToAdd[currentIndex];
-  const totalItems = itemsToAdd.length;
 
-  const handleNavigate = (direction: 'prev' | 'next') => {
-    console.log(`Navigation triggered: ${direction}, current: ${currentIndex}, total: ${totalItems}`);
-    
-    // Use functional updates to ensure we're using the latest state
-    if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex((prevIndex) => {
-        const newIndex = prevIndex - 1;
-        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
-        return newIndex;
-      });
-    } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex((prevIndex) => {
-        const newIndex = prevIndex + 1;
-        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
-        return newIndex;
-      });
-    }
-    
-    // Reset scroll position on every navigation
-    setTimeout(() => {
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
-    }, 10);
-  };
-
-  const handleCancel = () => {
-    onOpenChange(false);
-  };
-
-  const handleSave = () => {
-    // If no items are explicitly confirmed, confirm all
-    if (confirmedItems.size === 0 && totalItems > 0) {
-      // Confirm all items
-      onConfirm(itemsToAdd);
-    } else {
-      // Filter items to only include confirmed ones
-      const itemsToConfirm = itemsToAdd.filter((_, index) => 
-        confirmedItems.has(index)
-      );
-      
-      // If no items were confirmed, confirm the current one
-      if (itemsToConfirm.length === 0) {
-        onConfirm([currentItem]);
-      } else {
-        onConfirm(itemsToConfirm);
-      }
-    }
-    
-    onOpenChange(false);
-  };
-
-  const handleConfirmSingleItem = () => {
-    console.log(`Confirming item at index ${currentIndex}`);
-    
-    // Mark the current item as confirmed
-    setConfirmedItems(prev => {
-      const updated = new Set(prev);
-      updated.add(currentIndex);
-      return updated;
-    });
-    
-    // Show a toast to confirm to the user
-    toast({
-      title: "Articolo confermato",
-      description: `Articolo ${currentIndex + 1} confermato. Passa al prossimo.`,
-      duration: 1500,
-      className: "compact-toast top-toast",
-    });
-    
-    // Automatically navigate to the next item if not on the last item
-    if (currentIndex < totalItems - 1) {
-      // Wait for state to update before navigating
-      setTimeout(() => {
-        console.log(`Auto-navigating to next item from ${currentIndex} to ${currentIndex + 1}`);
-        setCurrentIndex(prevIndex => {
-          const newIndex = prevIndex + 1;
-          
-          // Reset scroll position
-          if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = 0;
-          }
-          
-          return newIndex;
-        });
-      }, 50);
-    }
-  };
-
+  // Function to handle field changes and propagate to parent
   const handleCurrentItemChange = (field: keyof ItemInference, value: string) => {
     onFieldChange(currentIndex, field, value);
-    
-    // Also update local state
-    setItemsToAdd(prevItems => {
-      const updated = [...prevItems];
-      updated[currentIndex] = {
-        ...updated[currentIndex],
-        [field]: value
-      };
-      return updated;
-    });
+    handleFieldChange(field, value);
   };
+
+  // Check if current item is confirmed
+  const isCurrentItemConfirmed = confirmedItems.has(currentIndex);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -168,14 +67,7 @@ const MultipleInferenceDialog = ({
         dismissThreshold={60}
         showDismissIndicator={true}
       >
-        <DialogHeader>
-          <DialogTitle>Conferma Riconoscimento</DialogTitle>
-          <DialogDescription>
-            {totalItems > 1 
-              ? `Sono stati riconosciuti ${totalItems} articoli. Conferma o modifica le informazioni per ciascuno.` 
-              : 'Conferma o modifica le informazioni per questo indumento.'}
-          </DialogDescription>
-        </DialogHeader>
+        <DialogHeaderSection totalItems={totalItems} />
 
         <div className="mb-4">
           <NavigationControls 
@@ -185,24 +77,13 @@ const MultipleInferenceDialog = ({
           />
         </div>
 
-        <ScrollArea className="flex-1 max-h-[60vh] pr-4">
-          <div className="space-y-4 py-2" ref={scrollAreaRef}>
-            <div className="opacity-100 transition-opacity duration-150">
-              <InferredItemDisplay 
-                item={currentItem}
-                onFieldChange={handleCurrentItemChange}
-                clothingCategories={clothingCategories}
-              />
-            </div>
-            
-            {/* Show visual indication that an item has been confirmed */}
-            {confirmedItems.has(currentIndex) && (
-              <div className="text-green-600 text-center text-sm mt-2">
-                ✓ Questo articolo è stato confermato
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+        <ItemDisplaySection 
+          currentItem={currentItem}
+          onFieldChange={handleCurrentItemChange}
+          clothingCategories={clothingCategories}
+          scrollAreaRef={scrollAreaRef}
+          isConfirmed={isCurrentItemConfirmed}
+        />
 
         <DialogActions 
           onCancel={handleCancel} 
