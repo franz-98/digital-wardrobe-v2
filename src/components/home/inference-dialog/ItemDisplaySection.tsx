@@ -28,7 +28,7 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <ScrollArea className="flex-1 min-h-[35vh] max-h-[55vh] pr-4 overflow-y-auto">
+    <ScrollArea className="flex-1 min-h-[35vh] max-h-[50vh] pr-4 overflow-y-auto">
       <div className="space-y-4 py-4" ref={scrollAreaRef}>
         <div className="opacity-100 transition-opacity duration-150">
           <InferredItemDisplay 

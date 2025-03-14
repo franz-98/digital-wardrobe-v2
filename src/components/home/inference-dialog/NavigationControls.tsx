@@ -36,25 +36,25 @@ const NavigationControls = ({
       <div className="flex space-x-2">
         <Button 
           variant="outline" 
-          size="icon"
+          size="sm"
           onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
-          className="h-10 w-10 p-0"
+          className="h-8 w-8 p-0"
           type="button"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4" />
         </Button>
         <Button 
           variant="outline" 
-          size="icon"
+          size="sm"
           onClick={handleNext}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
-          className="h-10 w-10 p-0"
+          className="h-8 w-8 p-0"
           type="button"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

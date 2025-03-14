@@ -7,10 +7,8 @@ import { DialogFooter } from "@/components/ui/dialog";
 interface DialogActionsProps {
   onCancel: () => void;
   onSave: () => void;
-  // Add navigation props
   currentIndex?: number;
   totalItems?: number;
-  // Add confirm single item prop
   onConfirmSingle?: () => void;
 }
 
@@ -33,47 +31,48 @@ const DialogActions = ({
   };
 
   return (
-    <DialogFooter className="gap-2 mt-4 pt-2 border-t">
+    <DialogFooter className="gap-2 mt-2 pt-2 border-t">
       <Button 
         variant="outline" 
         onClick={onCancel} 
         type="button" 
         className="flex-1"
+        size="sm"
       >
         Annulla
       </Button>
       
       {isMultipleItems ? (
         <>
-          {/* For multiple items, show appropriate button based on position */}
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
             <Button 
               onClick={handleConfirmAndNext} 
-              className="gap-1 flex-1 min-h-[44px] bg-green-600 hover:bg-green-700"
+              className="gap-1 flex-1 min-h-[36px] bg-green-600 hover:bg-green-700"
               type="button"
+              size="sm"
             >
-              <Check className="h-4 w-4" /> Conferma e Prossimo
-              <ArrowRight className="h-4 w-4 ml-1" />
+              <Check className="h-3 w-3" /> Conferma e Prossimo
+              <ArrowRight className="h-3 w-3 ml-1" />
             </Button>
           ) : (
-            /* On last item, show final save button */
             <Button 
               onClick={onSave} 
-              className="gap-1 flex-1 min-h-[44px]"
+              className="gap-1 flex-1 min-h-[36px]"
               type="button"
+              size="sm"
             >
-              <Check className="h-4 w-4" /> Conferma Tutti
+              <Check className="h-3 w-3" /> Conferma Tutti
             </Button>
           )}
         </>
       ) : (
-        /* For single item, just show confirm button */
         <Button 
           onClick={onSave} 
-          className="gap-1 flex-1 min-h-[44px]"
+          className="gap-1 flex-1 min-h-[36px]"
           type="button"
+          size="sm"
         >
-          <Check className="h-4 w-4" /> Conferma
+          <Check className="h-3 w-3" /> Conferma
         </Button>
       )}
     </DialogFooter>
