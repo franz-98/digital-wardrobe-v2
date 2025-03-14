@@ -49,11 +49,11 @@ const InferredItemDisplay = ({
     <div className="space-y-4 bg-secondary/10 p-4 rounded-md">
       <h4 className="font-medium">Indumento</h4>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="aspect-square overflow-hidden rounded-md border">
+        <div className="aspect-square overflow-hidden rounded-md border bg-white">
           <img 
             src={item.imageUrl} 
             alt={item.name || "Item preview"} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             loading="eager"
           />
         </div>
@@ -80,8 +80,8 @@ const InferredItemDisplay = ({
               <SelectTrigger id="category" className="touch-manipulation h-12 mt-1">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
-              <SelectContent className="touch-manipulation" position="popper" sideOffset={5}>
-                <ScrollArea className="h-[200px] touch-manipulation">
+              <SelectContent className="touch-manipulation max-h-[200px]" position="popper" sideOffset={5}>
+                <ScrollArea className="h-[200px]">
                   {clothingCategories.map((category) => (
                     <SelectItem 
                       key={category} 
@@ -107,19 +107,19 @@ const InferredItemDisplay = ({
               className="touch-manipulation h-12 mt-1"
             />
           </div>
+          
+          {item.confidence > 0 && (
+            <div className="mt-3">
+              <Badge 
+                variant={item.confidence > 0.9 ? "default" : "outline"}
+                className={item.confidence > 0.9 ? "bg-green-600" : ""}
+              >
+                {(item.confidence * 100).toFixed(0)}% sicurezza
+              </Badge>
+            </div>
+          )}
         </div>
       </div>
-      
-      {item.confidence > 0 && (
-        <div className="mt-3 flex justify-end">
-          <Badge 
-            variant={item.confidence > 0.9 ? "default" : "outline"}
-            className={item.confidence > 0.9 ? "bg-green-600" : ""}
-          >
-            {(item.confidence * 100).toFixed(0)}% sicurezza
-          </Badge>
-        </div>
-      )}
     </div>
   );
 };

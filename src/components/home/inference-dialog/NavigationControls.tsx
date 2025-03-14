@@ -31,7 +31,7 @@ const NavigationControls = ({
   };
   
   return (
-    <div className="flex items-center justify-between text-sm py-2">
+    <div className="flex items-center justify-between text-sm py-2 mb-2">
       <span>Articolo {currentIndex + 1} di {totalItems}</span>
       <div className="flex space-x-2">
         <Button 
@@ -40,7 +40,7 @@ const NavigationControls = ({
           onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
-          className="h-10 w-10 touch-manipulation"
+          className="h-10 w-10 p-0"
           type="button"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -51,7 +51,7 @@ const NavigationControls = ({
           onClick={handleNext}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
-          className="h-10 w-10 touch-manipulation"
+          className="h-10 w-10 p-0"
           type="button"
         >
           <ChevronRight className="h-5 w-5" />

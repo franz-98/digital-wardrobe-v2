@@ -18,6 +18,7 @@ export function useMultipleInferenceDialog({
   const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>([]);
   const [confirmedItems, setConfirmedItems] = useState<Set<number>>(new Set());
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const isNavigating = useRef(false);
   
   // Reset state when dialog opens with new items
   useEffect(() => {
@@ -25,6 +26,7 @@ export function useMultipleInferenceDialog({
       setItemsToAdd([...inferredItems]);
       setCurrentIndex(0);
       setConfirmedItems(new Set());
+      isNavigating.current = false;
       
       // Reset scroll position
       if (scrollAreaRef.current) {
@@ -37,6 +39,10 @@ export function useMultipleInferenceDialog({
   const totalItems = itemsToAdd.length || inferredItems.length;
   
   const handleNavigate = (direction: 'prev' | 'next') => {
+    // Prevent multiple rapid navigations
+    if (isNavigating.current) return;
+    isNavigating.current = true;
+    
     // Use functional updates to ensure we're using the latest state
     setCurrentIndex(prevIndex => {
       let newIndex = prevIndex;
@@ -47,6 +53,7 @@ export function useMultipleInferenceDialog({
         newIndex = prevIndex + 1;
       } else {
         // Return the same index if no change needed
+        isNavigating.current = false;
         return prevIndex;
       }
       
@@ -57,6 +64,11 @@ export function useMultipleInferenceDialog({
         if (scrollAreaRef.current) {
           scrollAreaRef.current.scrollTop = 0;
         }
+        
+        // Allow navigation again after a short delay
+        setTimeout(() => {
+          isNavigating.current = false;
+        }, 300);
       });
       
       return newIndex;
@@ -74,7 +86,7 @@ export function useMultipleInferenceDialog({
       onConfirm(itemsToAdd);
       toast({
         title: "Articoli confermati",
-        description: `Tutti gli articoli sono stati confermati.`,
+        description: `Tutti gli ${totalItems} articoli sono stati confermati.`,
         duration: 2000,
       });
     } else {
@@ -88,7 +100,7 @@ export function useMultipleInferenceDialog({
         onConfirm([currentItem]);
         toast({
           title: "Articolo confermato",
-          description: `Articolo corrente confermato.`,
+          description: `Articolo ${currentIndex + 1} confermato.`,
           duration: 2000,
         });
       } else {
@@ -105,6 +117,10 @@ export function useMultipleInferenceDialog({
   };
 
   const handleConfirmSingleItem = () => {
+    // Prevent multiple rapid confirmations
+    if (isNavigating.current) return;
+    isNavigating.current = true;
+    
     // Mark the current item as confirmed
     setConfirmedItems(prev => {
       const updated = new Set(prev);
@@ -117,7 +133,7 @@ export function useMultipleInferenceDialog({
     toast({
       title: "Articolo confermato",
       description: `Articolo ${currentIndex + 1} confermato.`,
-      duration: 1500,
+      duration: 1000,
     });
     
     // Automatically navigate to the next item if not on the last item
@@ -133,6 +149,11 @@ export function useMultipleInferenceDialog({
             if (scrollAreaRef.current) {
               scrollAreaRef.current.scrollTop = 0;
             }
+            
+            // Allow navigation again after scrolling completes
+            setTimeout(() => {
+              isNavigating.current = false;
+            }, 300);
           });
           
           return newIndex;
@@ -146,7 +167,8 @@ export function useMultipleInferenceDialog({
           description: "Clicca 'Conferma Tutti' per salvare tutto.",
           duration: 3000,
         });
-      }, 1000);
+        isNavigating.current = false;
+      }, 500);
     }
   };
 

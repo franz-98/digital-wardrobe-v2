@@ -49,7 +49,7 @@ const DialogActions = ({
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
             <Button 
               onClick={handleConfirmAndNext} 
-              className="gap-1 flex-1 min-h-[44px]"
+              className="gap-1 flex-1 min-h-[44px] bg-green-600 hover:bg-green-700"
               type="button"
             >
               <Check className="h-4 w-4" /> Conferma e Prossimo

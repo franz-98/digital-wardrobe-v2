@@ -62,7 +62,7 @@ const MultipleInferenceDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-w-md md:max-w-2xl max-h-[95vh] overflow-hidden flex flex-col space-y-4"
+        className="max-w-md md:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
       >
         <DialogHeaderSection totalItems={totalItems} />
 
