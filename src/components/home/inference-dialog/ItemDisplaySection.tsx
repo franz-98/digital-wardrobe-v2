@@ -28,8 +28,8 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <ScrollArea className="flex-1 max-h-[50vh] pr-4">
-      <div className="space-y-4 py-2" ref={scrollAreaRef}>
+    <ScrollArea className="flex-1 min-h-[30vh] max-h-[60vh] pr-4 overflow-y-auto">
+      <div className="space-y-4 py-4" ref={scrollAreaRef}>
         <div className="opacity-100 transition-opacity duration-150">
           <InferredItemDisplay 
             item={currentItem}
@@ -40,7 +40,7 @@ const ItemDisplaySection = ({
         
         {/* Show visual indication that an item has been confirmed */}
         {isConfirmed && (
-          <div className="text-green-600 text-center text-sm mt-2">
+          <div className="text-green-600 text-center text-sm mt-4">
             ✓ Questo articolo è stato confermato
           </div>
         )}

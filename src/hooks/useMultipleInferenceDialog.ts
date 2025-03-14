@@ -45,16 +45,19 @@ export function useMultipleInferenceDialog({
         newIndex = prevIndex - 1;
       } else if (direction === 'next' && prevIndex < totalItems - 1) {
         newIndex = prevIndex + 1;
+      } else {
+        // Return the same index if no change needed
+        return prevIndex;
       }
       
       console.log(`Navigating from ${prevIndex} to ${newIndex}`);
       
-      // Reset scroll position after a small delay to ensure the component has updated
-      setTimeout(() => {
+      // Reset scroll position after navigation
+      requestAnimationFrame(() => {
         if (scrollAreaRef.current) {
           scrollAreaRef.current.scrollTop = 0;
         }
-      }, 50);
+      });
       
       return newIndex;
     });
@@ -69,6 +72,11 @@ export function useMultipleInferenceDialog({
     if (confirmedItems.size === 0 && totalItems > 0) {
       // Confirm all items
       onConfirm(itemsToAdd);
+      toast({
+        title: "Articoli confermati",
+        description: `Tutti gli articoli sono stati confermati.`,
+        duration: 2000,
+      });
     } else {
       // Filter items to only include confirmed ones
       const itemsToConfirm = itemsToAdd.filter((_, index) => 
@@ -78,8 +86,18 @@ export function useMultipleInferenceDialog({
       // If no items were confirmed, confirm the current one
       if (itemsToConfirm.length === 0) {
         onConfirm([currentItem]);
+        toast({
+          title: "Articolo confermato",
+          description: `Articolo corrente confermato.`,
+          duration: 2000,
+        });
       } else {
         onConfirm(itemsToConfirm);
+        toast({
+          title: "Articoli confermati",
+          description: `${itemsToConfirm.length} articoli confermati.`,
+          duration: 2000,
+        });
       }
     }
     
@@ -104,20 +122,31 @@ export function useMultipleInferenceDialog({
     
     // Automatically navigate to the next item if not on the last item
     if (currentIndex < totalItems - 1) {
-      // Wait for state to update before navigating
+      // Wait a moment before navigating to next item
       setTimeout(() => {
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
           console.log(`Auto-navigating to next item from ${prevIndex} to ${newIndex}`);
           
           // Reset scroll position
-          if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = 0;
-          }
+          requestAnimationFrame(() => {
+            if (scrollAreaRef.current) {
+              scrollAreaRef.current.scrollTop = 0;
+            }
+          });
           
           return newIndex;
         });
-      }, 200); // Slightly longer delay to ensure state updates fully
+      }, 300); // Slightly longer delay for a better user experience
+    } else {
+      // If it's the last item, show a toast suggesting to save
+      setTimeout(() => {
+        toast({
+          title: "Ultimo articolo confermato",
+          description: "Clicca 'Conferma Tutti' per salvare tutto.",
+          duration: 3000,
+        });
+      }, 1000);
     }
   };
 

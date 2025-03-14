@@ -10,7 +10,6 @@ interface DialogActionsProps {
   // Add navigation props
   currentIndex?: number;
   totalItems?: number;
-  onNavigate?: (direction: 'prev' | 'next') => void;
   // Add confirm single item prop
   onConfirmSingle?: () => void;
 }
@@ -24,7 +23,6 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  // Only handle confirmation - navigation will be handled automatically
   const handleConfirmAndNext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -35,7 +33,7 @@ const DialogActions = ({
   };
 
   return (
-    <DialogFooter className="gap-2 mt-4">
+    <DialogFooter className="gap-2 mt-4 pt-2 border-t">
       <Button 
         variant="outline" 
         onClick={onCancel} 
