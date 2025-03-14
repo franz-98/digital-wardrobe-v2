@@ -54,9 +54,9 @@ const MultipleInferenceDialog = ({
   const handleNavigate = (direction: 'prev' | 'next') => {
     console.log(`Navigation triggered: ${direction}`);
     if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      setCurrentIndex(prev => prev - 1);
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex(prev => prev + 1);
     }
   };
 
@@ -65,19 +65,10 @@ const MultipleInferenceDialog = ({
   };
 
   const handleSave = () => {
-    // Only save the confirmed items
+    // If no items are explicitly confirmed, confirm all
     if (confirmedItems.size === 0 && totalItems > 0) {
-      // If no items are explicitly confirmed, confirm the current one at least
-      const updatedConfirmed = new Set(confirmedItems);
-      updatedConfirmed.add(currentIndex);
-      setConfirmedItems(updatedConfirmed);
-      
-      // Filter items to only include confirmed ones
-      const itemsToConfirm = itemsToAdd.filter((_, index) => 
-        updatedConfirmed.has(index)
-      );
-      
-      onConfirm(itemsToConfirm);
+      // Confirm all items
+      onConfirm(itemsToAdd);
     } else {
       // Filter items to only include confirmed ones
       const itemsToConfirm = itemsToAdd.filter((_, index) => 
@@ -125,7 +116,7 @@ const MultipleInferenceDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-w-md max-h-[90vh] overflow-hidden"
+        className="max-w-md max-h-[90vh] overflow-hidden flex flex-col"
         enableDismissOnScroll={true}
         dismissThreshold={60}
         showDismissIndicator={true}
@@ -139,7 +130,7 @@ const MultipleInferenceDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="max-h-[60vh] touch-manipulation">
+        <ScrollArea className="flex-1 max-h-[60vh] touch-manipulation">
           <div className="space-y-4 py-2">
             <NavigationControls 
               currentIndex={currentIndex}

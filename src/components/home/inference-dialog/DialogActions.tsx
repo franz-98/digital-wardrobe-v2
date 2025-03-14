@@ -25,42 +25,45 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  // If we have multiple items and are not on the last one,
-  // show "Conferma e Prossimo" button
+  // Handle confirmation and navigation to next item
   const handleConfirmAndNext = () => {
     if (onConfirmSingle) {
       onConfirmSingle();
     }
     
+    // Always navigate to the next item after confirmation
     if (onNavigate && currentIndex !== undefined && totalItems && currentIndex < totalItems - 1) {
       onNavigate('next');
+    } else {
+      // If on the last item, save all
+      onSave();
     }
   };
 
   return (
-    <DialogFooter>
-      <Button variant="outline" onClick={onCancel} type="button">
+    <DialogFooter className="gap-2">
+      <Button variant="outline" onClick={onCancel} type="button" className="flex-1">
         Annulla
       </Button>
       
       {isMultipleItems ? (
         <>
-          {/* For multiple items, individual confirmation button */}
+          {/* For multiple items, show appropriate button based on position */}
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
-            <Button onClick={handleConfirmAndNext} className="gap-1">
+            <Button onClick={handleConfirmAndNext} className="gap-1 flex-1 min-h-[44px]">
               <Check className="h-4 w-4" /> Conferma e Prossimo
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           ) : (
             /* On last item, show final save button */
-            <Button onClick={onSave} className="gap-1">
+            <Button onClick={onSave} className="gap-1 flex-1 min-h-[44px]">
               <Check className="h-4 w-4" /> Conferma Tutti
             </Button>
           )}
         </>
       ) : (
         /* For single item, just show confirm button */
-        <Button onClick={onSave} className="gap-1">
+        <Button onClick={onSave} className="gap-1 flex-1 min-h-[44px]">
           <Check className="h-4 w-4" /> Conferma
         </Button>
       )}
