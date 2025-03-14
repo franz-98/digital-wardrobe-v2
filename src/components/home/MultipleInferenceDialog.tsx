@@ -52,11 +52,12 @@ const MultipleInferenceDialog = ({
   const totalItems = itemsToAdd.length;
 
   const handleNavigate = (direction: 'prev' | 'next') => {
-    console.log(`Navigation triggered: ${direction}`);
+    console.log(`Navigation triggered: ${direction}, current: ${currentIndex}, total: ${totalItems}`);
+    
     if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
+      setCurrentIndex(currentIndex - 1);
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -87,6 +88,8 @@ const MultipleInferenceDialog = ({
   };
 
   const handleConfirmSingleItem = () => {
+    console.log(`Confirming item at index ${currentIndex}`);
+    
     // Mark the current item as confirmed
     const updatedConfirmed = new Set(confirmedItems);
     updatedConfirmed.add(currentIndex);
@@ -99,6 +102,12 @@ const MultipleInferenceDialog = ({
       duration: 1500,
       className: "compact-toast top-toast",
     });
+    
+    // Automatically navigate to the next item if not on the last item
+    if (currentIndex < totalItems - 1) {
+      console.log(`Auto-navigating to next item: ${currentIndex + 1}`);
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
   const handleCurrentItemChange = (field: keyof ItemInference, value: string) => {
