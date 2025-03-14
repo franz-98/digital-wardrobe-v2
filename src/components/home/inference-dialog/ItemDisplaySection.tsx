@@ -33,10 +33,10 @@ const ItemDisplaySection = ({
         ref={scrollAreaRef}
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'contain',
+          overscrollBehavior: 'none', // Changed to 'none' to completely disable browser pull-to-refresh
           touchAction: 'pan-y', 
           scrollBehavior: 'auto',
-          msOverflowStyle: '-ms-autohiding-scrollbar',
+          msOverflowStyle: 'none',
           scrollbarWidth: 'thin'
         }}
       >

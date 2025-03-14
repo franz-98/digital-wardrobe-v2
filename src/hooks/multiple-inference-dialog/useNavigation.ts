@@ -50,19 +50,21 @@ export function useNavigation(
     if (nextIndex !== currentIndex) {
       console.log(`Setting current index to ${nextIndex}`);
       
-      // Immediate state update with direct value instead of function
-      setCurrentIndex(nextIndex);
-      
-      // Reset scroll position when navigating between items
+      // Force reset scroll position before changing pages
       if (scrollAreaRef.current) {
         scrollAreaRef.current.scrollTop = 0;
       }
       
-      // Reduce timeout for better responsiveness
+      // Use a cleaner approach for state updates to avoid potential race conditions
       setTimeout(() => {
-        isNavigating.current = false;
-        console.log("Navigation cooldown complete, ready for next navigation");
-      }, 100);
+        setCurrentIndex(nextIndex);
+        
+        // Allow navigation again after a delay
+        setTimeout(() => {
+          isNavigating.current = false;
+          console.log("Navigation cooldown complete, ready for next navigation");
+        }, 300);
+      }, 50);
     } else {
       console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
       isNavigating.current = false;

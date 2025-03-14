@@ -46,6 +46,14 @@ const PaginationControls = ({
     return pages;
   };
   
+  const handlePageClick = (pageIndex: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent event bubbling
+    if (pageIndex !== currentIndex) {
+      onPageChange(pageIndex);
+    }
+  };
+  
   return (
     <div className="mt-3 mb-3 border-t border-b py-3">
       <Pagination className="select-none">
@@ -53,10 +61,7 @@ const PaginationControls = ({
           {showPageNumbers().map((pageIndex) => (
             <PaginationItem key={pageIndex}>
               <PaginationLink 
-                onClick={(e) => {
-                  e.preventDefault();
-                  onPageChange(pageIndex);
-                }} 
+                onClick={(e) => handlePageClick(pageIndex, e)} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
                   "h-9 w-9 p-0 flex items-center justify-center relative",
