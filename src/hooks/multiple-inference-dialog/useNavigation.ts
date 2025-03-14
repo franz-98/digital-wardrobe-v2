@@ -49,16 +49,21 @@ export function useNavigation(
       console.log(`Setting current index to ${nextIndex}`);
       setCurrentIndex(nextIndex);
       
+      // Reset scroll position when navigating between items
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = 0;
+      }
+      
       // Wait a small amount of time before releasing the navigation lock
       setTimeout(() => {
         isNavigating.current = false;
         console.log("Navigation cooldown complete, ready for next navigation");
-      }, 300); // Reduced timeout for better responsiveness
+      }, 150); // Reduced timeout for better responsiveness
     } else {
       console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
       isNavigating.current = false;
     }
-  }, [currentIndex, setCurrentIndex, totalItems]);
+  }, [currentIndex, setCurrentIndex, totalItems, scrollAreaRef]);
 
   return { handleNavigate };
 }

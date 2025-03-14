@@ -25,10 +25,8 @@ export function useDismissOnScroll(
   const scrollHandler = React.useRef<number | null>(null);
 
   React.useEffect(() => {
-    if (!enableDismissOnScroll || !ref.current || !onDismiss) return;
-    
-    // Only set up dismiss on scroll if specifically enabled
-    if (!enableDismissOnScroll) {
+    // Don't set up any events if dismiss-on-scroll is disabled
+    if (!enableDismissOnScroll || !ref.current || !onDismiss) {
       return;
     }
     
@@ -76,7 +74,7 @@ export function useDismissOnScroll(
       }
       
       // If scrolling down past threshold when already at top of content
-      if (deltaY > dismissThreshold && enableDismissOnScroll) {
+      if (deltaY > dismissThreshold) {
         // Reset progress before dismissing
         setDismissProgress(0);
         // We're at the top and pulling down, so dismiss
@@ -101,13 +99,11 @@ export function useDismissOnScroll(
 
     const element = ref.current;
     
-    // Add event listeners only if dismiss on scroll is enabled
-    if (enableDismissOnScroll && element) {
-      element.addEventListener('touchstart', handleTouchStart, { passive: true });
-      element.addEventListener('touchmove', handleTouchMove, { passive: true });
-      element.addEventListener('touchend', handleTouchEnd);
-      element.addEventListener('scroll', updateIsAtTop, { passive: true });
-    }
+    // Add event listeners
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd);
+    element.addEventListener('scroll', updateIsAtTop, { passive: true });
 
     // Initial check
     updateIsAtTop();
