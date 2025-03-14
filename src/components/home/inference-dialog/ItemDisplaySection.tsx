@@ -25,7 +25,7 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <div className="flex-1 mb-4 overflow-y-auto">
+    <div className="flex-1 mb-4">
       <div className="space-y-4 py-2">
         <InferredItemDisplay 
           item={currentItem}
@@ -34,7 +34,7 @@ const ItemDisplaySection = ({
         />
         
         {isConfirmed && (
-          <div className="text-green-600 text-center text-sm mt-2">
+          <div className="text-green-600 text-center text-sm mt-2 font-medium">
             ✓ Questo articolo è stato confermato
           </div>
         )}

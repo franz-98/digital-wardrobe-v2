@@ -7,15 +7,15 @@ export function useNavigation(
   totalItems: number
 ) {
   // Add a debounce mechanism to prevent rapid clicks
-  const lastNavigationTime = useRef<number>(0);
+  const lastNavigationTimeRef = useRef<number>(0);
   
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
     // Simple debounce to prevent multiple rapid clicks
     const now = Date.now();
-    if (now - lastNavigationTime.current < 200) {
+    if (now - lastNavigationTimeRef.current < 300) {
       return; // Ignore rapid clicks
     }
-    lastNavigationTime.current = now;
+    lastNavigationTimeRef.current = now;
     
     let nextIndex: number;
     
@@ -34,6 +34,14 @@ export function useNavigation(
     // Only update if we're changing to a different index
     if (nextIndex !== currentIndex) {
       setCurrentIndex(nextIndex);
+      
+      // Scroll to top when navigating between items
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Also reset focus to avoid keyboard issues
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
   }, [currentIndex, setCurrentIndex, totalItems]);
 

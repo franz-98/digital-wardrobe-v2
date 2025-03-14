@@ -14,13 +14,15 @@ interface PaginationControlsProps {
   totalItems: number;
   onPageChange: (page: number) => void;
   confirmedItems: Set<number>;
+  className?: string;
 }
 
 const PaginationControls = ({ 
   currentIndex, 
   totalItems, 
   onPageChange, 
-  confirmedItems 
+  confirmedItems,
+  className
 }: PaginationControlsProps) => {
   if (totalItems <= 1) return null;
 
@@ -56,9 +58,9 @@ const PaginationControls = ({
   };
   
   return (
-    <div className="mt-3 mb-3 border-t border-b py-3">
+    <div className={cn("py-3 border-t border-b", className)}>
       <Pagination className="select-none">
-        <PaginationContent className="flex flex-wrap justify-center gap-1">
+        <PaginationContent className="flex flex-wrap justify-center gap-2">
           {showPageNumbers().map((pageIndex) => (
             <PaginationItem key={pageIndex} className="touch-none">
               <PaginationLink 
@@ -66,7 +68,8 @@ const PaginationControls = ({
                 onClick={(e) => handlePageClick(pageIndex, e)} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
-                  "h-9 w-9 p-0 flex items-center justify-center relative touch-none",
+                  "h-8 w-8 p-0 flex items-center justify-center relative touch-none rounded-full",
+                  currentIndex === pageIndex ? "bg-blue-100 dark:bg-blue-900/50" : "",
                   confirmedItems.has(pageIndex) ? "text-green-600 font-medium" : ""
                 )}
               >

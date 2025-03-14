@@ -1,93 +1,69 @@
 
 import React from "react";
-import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+import { Check, X, Save } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface DialogActionsProps {
   onCancel: () => void;
   onSave: () => void;
-  currentIndex?: number;
-  totalItems?: number;
-  onConfirmSingle?: () => void;
+  onConfirmSingle: () => void;
+  currentIndex: number;
+  totalItems: number;
+  className?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
-const DialogActions = ({ 
-  onCancel, 
-  onSave, 
-  currentIndex, 
+const DialogActions = ({
+  onCancel,
+  onSave,
+  onConfirmSingle,
+  currentIndex,
   totalItems,
-  onConfirmSingle
+  className,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel"
 }: DialogActionsProps) => {
-  const isMultipleItems = totalItems && totalItems > 1;
-  
-  const isLastItem = currentIndex !== undefined && totalItems 
-    ? currentIndex >= totalItems - 1 
-    : false;
-
-  const handleCancel = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onCancel();
-  };
-
-  const handleSave = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onSave();
-  };
-
-  const handleConfirmSingle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onConfirmSingle) onConfirmSingle();
-  };
-
   return (
-    <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 mt-3 pt-4 border-t sticky bottom-0 bg-background pb-2 z-10">
-      <Button 
-        variant="outline" 
-        onClick={handleCancel} 
-        type="button" 
-        className="flex-1 h-10 text-gray-500 border-gray-300"
-        size="sm"
+    <div className={cn("flex justify-between gap-3 border-t pt-4", className)}>
+      <Button
+        variant="secondary"
+        onClick={onCancel}
+        className="flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-foreground rounded-full h-11 font-medium"
       >
-        <X className="h-4 w-4 mr-1" /> Annulla
+        <X className="mr-1 h-4 w-4" />
+        {cancelLabel}
       </Button>
       
-      {isMultipleItems ? (
+      {totalItems > 1 ? (
         <>
-          {!isLastItem ? (
-            <Button 
-              onClick={handleConfirmSingle} 
-              className="flex-1 min-h-[40px] sm:min-h-[36px] bg-blue-500 hover:bg-blue-600"
-              type="button"
-              size="sm"
-            >
-              <Check className="h-4 w-4 mr-1" /> Conferma
-            </Button>
-          ) : (
-            <Button 
-              onClick={handleSave} 
-              className="flex-1 min-h-[40px] sm:min-h-[36px] bg-blue-500 hover:bg-blue-600"
-              type="button"
-              size="sm"
-            >
-              <Check className="h-4 w-4 mr-1" /> Conferma Tutti
-            </Button>
-          )}
+          <Button
+            onClick={onConfirmSingle}
+            className="flex-1 bg-blue-500 hover:bg-blue-600 text-white rounded-full h-11 font-medium"
+          >
+            <Check className="mr-1 h-4 w-4" />
+            {confirmLabel}
+          </Button>
+          
+          <Button
+            onClick={onSave}
+            className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-full h-11 font-medium"
+          >
+            <Save className="mr-1 h-4 w-4" />
+            {confirmLabel} tutti
+          </Button>
         </>
       ) : (
-        <Button 
-          onClick={handleSave} 
-          className="flex-1 min-h-[40px] sm:min-h-[36px] bg-blue-500 hover:bg-blue-600"
-          type="button"
-          size="sm"
+        <Button
+          onClick={onConfirmSingle}
+          className="flex-1 bg-blue-500 hover:bg-blue-600 text-white rounded-full h-11 font-medium"
         >
-          <Check className="h-4 w-4 mr-1" /> Conferma
+          <Check className="mr-1 h-4 w-4" />
+          {confirmLabel}
         </Button>
       )}
-    </DialogFooter>
+    </div>
   );
 };
 
