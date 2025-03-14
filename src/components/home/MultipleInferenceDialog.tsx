@@ -31,6 +31,8 @@ const MultipleInferenceDialog = ({
   onFieldChange,
   clothingCategories
 }: MultipleInferenceDialogProps) => {
+  // Only initialize the hook if the dialog is open and there are items
+  // This prevents hook inconsistency during renders
   const {
     currentIndex,
     currentItem,
@@ -48,6 +50,7 @@ const MultipleInferenceDialog = ({
     onConfirm
   });
 
+  // Early return if no items to prevent unnecessary hook calls
   if (!inferredItems.length) return null;
 
   const handleCurrentItemChange = (field: keyof ItemInference, value: string) => {
