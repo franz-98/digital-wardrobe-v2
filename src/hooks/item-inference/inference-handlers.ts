@@ -1,5 +1,6 @@
 
 import { ItemInference, RecentUpload, ClothingItem } from "./types";
+import { Outfit } from "@/components/wardrobe/types";
 import { 
   createFileUploadHandlers,
   createItemClickHandlers,
@@ -19,7 +20,8 @@ export const createInferenceHandlers = (
   setIsUploading: React.Dispatch<React.SetStateAction<boolean>>,
   setRecentUploadItems: React.Dispatch<React.SetStateAction<RecentUpload[]>>,
   setClothingItems: React.Dispatch<React.SetStateAction<ClothingItem[]>>,
-  setLastAddedItem: React.Dispatch<React.SetStateAction<string | null>>
+  setLastAddedItem: React.Dispatch<React.SetStateAction<string | null>>,
+  setOutfits: React.Dispatch<React.SetStateAction<Outfit[]>>
 ) => {
   // Create all handlers
   const fileUploadHandlers = createFileUploadHandlers(
@@ -36,7 +38,8 @@ export const createInferenceHandlers = (
   const inferenceConfirmationHandlers = createInferenceConfirmationHandlers(
     setClothingItems,
     setRecentUploadItems,
-    setLastAddedItem
+    setLastAddedItem,
+    setOutfits
   );
   
   const inferenceEditHandlers = createInferenceEditHandlers();

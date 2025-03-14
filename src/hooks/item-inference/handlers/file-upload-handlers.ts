@@ -26,39 +26,46 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
+      // Generate outfit name based on timestamp
+      const outfitName = `Outfit ${new Date().toLocaleDateString('it-IT')}`;
+      
       // Create test data with varying confidence levels to demonstrate threshold behavior
       const mockItems: ItemInference[] = [
         {
           id: `item-${Date.now()}-1`,
           name: "Camicia Blu",
-          category: "Tops",
+          category: "Shirt",
           color: "Blue",
           imageUrl: sharedImageUrl,
-          confidence: 0.95 // High confidence - should go directly to wardrobe
+          confidence: 0.95, // High confidence - should go directly to wardrobe
+          outfitId: outfitName
         },
         {
           id: `item-${Date.now()}-2`,
           name: "Pantaloni Neri", 
-          category: "Bottoms",
+          category: "Pants",
           color: "Black",
           imageUrl: sharedImageUrl,
-          confidence: 0.92 // High confidence - should go directly to wardrobe
+          confidence: 0.92, // High confidence - should go directly to wardrobe
+          outfitId: outfitName
         },
         {
           id: `item-${Date.now()}-3`,
           name: "Giacca Verde",
-          category: "Outerwear", 
+          category: "Jacket", 
           color: "Green",
           imageUrl: sharedImageUrl,
-          confidence: 0.68 // Below 75% - should go to recent uploads
+          confidence: 0.68, // Below 75% - should go to recent uploads
+          outfitId: outfitName
         },
         {
           id: `item-${Date.now()}-4`,
           name: "Scarpe Marroni",
-          category: "Footwear",
+          category: "Shoes",
           color: "Brown", 
           imageUrl: sharedImageUrl,
-          confidence: 0.65 // Below 75% - should go to recent uploads
+          confidence: 0.65, // Below 75% - should go to recent uploads
+          outfitId: outfitName
         },
         {
           id: `item-${Date.now()}-5`,
@@ -66,7 +73,8 @@ export const createFileUploadHandlers = (
           category: "Accessories",
           color: "Red",
           imageUrl: sharedImageUrl, 
-          confidence: 0.82 // High confidence - should go directly to wardrobe
+          confidence: 0.82, // High confidence - should go directly to wardrobe
+          outfitId: outfitName
         }
       ];
       

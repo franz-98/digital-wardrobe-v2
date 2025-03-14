@@ -1,6 +1,7 @@
 
 import { toast } from "@/components/ui/use-toast";
 import { ItemInference, RecentUpload, ClothingItem } from "../types";
+import { Outfit } from "@/components/wardrobe/types";
 
 /**
  * Handlers related to confirming inferences
@@ -8,7 +9,8 @@ import { ItemInference, RecentUpload, ClothingItem } from "../types";
 export const createInferenceConfirmationHandlers = (
   setClothingItems: React.Dispatch<React.SetStateAction<ClothingItem[]>>,
   setRecentUploadItems: React.Dispatch<React.SetStateAction<RecentUpload[]>>,
-  setLastAddedItem: React.Dispatch<React.SetStateAction<string | null>>
+  setLastAddedItem: React.Dispatch<React.SetStateAction<string | null>>,
+  setOutfits: React.Dispatch<React.SetStateAction<Outfit[]>>
 ) => {
   // Process items based on confidence threshold
   const processItems = (items: ItemInference[]) => {
@@ -28,7 +30,8 @@ export const createInferenceConfirmationHandlers = (
           name: item.name,
           imageUrl: item.imageUrl,
           category: item.category,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          outfitId: item.outfitId
         });
       }
     });
@@ -65,7 +68,7 @@ export const createInferenceConfirmationHandlers = (
     }
   };
   
-  // Add items to wardrobe
+  // Add items to wardrobe and create outfit if needed
   const addItemsToWardrobe = (items: ItemInference[]) => {
     const newClothingItems: ClothingItem[] = items.map(item => {
       // Generate a truly unique ID with timestamp and random string
@@ -96,7 +99,54 @@ export const createInferenceConfirmationHandlers = (
     setClothingItems(prevItems => {
       console.log(`Adding ${newClothingItems.length} new items to wardrobe`);
       console.log("Previous items count:", prevItems.length);
-      return [...newClothingItems, ...prevItems];
+      const updatedItems = [...newClothingItems, ...prevItems];
+      
+      // Create outfit if there are multiple items from the same outfit ID
+      const outfitGroups = items.reduce((acc, item) => {
+        if (item.outfitId) {
+          if (!acc[item.outfitId]) {
+            acc[item.outfitId] = [];
+          }
+          acc[item.outfitId].push(item);
+        }
+        return acc;
+      }, {} as Record<string, ItemInference[]>);
+      
+      // Create outfits for each group
+      Object.entries(outfitGroups).forEach(([outfitId, outfitItems]) => {
+        if (outfitItems.length > 1) {
+          // Only create outfit if there are at least 2 items
+          createOutfitFromItems(outfitId, newClothingItems);
+        }
+      });
+      
+      return updatedItems;
+    });
+  };
+  
+  // Create a new outfit from the detected items
+  const createOutfitFromItems = (outfitName: string, clothingItems: ClothingItem[]) => {
+    // Create a new outfit with the items
+    const newOutfit: Outfit = {
+      id: `o${Date.now()}`,
+      name: outfitName,
+      items: clothingItems,
+      imageUrl: clothingItems[0].imageUrl,
+      createdAt: new Date().toISOString(),
+      season: "All Seasons", // Default season
+    };
+    
+    // Add the outfit to the outfits list
+    setOutfits(prevOutfits => {
+      console.log(`Creating new outfit "${outfitName}" with ${clothingItems.length} items`);
+      return [newOutfit, ...prevOutfits];
+    });
+    
+    // Show success message
+    toast({
+      title: "Nuovo outfit creato",
+      description: `L'outfit "${outfitName}" è stato aggiunto automaticamente con ${clothingItems.length} capi.`,
+      duration: 3000,
     });
   };
   

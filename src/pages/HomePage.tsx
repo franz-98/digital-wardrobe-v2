@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 // Import hooks
@@ -83,7 +82,6 @@ const HomePage = () => {
     confirmSingleInference,
     confirmMultipleInference,
     handleSingleInferenceEdit,
-    handleMultipleInferenceEdit,
     handleSingleDialogOpenChange,
     handleMultipleDialogOpenChange,
   } = useItemInference();

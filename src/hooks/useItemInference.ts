@@ -21,7 +21,7 @@ export const useItemInference = () => {
   const [inferredItems, setInferredItems] = useState<ItemInference[]>([]);
   const [multipleInferenceDialogOpen, setMultipleInferenceDialogOpen] = useState(false);
   
-  const { setClothingItems, clothingItems } = useWardrobeData();
+  const { setClothingItems, clothingItems, setOutfits } = useWardrobeData();
   
   // Track if we've just added an item to help with debugging
   const [lastAddedItem, setLastAddedItem] = useState<string | null>(null);
@@ -53,7 +53,8 @@ export const useItemInference = () => {
     setIsUploading,
     setRecentUploadItems,
     setClothingItems,
-    setLastAddedItem
+    setLastAddedItem,
+    setOutfits
   );
 
   // Wrap handlers to use the current state
