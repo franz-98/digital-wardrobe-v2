@@ -26,25 +26,29 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
-      // Simulate multiple detected items from a single image
-      const inferredItems: ItemInference[] = [
-        {
-          id: `inferred-${Date.now()}-1`,
-          name: "T-Shirt", // Empty initial name for first item
-          category: "Tops", // Default category
-          color: "Blue",
+      // Generate 4-5 mock items to better test pagination
+      const itemCount = Math.floor(Math.random() * 2) + 4; // 4-5 items
+      const mockCategories = ["Tops", "Bottoms", "Outerwear", "Accessories", "Footwear"];
+      const mockColors = ["Blue", "Black", "White", "Red", "Green", "Yellow", "Gray"];
+      
+      const inferredItems: ItemInference[] = [];
+      
+      // Generate the specified number of mock items
+      for (let i = 0; i < itemCount; i++) {
+        const randomCategory = mockCategories[Math.floor(Math.random() * mockCategories.length)];
+        const randomColor = mockColors[Math.floor(Math.random() * mockColors.length)];
+        
+        inferredItems.push({
+          id: `inferred-${Date.now()}-${i}`,
+          name: `${randomColor} ${randomCategory}`, 
+          category: randomCategory,
+          color: randomColor,
           imageUrl: sharedImageUrl,
-          confidence: 0.92
-        },
-        {
-          id: `inferred-${Date.now()}-2`,
-          name: "Jeans", // Empty initial name for second item
-          category: "Bottoms", // Default category
-          color: "Blue",
-          imageUrl: sharedImageUrl,
-          confidence: 0.85
-        }
-      ];
+          confidence: 0.75 + (Math.random() * 0.2) // Between 0.75 and 0.95
+        });
+      }
+      
+      console.log(`Generated ${inferredItems.length} mock items for inference`);
       
       // Set the inferred items and open the multiple inference dialog
       setInferredItems(inferredItems);

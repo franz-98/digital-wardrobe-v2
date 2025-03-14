@@ -28,9 +28,13 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '280px', maxHeight: 'calc(60vh - 100px)' }}>
-      <ScrollArea className="flex-1 pr-1 h-full w-full" scrollHideDelay={100}>
-        <div className="space-y-6 py-2 pb-6" ref={scrollAreaRef}>
+    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '280px', maxHeight: 'calc(60vh - 120px)' }}>
+      <ScrollArea className="flex-1 pr-1 h-full w-full overflow-y-auto" scrollHideDelay={100}>
+        <div 
+          className="space-y-6 py-2 pb-6 touch-auto" 
+          ref={scrollAreaRef}
+          style={{ minHeight: '100%', WebkitOverflowScrolling: 'touch' }}
+        >
           <div className="opacity-100 transition-opacity duration-150">
             <InferredItemDisplay 
               item={currentItem}
