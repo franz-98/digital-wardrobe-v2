@@ -36,9 +36,15 @@ const MultipleInferenceDialog = ({
 }: MultipleInferenceDialogProps) => {
   const isMobile = useIsMobile();
   
-  // Wrap all this in a conditional to prevent hook inconsistency during renders
-  // Only render the content if the dialog is open and there are items
-  if (!open || !inferredItems.length) return null;
+  // Only use hooks when dialog is open to avoid inconsistent hook calls
+  if (!open || !inferredItems.length) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        {/* Empty DialogContent to maintain consistency */}
+        {open && <DialogContent className="hidden" />}
+      </Dialog>
+    );
+  }
   
   const {
     currentIndex,
