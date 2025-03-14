@@ -35,7 +35,7 @@ export const createFileUploadHandlers = (
           id: `item-${Date.now()}-1`,
           name: "Camicia Blu",
           category: "Shirt",
-          color: "Blue",
+          color: "Blue", // Ensuring color is always set
           imageUrl: sharedImageUrl,
           confidence: 0.95, // High confidence - should go directly to wardrobe
           outfitId: outfitName
@@ -44,7 +44,7 @@ export const createFileUploadHandlers = (
           id: `item-${Date.now()}-2`,
           name: "Pantaloni Neri", 
           category: "Pants",
-          color: "Black",
+          color: "Black", // Ensuring color is always set
           imageUrl: sharedImageUrl,
           confidence: 0.92, // High confidence - should go directly to wardrobe
           outfitId: outfitName
@@ -53,7 +53,7 @@ export const createFileUploadHandlers = (
           id: `item-${Date.now()}-3`,
           name: "Giacca Verde",
           category: "Jacket", 
-          color: "Green",
+          color: "Green", // Ensuring color is always set
           imageUrl: sharedImageUrl,
           confidence: 0.68, // Below 75% - should go to recent uploads
           outfitId: outfitName
@@ -62,7 +62,7 @@ export const createFileUploadHandlers = (
           id: `item-${Date.now()}-4`,
           name: "Scarpe Marroni",
           category: "Shoes",
-          color: "Brown", 
+          color: "Brown", // Ensuring color is always set
           imageUrl: sharedImageUrl,
           confidence: 0.65, // Below 75% - should go to recent uploads
           outfitId: outfitName
@@ -71,7 +71,7 @@ export const createFileUploadHandlers = (
           id: `item-${Date.now()}-5`,
           name: "Accessorio Rosso",
           category: "Accessories",
-          color: "Red",
+          color: "Red", // Ensuring color is always set
           imageUrl: sharedImageUrl, 
           confidence: 0.82, // High confidence - should go directly to wardrobe
           outfitId: outfitName

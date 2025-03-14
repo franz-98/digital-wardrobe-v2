@@ -2,10 +2,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWardrobeData } from "@/hooks/useWardrobeData";
-import { ItemInference } from "@/components/home/types";
 
-// Import the refactored modules
-import { DEFAULT_INFERRED_ITEMS } from "./item-inference/types";
+// Import the refactored modules with correct types
+import { ItemInference, DEFAULT_INFERRED_ITEMS } from "./item-inference/types";
 import { loadRecentUploads, saveRecentUploads } from "./item-inference/storage-utils";
 import { createInferenceHandlers } from "./item-inference/inference-handlers";
 
@@ -59,8 +58,10 @@ export const useItemInference = () => {
 
   // Wrap handlers to use the current state
   const confirmSingleInference = () => {
-    handlers.confirmSingleInference(selectedItem);
-    handlers.handleSingleDialogOpenChange(false, setInferenceDialogOpen, setSelectedItem);
+    if (selectedItem) {
+      handlers.confirmSingleInference(selectedItem);
+      handlers.handleSingleDialogOpenChange(false, setInferenceDialogOpen, setSelectedItem);
+    }
   };
 
   const confirmMultipleInference = (items: ItemInference[]) => {
@@ -68,9 +69,11 @@ export const useItemInference = () => {
   };
 
   const handleSingleInferenceEdit = (field: keyof ItemInference, value: string) => {
-    const updatedItem = handlers.handleInferenceEdit(selectedItem, field, value);
-    if (updatedItem) {
-      setSelectedItem(updatedItem);
+    if (selectedItem) {
+      const updatedItem = handlers.handleInferenceEdit(selectedItem, field, value);
+      if (updatedItem) {
+        setSelectedItem(updatedItem);
+      }
     }
   };
 

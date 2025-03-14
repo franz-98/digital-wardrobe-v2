@@ -1,11 +1,11 @@
 
-import { ClothingItem } from "@/components/wardrobe/types";
+import { ClothingItem as WardrobeClothingItem } from "@/components/wardrobe/types";
 
 export interface ItemInference {
   id: string;
   name: string;
   category: string;
-  color?: string;
+  color: string; // Making color required to match the component's ItemInference type
   imageUrl: string;
   confidence: number;
   outfitId?: string; // Added outfitId to track which items belong to the same outfit
@@ -39,4 +39,30 @@ export const DEFAULT_INFERRED_ITEMS: ItemInference[] = [
   }
 ];
 
-export type ClothingItem = ClothingItem;
+// Adding storage keys for localStorage
+export const STORAGE_KEYS = {
+  CLOTHING_ITEMS: "wardrobeApp_clothingItems",
+  OUTFITS: "wardrobeApp_outfits",
+  RECENT_UPLOADS: "wardrobeApp_recentUploads"
+};
+
+// Default recent uploads to use when none are in localStorage
+export const DEFAULT_RECENT_UPLOADS: RecentUpload[] = [
+  {
+    id: "recent-1",
+    name: "Camicia Blu",
+    imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&h=300&fit=crop",
+    category: "Shirt",
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: "recent-2",
+    name: "Pantaloni Neri",
+    imageUrl: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=300&h=300&fit=crop",
+    category: "Pants",
+    createdAt: new Date().toISOString()
+  }
+];
+
+// Renaming the import to avoid conflict
+export type ClothingItem = WardrobeClothingItem;

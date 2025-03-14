@@ -14,9 +14,10 @@ export const createItemClickHandlers = (
       id: item.id,
       name: item.name,
       category: item.category,
-      color: "",
+      color: "", // Always provide a color field, even if empty
       imageUrl: item.imageUrl,
-      confidence: 1.0
+      confidence: 1.0,
+      outfitId: item.outfitId
     };
     
     setSelectedItem(inferredItem);
