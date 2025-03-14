@@ -64,5 +64,5 @@ export const DEFAULT_RECENT_UPLOADS: RecentUpload[] = [
   }
 ];
 
-// Renaming the import to avoid conflict
+// Using type alias to avoid conflict with the import
 export type ClothingItem = WardrobeClothingItem;

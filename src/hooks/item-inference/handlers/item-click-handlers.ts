@@ -14,7 +14,7 @@ export const createItemClickHandlers = (
       id: item.id,
       name: item.name,
       category: item.category,
-      color: "", // Always provide a color field, even if empty
+      color: "Unknown", // Always provide a color field, even if not known
       imageUrl: item.imageUrl,
       confidence: 1.0,
       outfitId: item.outfitId
