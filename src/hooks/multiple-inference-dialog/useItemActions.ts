@@ -1,80 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+
 import { ItemInference } from "@/components/home/types";
 import { toast } from "@/components/ui/use-toast";
 
-export function useMultipleInferenceDialog({
-  open,
-  onOpenChange,
-  inferredItems,
-  onConfirm,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  inferredItems: ItemInference[];
-  onConfirm: (items: ItemInference[]) => void;
-}) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>([]);
-  const [confirmedItems, setConfirmedItems] = useState<Set<number>>(new Set());
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const isNavigating = useRef(false);
-  
-  // Reset state when dialog opens with new items
-  useEffect(() => {
-    if (open && inferredItems.length > 0) {
-      setItemsToAdd([...inferredItems]);
-      setCurrentIndex(0);
-      setConfirmedItems(new Set());
-      isNavigating.current = false;
-      
-      // Reset scroll position
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
-    }
-  }, [open, inferredItems]);
-
-  const currentItem = itemsToAdd[currentIndex] || inferredItems[0];
-  const totalItems = itemsToAdd.length || inferredItems.length;
-  
-  const handleNavigate = (direction: 'prev' | 'next') => {
-    // Prevent multiple rapid navigations
-    if (isNavigating.current) {
-      console.log("Navigation blocked: already navigating");
-      return;
-    }
-    
-    isNavigating.current = true;
-    console.log(`Navigation started: ${direction}, current index: ${currentIndex}`);
-    
-    // Calculate the new index based on direction
-    let newIndex = currentIndex;
-    if (direction === 'prev' && currentIndex > 0) {
-      newIndex = currentIndex - 1;
-    } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      newIndex = currentIndex + 1;
-    } else {
-      // If no change needed, reset the navigating flag and return
-      console.log("Navigation canceled: no valid direction to navigate");
-      isNavigating.current = false;
-      return;
-    }
-    
-    console.log(`Navigating from ${currentIndex} to ${newIndex}`);
-    
-    // Update the current index
-    setCurrentIndex(newIndex);
-    
-    // Reset scroll position and allow navigation again after a short delay
-    setTimeout(() => {
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
-      console.log("Navigation completed, ready for next navigation");
-      isNavigating.current = false;
-    }, 300);
-  };
-
+export function useItemActions(
+  currentIndex: number,
+  totalItems: number,
+  confirmedItems: Set<number>,
+  setConfirmedItems: React.Dispatch<React.SetStateAction<Set<number>>>,
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>,
+  scrollAreaRef: React.RefObject<HTMLDivElement>,
+  isNavigating: React.MutableRefObject<boolean>,
+  itemsToAdd: ItemInference[],
+  setItemsToAdd: React.Dispatch<React.SetStateAction<ItemInference[]>>,
+  onOpenChange: (open: boolean) => void,
+  onConfirm: (items: ItemInference[]) => void
+) {
   const handleCancel = () => {
     onOpenChange(false);
   };
@@ -97,6 +37,7 @@ export function useMultipleInferenceDialog({
       
       // If no items were confirmed, confirm the current one
       if (itemsToConfirm.length === 0) {
+        const currentItem = itemsToAdd[currentIndex];
         onConfirm([currentItem]);
         toast({
           title: "Articolo confermato",
@@ -186,13 +127,6 @@ export function useMultipleInferenceDialog({
   };
 
   return {
-    currentIndex,
-    currentItem,
-    totalItems,
-    confirmedItems,
-    scrollAreaRef,
-    itemsToAdd,
-    handleNavigate,
     handleCancel,
     handleSave,
     handleConfirmSingleItem,

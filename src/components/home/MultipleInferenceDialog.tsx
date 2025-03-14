@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Dialog, 
@@ -11,7 +10,7 @@ import {
   DialogHeaderSection,
   ItemDisplaySection
 } from "./inference-dialog";
-import { useMultipleInferenceDialog } from "@/hooks/useMultipleInferenceDialog";
+import { useMultipleInferenceDialog } from "@/hooks/multiple-inference-dialog";
 
 interface MultipleInferenceDialogProps {
   open: boolean;
@@ -50,13 +49,11 @@ const MultipleInferenceDialog = ({
 
   if (!inferredItems.length) return null;
 
-  // Function to handle field changes and propagate to parent
   const handleCurrentItemChange = (field: keyof ItemInference, value: string) => {
     onFieldChange(currentIndex, field, value);
     handleFieldChange(field, value);
   };
 
-  // Check if current item is confirmed
   const isCurrentItemConfirmed = confirmedItems.has(currentIndex);
 
   return (
