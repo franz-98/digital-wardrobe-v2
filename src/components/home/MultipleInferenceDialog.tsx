@@ -36,7 +36,6 @@ const MultipleInferenceDialog = ({
     currentItem,
     totalItems,
     confirmedItems,
-    scrollAreaRef,
     handleNavigate,
     handleCancel,
     handleSave,
@@ -61,14 +60,10 @@ const MultipleInferenceDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] flex flex-col p-3 sm:p-6 overflow-hidden"
+        className="max-w-md sm:max-w-lg md:max-w-xl flex flex-col p-3 sm:p-6 overflow-auto"
+        dismissThreshold={999999}
         enableDismissOnScroll={false}
-        dismissThreshold={99999}
         showDismissIndicator={false}
-        onPointerDownOutside={(e) => {
-          // Prevent closing on pointer down outside to avoid accidental closes
-          e.preventDefault();
-        }}
       >
         <DialogHeaderSection totalItems={totalItems} />
 
@@ -82,7 +77,6 @@ const MultipleInferenceDialog = ({
           currentItem={currentItem}
           onFieldChange={handleCurrentItemChange}
           clothingCategories={clothingCategories}
-          scrollAreaRef={scrollAreaRef}
           isConfirmed={isCurrentItemConfirmed}
         />
 

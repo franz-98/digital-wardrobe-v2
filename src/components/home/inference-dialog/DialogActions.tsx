@@ -21,34 +21,17 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  const handleConfirmAndNext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (onConfirmSingle) {
-      onConfirmSingle();
-    }
-  };
-
-  const handleSave = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onSave();
-  };
-
-  const handleCancel = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onCancel();
-  };
+  const isLastItem = currentIndex !== undefined && totalItems 
+    ? currentIndex >= totalItems - 1 
+    : false;
 
   return (
     <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-3 pt-4 border-t sticky bottom-0 bg-background pb-2 z-10">
       <Button 
         variant="outline" 
-        onClick={handleCancel} 
+        onClick={onCancel} 
         type="button" 
-        className="flex-1 h-10 sm:h-9 touch-none"
+        className="flex-1 h-10 sm:h-9"
         size="sm"
       >
         Annulla
@@ -56,10 +39,10 @@ const DialogActions = ({
       
       {isMultipleItems ? (
         <>
-          {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
+          {!isLastItem ? (
             <Button 
-              onClick={handleConfirmAndNext} 
-              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] bg-green-600 hover:bg-green-700 touch-none"
+              onClick={onConfirmSingle} 
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] bg-green-600 hover:bg-green-700"
               type="button"
               size="sm"
             >
@@ -68,8 +51,8 @@ const DialogActions = ({
             </Button>
           ) : (
             <Button 
-              onClick={handleSave} 
-              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] touch-none"
+              onClick={onSave} 
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
               type="button"
               size="sm"
             >
@@ -79,8 +62,8 @@ const DialogActions = ({
         </>
       ) : (
         <Button 
-          onClick={handleSave} 
-          className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] touch-none"
+          onClick={onSave} 
+          className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
           type="button"
           size="sm"
         >

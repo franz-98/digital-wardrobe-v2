@@ -8,8 +8,6 @@ export function useItemActions(
   confirmedItems: Set<number>,
   setConfirmedItems: React.Dispatch<React.SetStateAction<Set<number>>>,
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>,
-  scrollAreaRef: React.RefObject<HTMLDivElement>,
-  isNavigating: React.MutableRefObject<boolean>,
   itemsToAdd: ItemInference[],
   setItemsToAdd: React.Dispatch<React.SetStateAction<ItemInference[]>>,
   onOpenChange: (open: boolean) => void,
@@ -58,20 +56,10 @@ export function useItemActions(
   };
 
   const handleConfirmSingleItem = () => {
-    // Prevent multiple rapid confirmations
-    if (isNavigating.current) {
-      console.log("Confirm action blocked: already navigating");
-      return;
-    }
-    
-    isNavigating.current = true;
-    console.log("Starting single item confirmation process");
-    
     // Mark the current item as confirmed
     setConfirmedItems(prev => {
       const updated = new Set(prev);
       updated.add(currentIndex);
-      console.log(`Confirming item at index ${currentIndex}`);
       return updated;
     });
     
@@ -84,41 +72,14 @@ export function useItemActions(
     
     // Automatically navigate to the next item if not on the last item
     if (currentIndex < totalItems - 1) {
-      // Wait a moment before navigating to next item
-      console.log("Waiting to navigate to next item...");
-      setTimeout(() => {
-        // Make sure we're still navigating (not canceled)
-        if (!isNavigating.current) return;
-        
-        setCurrentIndex(prevIndex => {
-          const newIndex = prevIndex + 1;
-          console.log(`Auto-navigating to next item from ${prevIndex} to ${newIndex}`);
-          return newIndex;
-        });
-        
-        // Reset scroll position
-        if (scrollAreaRef.current) {
-          console.log("Resetting scroll position after navigation");
-          scrollAreaRef.current.scrollTop = 0;
-        }
-        
-        // Allow navigation again after another delay
-        setTimeout(() => {
-          isNavigating.current = false;
-          console.log("Navigation cooldown complete, ready for next navigation");
-        }, 400);
-      }, 300);
+      setCurrentIndex(currentIndex + 1);
     } else {
       // If it's the last item, show a toast suggesting to save
-      setTimeout(() => {
-        toast({
-          title: "Ultimo articolo confermato",
-          description: "Clicca 'Conferma Tutti' per salvare tutto.",
-          duration: 3000,
-        });
-        isNavigating.current = false;
-        console.log("Last item confirmed, navigation cooldown complete");
-      }, 500);
+      toast({
+        title: "Ultimo articolo confermato",
+        description: "Clicca 'Conferma Tutti' per salvare tutto.",
+        duration: 3000,
+      });
     }
   };
 

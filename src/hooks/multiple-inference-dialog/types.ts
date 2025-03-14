@@ -13,7 +13,6 @@ export interface UseMultipleInferenceDialogReturn {
   currentItem: ItemInference;
   totalItems: number;
   confirmedItems: Set<number>;
-  scrollAreaRef: React.RefObject<HTMLDivElement>;
   itemsToAdd: ItemInference[];
   handleNavigate: (directionOrPage: 'prev' | 'next' | number) => void;
   handleCancel: () => void;

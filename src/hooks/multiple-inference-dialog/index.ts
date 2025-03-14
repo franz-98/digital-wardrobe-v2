@@ -13,9 +13,7 @@ export function useMultipleInferenceDialog(props: UseMultipleInferenceDialogProp
     itemsToAdd,
     setItemsToAdd,
     confirmedItems,
-    setConfirmedItems,
-    scrollAreaRef,
-    isNavigating
+    setConfirmedItems
   } = useDialogState({
     open: props.open,
     inferredItems: props.inferredItems
@@ -24,9 +22,7 @@ export function useMultipleInferenceDialog(props: UseMultipleInferenceDialogProp
   const { handleNavigate } = useNavigation(
     currentIndex,
     setCurrentIndex,
-    totalItems,
-    scrollAreaRef,
-    isNavigating
+    totalItems
   );
 
   const {
@@ -40,8 +36,6 @@ export function useMultipleInferenceDialog(props: UseMultipleInferenceDialogProp
     confirmedItems,
     setConfirmedItems,
     setCurrentIndex,
-    scrollAreaRef,
-    isNavigating,
     itemsToAdd,
     setItemsToAdd,
     props.onOpenChange,
@@ -53,7 +47,6 @@ export function useMultipleInferenceDialog(props: UseMultipleInferenceDialogProp
     currentItem,
     totalItems,
     confirmedItems,
-    scrollAreaRef,
     itemsToAdd,
     handleNavigate,
     handleCancel,
