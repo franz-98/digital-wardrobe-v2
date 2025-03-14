@@ -5,14 +5,16 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface DialogHeaderSectionProps {
   totalItems: number;
+  className?: string;
 }
 
-const DialogHeaderSection = ({ totalItems }: DialogHeaderSectionProps) => {
+const DialogHeaderSection = ({ totalItems, className }: DialogHeaderSectionProps) => {
   return (
-    <DialogHeader>
+    <DialogHeader className={className}>
       <DialogTitle>Conferma Riconoscimento</DialogTitle>
       <DialogDescription>
         {totalItems > 1 
