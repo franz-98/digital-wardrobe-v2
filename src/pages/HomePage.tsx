@@ -90,7 +90,6 @@ const HomePage = () => {
         onOpenChange={handleMultipleDialogOpenChange}
         inferredItems={inferredItems}
         onConfirm={confirmMultipleInference}
-        onFieldChange={handleMultipleInferenceEdit}
         clothingCategories={CLOTHING_CATEGORIES}
       />
     </div>
