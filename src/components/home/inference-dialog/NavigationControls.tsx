@@ -40,7 +40,7 @@ const NavigationControls = ({
           onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 focus:ring-2"
           type="button"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -51,7 +51,7 @@ const NavigationControls = ({
           onClick={handleNext}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
-          className="h-8 w-8 p-0"
+          className="h-8 w-8 p-0 focus:ring-2"
           type="button"
         >
           <ChevronRight className="h-4 w-4" />
