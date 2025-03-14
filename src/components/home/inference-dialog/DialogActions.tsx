@@ -22,19 +22,18 @@ const DialogActions = ({
   const isMultipleItems = totalItems && totalItems > 1;
   
   const handleConfirmAndNext = () => {
-    console.log("Confirm and next clicked");
     if (onConfirmSingle) {
       onConfirmSingle();
     }
   };
 
   return (
-    <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-3 pt-3 border-t sticky bottom-0 bg-background pb-2 z-10">
+    <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-3 pt-4 border-t sticky bottom-0 bg-background pb-2 z-10">
       <Button 
         variant="outline" 
         onClick={onCancel} 
         type="button" 
-        className="flex-1"
+        className="flex-1 h-10 sm:h-9"
         size="sm"
       >
         Annulla
@@ -45,7 +44,7 @@ const DialogActions = ({
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
             <Button 
               onClick={handleConfirmAndNext} 
-              className="gap-1 flex-1 min-h-[36px] bg-green-600 hover:bg-green-700"
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] bg-green-600 hover:bg-green-700"
               type="button"
               size="sm"
             >
@@ -55,7 +54,7 @@ const DialogActions = ({
           ) : (
             <Button 
               onClick={onSave} 
-              className="gap-1 flex-1 min-h-[36px]"
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
               type="button"
               size="sm"
             >
@@ -66,7 +65,7 @@ const DialogActions = ({
       ) : (
         <Button 
           onClick={onSave} 
-          className="gap-1 flex-1 min-h-[36px]"
+          className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
           type="button"
           size="sm"
         >

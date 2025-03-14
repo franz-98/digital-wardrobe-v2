@@ -34,7 +34,7 @@ export function useNavigation(
       setCurrentIndex(nextIndex);
       
       // Reset scroll position when navigating
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         if (scrollAreaRef.current) {
           scrollAreaRef.current.scrollTop = 0;
         }
@@ -44,7 +44,7 @@ export function useNavigation(
           isNavigating.current = false;
           console.info(`Navigation completed, ready for next navigation`);
         }, 150);
-      });
+      }, 10); // Small timeout to ensure the DOM has updated
     } else {
       isNavigating.current = false;
     }

@@ -84,7 +84,7 @@ const MultipleInferenceDialog = ({
         <PaginationControls
           currentIndex={currentIndex}
           totalItems={totalItems}
-          onPageChange={(page) => handleNavigate(page)}
+          onPageChange={handleNavigate}
           confirmedItems={confirmedItems}
         />
 

@@ -46,10 +46,10 @@ const InferredItemDisplay = ({
   }
 
   return (
-    <div className="space-y-4 bg-secondary/10 p-3 rounded-md">
+    <div className="space-y-5 bg-secondary/10 p-4 rounded-md">
       <h4 className="font-medium">Indumento</h4>
-      <div className="flex flex-col gap-4">
-        <div className="h-40 w-full overflow-hidden rounded-md border bg-white">
+      <div className="flex flex-col gap-5">
+        <div className="h-44 w-full overflow-hidden rounded-md border bg-white">
           <img 
             src={item.imageUrl} 
             alt={item.name || "Item preview"} 
@@ -58,7 +58,7 @@ const InferredItemDisplay = ({
           />
         </div>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
             <Label htmlFor="name" className="text-sm font-medium">Nome</Label>
             <Input 
@@ -67,7 +67,7 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('name', e.target.value)}
               placeholder="Inserisci nome"
               autoFocus={false}
-              className="touch-manipulation h-10 mt-1"
+              className="touch-manipulation h-11 mt-1"
             />
           </div>
           
@@ -77,16 +77,16 @@ const InferredItemDisplay = ({
               value={item.category || ""}
               onValueChange={(value) => onFieldChange('category', value)}
             >
-              <SelectTrigger id="category" className="touch-manipulation h-10 mt-1">
+              <SelectTrigger id="category" className="touch-manipulation h-11 mt-1">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
-              <SelectContent className="touch-manipulation max-h-[150px]" position="popper" sideOffset={5}>
-                <ScrollArea className="h-[150px]">
+              <SelectContent className="touch-manipulation max-h-[180px]" position="popper" sideOffset={5}>
+                <ScrollArea className="h-[180px]">
                   {clothingCategories.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
-                      className="py-2 px-3 touch-manipulation text-base cursor-pointer"
+                      className="py-3 px-3 touch-manipulation text-base cursor-pointer"
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>
@@ -104,12 +104,12 @@ const InferredItemDisplay = ({
               onChange={(e) => onFieldChange('color', e.target.value)}
               placeholder="Inserisci colore"
               autoFocus={false}
-              className="touch-manipulation h-10 mt-1"
+              className="touch-manipulation h-11 mt-1"
             />
           </div>
           
           {item.confidence > 0 && (
-            <div className="mt-2">
+            <div className="mt-3">
               <Badge 
                 variant={item.confidence > 0.9 ? "default" : "outline"}
                 className={item.confidence > 0.9 ? "bg-green-600" : ""}

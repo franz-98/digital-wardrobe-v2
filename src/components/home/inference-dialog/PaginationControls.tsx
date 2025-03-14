@@ -28,15 +28,15 @@ const PaginationControls = ({
   const showPageNumbers = () => {
     const pages = [];
     
-    const maxPages = totalItems > 7 ? 7 : totalItems;
-    const halfMaxVisible = Math.floor(maxPages / 2);
+    const maxVisible = window.innerWidth < 640 ? 5 : 7; // Show fewer on mobile
+    const halfMaxVisible = Math.floor(maxVisible / 2);
     
     let startPage = Math.max(0, currentIndex - halfMaxVisible);
-    let endPage = Math.min(totalItems - 1, startPage + maxPages - 1);
+    let endPage = Math.min(totalItems - 1, startPage + maxVisible - 1);
     
     // Adjust start if we're near the end
-    if (endPage - startPage < maxPages - 1) {
-      startPage = Math.max(0, endPage - maxPages + 1);
+    if (endPage - startPage < maxVisible - 1) {
+      startPage = Math.max(0, endPage - maxVisible + 1);
     }
     
     for (let i = startPage; i <= endPage; i++) {
@@ -47,7 +47,7 @@ const PaginationControls = ({
   };
   
   return (
-    <div className="mt-2 mb-2 border-t border-b py-2">
+    <div className="mt-3 mb-3 border-t border-b py-3">
       <Pagination className="select-none">
         <PaginationContent className="flex flex-wrap justify-center gap-1">
           {showPageNumbers().map((pageIndex) => (
@@ -56,7 +56,7 @@ const PaginationControls = ({
                 onClick={() => onPageChange(pageIndex)} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
-                  "h-8 w-8 p-0 flex items-center justify-center relative",
+                  "h-9 w-9 p-0 flex items-center justify-center relative",
                   confirmedItems.has(pageIndex) ? "text-green-600 font-medium" : ""
                 )}
               >

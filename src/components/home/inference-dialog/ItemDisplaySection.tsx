@@ -28,9 +28,9 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '280px', maxHeight: '60vh' }}>
-      <ScrollArea className="flex-1 pr-1 h-full" scrollHideDelay={100}>
-        <div className="space-y-4 py-2 pb-4" ref={scrollAreaRef}>
+    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '280px', maxHeight: 'calc(60vh - 100px)' }}>
+      <ScrollArea className="flex-1 pr-1 h-full w-full" scrollHideDelay={100}>
+        <div className="space-y-6 py-2 pb-6" ref={scrollAreaRef}>
           <div className="opacity-100 transition-opacity duration-150">
             <InferredItemDisplay 
               item={currentItem}
@@ -41,7 +41,7 @@ const ItemDisplaySection = ({
           
           {/* Show visual indication that an item has been confirmed */}
           {isConfirmed && (
-            <div className="text-green-600 text-center text-sm mt-2">
+            <div className="text-green-600 text-center text-sm mt-4">
               ✓ Questo articolo è stato confermato
             </div>
           )}
