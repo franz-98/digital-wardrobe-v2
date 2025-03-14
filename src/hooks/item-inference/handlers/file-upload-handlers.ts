@@ -26,23 +26,23 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
-      // Generate exactly 5 mock items to better test pagination
+      // Generate mock items with unique IDs and clear property values
       const itemCount = 5; // Fixed number of items for consistent testing
       const mockCategories = ["Tops", "Bottoms", "Outerwear", "Accessories", "Footwear"];
-      const mockColors = ["Blue", "Black", "White", "Red", "Green", "Yellow", "Gray"];
+      const mockColors = ["Blue", "Black", "White", "Red", "Green"];
       
       const inferredItems: ItemInference[] = [];
       
-      // Generate the specified number of mock items
+      // Generate the specified number of mock items with consistent data
       for (let i = 0; i < itemCount; i++) {
-        const randomCategory = mockCategories[Math.floor(Math.random() * mockCategories.length)];
-        const randomColor = mockColors[Math.floor(Math.random() * mockColors.length)];
+        const category = mockCategories[i % mockCategories.length];
+        const color = mockColors[i % mockColors.length];
         
         inferredItems.push({
           id: `inferred-${Date.now()}-${i}`,
-          name: `${randomColor} ${randomCategory} ${i+1}`, 
-          category: randomCategory,
-          color: randomColor,
+          name: `${color} ${category}`, 
+          category: category,
+          color: color,
           imageUrl: sharedImageUrl,
           confidence: 0.75 + (Math.random() * 0.2) // Between 0.75 and 0.95
         });
