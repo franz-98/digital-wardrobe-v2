@@ -15,7 +15,7 @@ export interface UseMultipleInferenceDialogReturn {
   confirmedItems: Set<number>;
   scrollAreaRef: React.RefObject<HTMLDivElement>;
   itemsToAdd: ItemInference[];
-  handleNavigate: (direction: 'prev' | 'next') => void;
+  handleNavigate: (directionOrPage: 'prev' | 'next' | number) => void;
   handleCancel: () => void;
   handleSave: () => void;
   handleConfirmSingleItem: () => void;

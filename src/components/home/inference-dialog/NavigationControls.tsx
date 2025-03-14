@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 interface NavigationControlsProps {
   currentIndex: number;
   totalItems: number;
-  onNavigate: (direction: 'prev' | 'next') => void;
+  onNavigate: (directionOrPage: 'prev' | 'next' | number) => void;
 }
 
 const NavigationControls = ({ 
