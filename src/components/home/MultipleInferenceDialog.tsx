@@ -9,7 +9,8 @@ import {
   NavigationControls, 
   DialogActions,
   DialogHeaderSection,
-  ItemDisplaySection
+  ItemDisplaySection,
+  PaginationControls
 } from "./inference-dialog";
 import { useMultipleInferenceDialog } from "@/hooks/multiple-inference-dialog";
 
@@ -78,6 +79,13 @@ const MultipleInferenceDialog = ({
           clothingCategories={clothingCategories}
           scrollAreaRef={scrollAreaRef}
           isConfirmed={isCurrentItemConfirmed}
+        />
+
+        <PaginationControls
+          currentIndex={currentIndex}
+          totalItems={totalItems}
+          onPageChange={(page) => handleNavigate(page)}
+          confirmedItems={confirmedItems}
         />
 
         <DialogActions 

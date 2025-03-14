@@ -17,19 +17,19 @@ const NavigationControls = ({
   if (totalItems <= 1) return null;
   
   return (
-    <div className="flex items-center justify-between text-sm py-2 mb-2 border-b pb-3">
-      <span>Articolo {currentIndex + 1} di {totalItems}</span>
-      <div className="flex space-x-2">
+    <div className="flex items-center justify-between text-sm py-2 mb-2">
+      <span className="text-xs sm:text-sm text-muted-foreground">Articolo {currentIndex + 1} di {totalItems}</span>
+      <div className="flex space-x-1">
         <Button 
           variant="outline" 
           size="sm"
           onClick={() => onNavigate('prev')}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
-          className="h-8 w-8 p-0 focus:ring-2"
+          className="h-7 w-7 p-0 focus:ring-1"
           type="button"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-3 w-3" />
         </Button>
         <Button 
           variant="outline" 
@@ -37,10 +37,10 @@ const NavigationControls = ({
           onClick={() => onNavigate('next')}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
-          className="h-8 w-8 p-0 focus:ring-2"
+          className="h-7 w-7 p-0 focus:ring-1"
           type="button"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-3 w-3" />
         </Button>
       </div>
     </div>

@@ -8,17 +8,25 @@ export function useNavigation(
   scrollAreaRef: React.RefObject<HTMLDivElement>,
   isNavigating: React.MutableRefObject<boolean>
 ) {
-  const handleNavigate = useCallback((direction: 'prev' | 'next') => {
+  const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
     // Prevent rapid multiple navigation clicks
     if (isNavigating.current) return;
     isNavigating.current = true;
 
-    console.info(`Navigation started: ${direction}, current index: ${currentIndex}`);
+    let nextIndex: number;
     
-    // Calculate next index based on direction
-    const nextIndex = direction === 'prev' 
-      ? Math.max(0, currentIndex - 1)
-      : Math.min(totalItems - 1, currentIndex + 1);
+    // Handle direct page navigation vs prev/next
+    if (typeof directionOrPage === 'number') {
+      // Direct page jump - bounds checking
+      nextIndex = Math.max(0, Math.min(totalItems - 1, directionOrPage));
+      console.info(`Direct navigation to page: ${nextIndex + 1}`);
+    } else {
+      // Directional navigation
+      console.info(`Navigation started: ${directionOrPage}, current index: ${currentIndex}`);
+      nextIndex = directionOrPage === 'prev' 
+        ? Math.max(0, currentIndex - 1)
+        : Math.min(totalItems - 1, currentIndex + 1);
+    }
     
     // Only update if it's a valid index change
     if (nextIndex !== currentIndex) {
