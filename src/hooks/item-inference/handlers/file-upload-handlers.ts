@@ -26,8 +26,8 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
-      // Generate 4-5 mock items to better test pagination
-      const itemCount = Math.floor(Math.random() * 2) + 4; // 4-5 items
+      // Generate exactly 5 mock items to better test pagination
+      const itemCount = 5; // Fixed number of items for consistent testing
       const mockCategories = ["Tops", "Bottoms", "Outerwear", "Accessories", "Footwear"];
       const mockColors = ["Blue", "Black", "White", "Red", "Green", "Yellow", "Gray"];
       
@@ -40,7 +40,7 @@ export const createFileUploadHandlers = (
         
         inferredItems.push({
           id: `inferred-${Date.now()}-${i}`,
-          name: `${randomColor} ${randomCategory}`, 
+          name: `${randomColor} ${randomCategory} ${i+1}`, 
           category: randomCategory,
           color: randomColor,
           imageUrl: sharedImageUrl,

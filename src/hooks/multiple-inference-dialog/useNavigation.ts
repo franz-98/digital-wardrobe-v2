@@ -1,5 +1,5 @@
 
-import { useCallback } from "react";
+import { useCallback, useRef, useEffect } from "react";
 
 export function useNavigation(
   currentIndex: number,
@@ -8,6 +8,13 @@ export function useNavigation(
   scrollAreaRef: React.RefObject<HTMLDivElement>,
   isNavigating: React.MutableRefObject<boolean>
 ) {
+  // Cleanup function to reset navigation state when component unmounts
+  useEffect(() => {
+    return () => {
+      isNavigating.current = false;
+    };
+  }, [isNavigating]);
+
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
     // Prevent rapid multiple navigation clicks
     if (isNavigating.current) {
@@ -41,7 +48,11 @@ export function useNavigation(
       // Reset scroll position when navigating
       if (scrollAreaRef.current) {
         console.log("Resetting scroll position");
-        scrollAreaRef.current.scrollTop = 0;
+        setTimeout(() => {
+          if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = 0;
+          }
+        }, 10);
       }
       
       // Allow navigation again after a short delay
