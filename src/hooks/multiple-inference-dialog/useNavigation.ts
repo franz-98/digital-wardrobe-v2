@@ -37,10 +37,12 @@ export function useNavigation(
     setCurrentIndex(newIndex);
     
     // Reset scroll position and allow navigation again after a short delay
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTop = 0;
+    }
+    
+    // Allow navigation again after a short delay
     setTimeout(() => {
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
       console.log("Navigation completed, ready for next navigation");
       isNavigating.current = false;
     }, 300);

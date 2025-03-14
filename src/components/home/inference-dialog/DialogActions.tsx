@@ -21,9 +21,7 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  const handleConfirmAndNext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleConfirmAndNext = () => {
     console.log("Confirm and next clicked");
     if (onConfirmSingle) {
       onConfirmSingle();
@@ -31,7 +29,7 @@ const DialogActions = ({
   };
 
   return (
-    <DialogFooter className="gap-2 mt-2 pt-2 border-t">
+    <DialogFooter className="flex flex-row gap-2 mt-2 pt-2 border-t sticky bottom-0 bg-background pb-2">
       <Button 
         variant="outline" 
         onClick={onCancel} 
