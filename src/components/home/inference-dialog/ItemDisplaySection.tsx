@@ -28,24 +28,26 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <ScrollArea className="flex-1 h-[300px] sm:h-[350px] md:h-[400px]" scrollHideDelay={100}>
-      <div className="space-y-4 py-2" ref={scrollAreaRef}>
-        <div className="opacity-100 transition-opacity duration-150">
-          <InferredItemDisplay 
-            item={currentItem}
-            onFieldChange={onFieldChange}
-            clothingCategories={clothingCategories}
-          />
-        </div>
-        
-        {/* Show visual indication that an item has been confirmed */}
-        {isConfirmed && (
-          <div className="text-green-600 text-center text-sm mt-2">
-            ✓ Questo articolo è stato confermato
+    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '240px' }}>
+      <ScrollArea className="flex-1 pr-1" scrollHideDelay={100}>
+        <div className="space-y-4 py-2" ref={scrollAreaRef}>
+          <div className="opacity-100 transition-opacity duration-150">
+            <InferredItemDisplay 
+              item={currentItem}
+              onFieldChange={onFieldChange}
+              clothingCategories={clothingCategories}
+            />
           </div>
-        )}
-      </div>
-    </ScrollArea>
+          
+          {/* Show visual indication that an item has been confirmed */}
+          {isConfirmed && (
+            <div className="text-green-600 text-center text-sm mt-2">
+              ✓ Questo articolo è stato confermato
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+    </div>
   );
 };
 

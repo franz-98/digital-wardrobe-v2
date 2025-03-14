@@ -16,24 +16,14 @@ const NavigationControls = ({
 }: NavigationControlsProps) => {
   if (totalItems <= 1) return null;
   
-  const handlePrev = () => {
-    console.log("Navigation: previous clicked");
-    onNavigate('prev');
-  };
-  
-  const handleNext = () => {
-    console.log("Navigation: next clicked");
-    onNavigate('next');
-  };
-  
   return (
-    <div className="flex items-center justify-between text-sm py-2 mb-2">
+    <div className="flex items-center justify-between text-sm py-2 mb-2 border-b pb-3">
       <span>Articolo {currentIndex + 1} di {totalItems}</span>
       <div className="flex space-x-2">
         <Button 
           variant="outline" 
           size="sm"
-          onClick={handlePrev}
+          onClick={() => onNavigate('prev')}
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
           className="h-8 w-8 p-0 focus:ring-2"
@@ -44,7 +34,7 @@ const NavigationControls = ({
         <Button 
           variant="outline" 
           size="sm"
-          onClick={handleNext}
+          onClick={() => onNavigate('next')}
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
           className="h-8 w-8 p-0 focus:ring-2"
