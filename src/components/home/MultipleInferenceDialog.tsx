@@ -44,6 +44,11 @@ const MultipleInferenceDialog = ({
       setItemsToAdd([...inferredItems]);
       setCurrentIndex(0);
       setConfirmedItems(new Set());
+      
+      // Reset scroll position
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = 0;
+      }
     }
   }, [open, inferredItems]);
 
@@ -55,21 +60,27 @@ const MultipleInferenceDialog = ({
   const handleNavigate = (direction: 'prev' | 'next') => {
     console.log(`Navigation triggered: ${direction}, current: ${currentIndex}, total: ${totalItems}`);
     
+    // Use functional updates to ensure we're using the latest state
     if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex(prevIndex => prevIndex - 1);
-      
-      // Reset scroll position when navigating
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
+      setCurrentIndex((prevIndex) => {
+        const newIndex = prevIndex - 1;
+        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
+        return newIndex;
+      });
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex(prevIndex => prevIndex + 1);
-      
-      // Reset scroll position when navigating
+      setCurrentIndex((prevIndex) => {
+        const newIndex = prevIndex + 1;
+        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
+        return newIndex;
+      });
+    }
+    
+    // Reset scroll position on every navigation
+    setTimeout(() => {
       if (scrollAreaRef.current) {
         scrollAreaRef.current.scrollTop = 0;
       }
-    }
+    }, 10);
   };
 
   const handleCancel = () => {
@@ -118,14 +129,20 @@ const MultipleInferenceDialog = ({
     
     // Automatically navigate to the next item if not on the last item
     if (currentIndex < totalItems - 1) {
-      console.log(`Auto-navigating to next item: ${currentIndex + 1}`);
-      // Use the functional update to ensure we're using the latest state
-      setCurrentIndex(prevIndex => prevIndex + 1);
-      
-      // Reset scroll position
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
+      // Wait for state to update before navigating
+      setTimeout(() => {
+        console.log(`Auto-navigating to next item from ${currentIndex} to ${currentIndex + 1}`);
+        setCurrentIndex(prevIndex => {
+          const newIndex = prevIndex + 1;
+          
+          // Reset scroll position
+          if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = 0;
+          }
+          
+          return newIndex;
+        });
+      }, 50);
     }
   };
 
@@ -160,14 +177,16 @@ const MultipleInferenceDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 max-h-[60vh]">
-          <div className="space-y-4 py-2" ref={scrollAreaRef}>
-            <NavigationControls 
-              currentIndex={currentIndex}
-              totalItems={totalItems}
-              onNavigate={handleNavigate}
-            />
+        <div className="mb-4">
+          <NavigationControls 
+            currentIndex={currentIndex}
+            totalItems={totalItems}
+            onNavigate={handleNavigate}
+          />
+        </div>
 
+        <ScrollArea className="flex-1 max-h-[60vh] pr-4">
+          <div className="space-y-4 py-2" ref={scrollAreaRef}>
             <div className="opacity-100 transition-opacity duration-150">
               <InferredItemDisplay 
                 item={currentItem}

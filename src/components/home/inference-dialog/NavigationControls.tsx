@@ -37,6 +37,7 @@ const NavigationControls = ({
           disabled={currentIndex === 0}
           aria-label="Articolo precedente"
           className="h-10 w-10 touch-manipulation"
+          type="button"
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
@@ -47,6 +48,7 @@ const NavigationControls = ({
           disabled={currentIndex === totalItems - 1}
           aria-label="Articolo successivo"
           className="h-10 w-10 touch-manipulation"
+          type="button"
         >
           <ChevronRight className="h-5 w-5" />
         </Button>
