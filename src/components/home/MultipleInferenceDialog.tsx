@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Dialog, 
   DialogContent,
@@ -34,13 +34,14 @@ const MultipleInferenceDialog = ({
   clothingCategories
 }: MultipleInferenceDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>(inferredItems);
+  const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>([]);
   const [confirmedItems, setConfirmedItems] = useState<Set<number>>(new Set());
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   // Reset state when dialog opens with new items
   useEffect(() => {
     if (open && inferredItems.length > 0) {
-      setItemsToAdd(inferredItems);
+      setItemsToAdd([...inferredItems]);
       setCurrentIndex(0);
       setConfirmedItems(new Set());
     }
@@ -56,8 +57,18 @@ const MultipleInferenceDialog = ({
     
     if (direction === 'prev' && currentIndex > 0) {
       setCurrentIndex(prevIndex => prevIndex - 1);
+      
+      // Reset scroll position when navigating
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = 0;
+      }
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
       setCurrentIndex(prevIndex => prevIndex + 1);
+      
+      // Reset scroll position when navigating
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = 0;
+      }
     }
   };
 
@@ -91,9 +102,11 @@ const MultipleInferenceDialog = ({
     console.log(`Confirming item at index ${currentIndex}`);
     
     // Mark the current item as confirmed
-    const updatedConfirmed = new Set(confirmedItems);
-    updatedConfirmed.add(currentIndex);
-    setConfirmedItems(updatedConfirmed);
+    setConfirmedItems(prev => {
+      const updated = new Set(prev);
+      updated.add(currentIndex);
+      return updated;
+    });
     
     // Show a toast to confirm to the user
     toast({
@@ -108,6 +121,11 @@ const MultipleInferenceDialog = ({
       console.log(`Auto-navigating to next item: ${currentIndex + 1}`);
       // Use the functional update to ensure we're using the latest state
       setCurrentIndex(prevIndex => prevIndex + 1);
+      
+      // Reset scroll position
+      if (scrollAreaRef.current) {
+        scrollAreaRef.current.scrollTop = 0;
+      }
     }
   };
 
@@ -115,12 +133,14 @@ const MultipleInferenceDialog = ({
     onFieldChange(currentIndex, field, value);
     
     // Also update local state
-    const updatedItems = [...itemsToAdd];
-    updatedItems[currentIndex] = {
-      ...updatedItems[currentIndex],
-      [field]: value
-    };
-    setItemsToAdd(updatedItems);
+    setItemsToAdd(prevItems => {
+      const updated = [...prevItems];
+      updated[currentIndex] = {
+        ...updated[currentIndex],
+        [field]: value
+      };
+      return updated;
+    });
   };
 
   return (
@@ -140,8 +160,8 @@ const MultipleInferenceDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 max-h-[60vh] touch-manipulation">
-          <div className="space-y-4 py-2">
+        <ScrollArea className="flex-1 max-h-[60vh]">
+          <div className="space-y-4 py-2" ref={scrollAreaRef}>
             <NavigationControls 
               currentIndex={currentIndex}
               totalItems={totalItems}
