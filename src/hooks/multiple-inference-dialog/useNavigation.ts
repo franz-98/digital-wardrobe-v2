@@ -20,6 +20,7 @@ export function useNavigation(
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
     // Prevent navigation if already in progress
     if (isNavigating.current || isUpdating.current) {
+      console.log("Navigation blocked: already in progress");
       return;
     }
     
@@ -43,25 +44,22 @@ export function useNavigation(
     
     // Only update if we're changing to a different index
     if (nextIndex !== currentIndex) {
-      // Reset scroll position first
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
-      }
+      console.log(`Navigating from index ${currentIndex} to ${nextIndex}`);
       
-      // Update state with small delay to ensure UI is ready
+      // Update the index immediately
+      setCurrentIndex(nextIndex);
+      
+      // Release navigation lock after a delay to prevent rapid navigation
       setTimeout(() => {
-        setCurrentIndex(nextIndex);
-        
-        // Release navigation lock after a delay
-        setTimeout(() => {
-          isNavigating.current = false;
-          isUpdating.current = false;
-        }, 500); // Longer cooldown to prevent rapid navigation
-      }, 50);
+        isNavigating.current = false;
+        isUpdating.current = false;
+        console.log("Navigation locks released");
+      }, 300);
     } else {
       // Release locks if no navigation needed
       isNavigating.current = false;
       isUpdating.current = false;
+      console.log("No navigation needed, locks released");
     }
   }, [currentIndex, setCurrentIndex, totalItems, scrollAreaRef]);
 

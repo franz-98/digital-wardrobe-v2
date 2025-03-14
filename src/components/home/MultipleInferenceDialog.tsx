@@ -65,6 +65,10 @@ const MultipleInferenceDialog = ({
         enableDismissOnScroll={false}
         dismissThreshold={99999}
         showDismissIndicator={false}
+        onPointerDownOutside={(e) => {
+          // Prevent closing on pointer down outside to avoid accidental closes
+          e.preventDefault();
+        }}
       >
         <DialogHeaderSection totalItems={totalItems} />
 

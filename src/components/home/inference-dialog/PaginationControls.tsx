@@ -47,8 +47,8 @@ const PaginationControls = ({
   };
   
   const handlePageClick = (pageIndex: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault(); // Prevent default anchor behavior
+    e.stopPropagation(); // Stop event propagation
     
     if (pageIndex !== currentIndex) {
       onPageChange(pageIndex);
@@ -60,13 +60,13 @@ const PaginationControls = ({
       <Pagination className="select-none">
         <PaginationContent className="flex flex-wrap justify-center gap-1">
           {showPageNumbers().map((pageIndex) => (
-            <PaginationItem key={pageIndex}>
+            <PaginationItem key={pageIndex} className="touch-none">
               <PaginationLink 
                 href="#"
                 onClick={(e) => handlePageClick(pageIndex, e)} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
-                  "h-9 w-9 p-0 flex items-center justify-center relative",
+                  "h-9 w-9 p-0 flex items-center justify-center relative touch-none",
                   confirmedItems.has(pageIndex) ? "text-green-600 font-medium" : ""
                 )}
               >

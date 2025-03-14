@@ -30,13 +30,25 @@ const DialogActions = ({
     }
   };
 
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onSave();
+  };
+
+  const handleCancel = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onCancel();
+  };
+
   return (
     <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-3 pt-4 border-t sticky bottom-0 bg-background pb-2 z-10">
       <Button 
         variant="outline" 
-        onClick={onCancel} 
+        onClick={handleCancel} 
         type="button" 
-        className="flex-1 h-10 sm:h-9"
+        className="flex-1 h-10 sm:h-9 touch-none"
         size="sm"
       >
         Annulla
@@ -47,7 +59,7 @@ const DialogActions = ({
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
             <Button 
               onClick={handleConfirmAndNext} 
-              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] bg-green-600 hover:bg-green-700"
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] bg-green-600 hover:bg-green-700 touch-none"
               type="button"
               size="sm"
             >
@@ -56,8 +68,8 @@ const DialogActions = ({
             </Button>
           ) : (
             <Button 
-              onClick={onSave} 
-              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
+              onClick={handleSave} 
+              className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] touch-none"
               type="button"
               size="sm"
             >
@@ -67,8 +79,8 @@ const DialogActions = ({
         </>
       ) : (
         <Button 
-          onClick={onSave} 
-          className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px]"
+          onClick={handleSave} 
+          className="gap-1 flex-1 min-h-[40px] sm:min-h-[36px] touch-none"
           type="button"
           size="sm"
         >
