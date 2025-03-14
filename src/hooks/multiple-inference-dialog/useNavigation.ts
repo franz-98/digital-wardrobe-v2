@@ -38,15 +38,19 @@ export function useNavigation(
       console.log(`Direct navigation to page: ${nextIndex + 1}`);
     } else {
       // Directional navigation
-      nextIndex = directionOrPage === 'prev' 
-        ? Math.max(0, currentIndex - 1)
-        : Math.min(totalItems - 1, currentIndex + 1);
+      if (directionOrPage === 'prev') {
+        nextIndex = Math.max(0, currentIndex - 1);
+      } else {
+        nextIndex = Math.min(totalItems - 1, currentIndex + 1);
+      }
       console.log(`Directional navigation: ${directionOrPage}, from ${currentIndex + 1} to ${nextIndex + 1}`);
     }
     
     // Only update if it's a valid index change
     if (nextIndex !== currentIndex) {
       console.log(`Setting current index to ${nextIndex}`);
+      
+      // Immediate state update with direct value instead of function
       setCurrentIndex(nextIndex);
       
       // Reset scroll position when navigating between items
@@ -54,11 +58,11 @@ export function useNavigation(
         scrollAreaRef.current.scrollTop = 0;
       }
       
-      // Wait a small amount of time before releasing the navigation lock
+      // Reduce timeout for better responsiveness
       setTimeout(() => {
         isNavigating.current = false;
         console.log("Navigation cooldown complete, ready for next navigation");
-      }, 150); // Reduced timeout for better responsiveness
+      }, 100);
     } else {
       console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
       isNavigating.current = false;

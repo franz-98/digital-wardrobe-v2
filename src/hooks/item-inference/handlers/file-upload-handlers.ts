@@ -26,7 +26,7 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
-      // Generate mock items with unique IDs and clear property values
+      // Generate mock items with consistent, predictable data
       const itemCount = 5; // Fixed number of items for consistent testing
       const mockCategories = ["Tops", "Bottoms", "Outerwear", "Accessories", "Footwear"];
       const mockColors = ["Blue", "Black", "White", "Red", "Green"];

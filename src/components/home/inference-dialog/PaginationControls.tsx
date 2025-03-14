@@ -53,7 +53,10 @@ const PaginationControls = ({
           {showPageNumbers().map((pageIndex) => (
             <PaginationItem key={pageIndex}>
               <PaginationLink 
-                onClick={() => onPageChange(pageIndex)} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPageChange(pageIndex);
+                }} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
                   "h-9 w-9 p-0 flex items-center justify-center relative",

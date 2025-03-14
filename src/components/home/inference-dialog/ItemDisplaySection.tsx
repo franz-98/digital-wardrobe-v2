@@ -33,9 +33,9 @@ const ItemDisplaySection = ({
         ref={scrollAreaRef}
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'auto', // Changed from 'contain' to 'auto' to improve scroll behavior
+          overscrollBehavior: 'contain',
           touchAction: 'pan-y', 
-          scrollBehavior: 'auto', // Changed from 'smooth' to 'auto' to improve scroll performance
+          scrollBehavior: 'auto',
           msOverflowStyle: '-ms-autohiding-scrollbar',
           scrollbarWidth: 'thin'
         }}
