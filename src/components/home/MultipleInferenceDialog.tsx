@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { toast } from "@/components/ui/use-toast";
 import { ItemInference } from "./types";
 import { 
   InferredItemDisplay, 
@@ -34,12 +35,14 @@ const MultipleInferenceDialog = ({
 }: MultipleInferenceDialogProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsToAdd, setItemsToAdd] = useState<ItemInference[]>(inferredItems);
+  const [confirmedItems, setConfirmedItems] = useState<Set<number>>(new Set());
   
   // Reset state when dialog opens with new items
   useEffect(() => {
     if (open && inferredItems.length > 0) {
       setItemsToAdd(inferredItems);
       setCurrentIndex(0);
+      setConfirmedItems(new Set());
     }
   }, [open, inferredItems]);
 
@@ -62,8 +65,49 @@ const MultipleInferenceDialog = ({
   };
 
   const handleSave = () => {
-    onConfirm(itemsToAdd);
+    // Only save the confirmed items
+    if (confirmedItems.size === 0 && totalItems > 0) {
+      // If no items are explicitly confirmed, confirm the current one at least
+      const updatedConfirmed = new Set(confirmedItems);
+      updatedConfirmed.add(currentIndex);
+      setConfirmedItems(updatedConfirmed);
+      
+      // Filter items to only include confirmed ones
+      const itemsToConfirm = itemsToAdd.filter((_, index) => 
+        updatedConfirmed.has(index)
+      );
+      
+      onConfirm(itemsToConfirm);
+    } else {
+      // Filter items to only include confirmed ones
+      const itemsToConfirm = itemsToAdd.filter((_, index) => 
+        confirmedItems.has(index)
+      );
+      
+      // If no items were confirmed, confirm the current one
+      if (itemsToConfirm.length === 0) {
+        onConfirm([currentItem]);
+      } else {
+        onConfirm(itemsToConfirm);
+      }
+    }
+    
     onOpenChange(false);
+  };
+
+  const handleConfirmSingleItem = () => {
+    // Mark the current item as confirmed
+    const updatedConfirmed = new Set(confirmedItems);
+    updatedConfirmed.add(currentIndex);
+    setConfirmedItems(updatedConfirmed);
+    
+    // Show a toast to confirm to the user
+    toast({
+      title: "Articolo confermato",
+      description: `Articolo ${currentIndex + 1} confermato. Passa al prossimo.`,
+      duration: 1500,
+      className: "compact-toast top-toast",
+    });
   };
 
   const handleCurrentItemChange = (field: keyof ItemInference, value: string) => {
@@ -110,12 +154,23 @@ const MultipleInferenceDialog = ({
                 clothingCategories={clothingCategories}
               />
             </div>
+            
+            {/* Show visual indication that an item has been confirmed */}
+            {confirmedItems.has(currentIndex) && (
+              <div className="text-green-600 text-center text-sm mt-2">
+                ✓ Questo articolo è stato confermato
+              </div>
+            )}
           </div>
         </ScrollArea>
 
         <DialogActions 
           onCancel={handleCancel} 
-          onSave={handleSave} 
+          onSave={handleSave}
+          currentIndex={currentIndex}
+          totalItems={totalItems}
+          onNavigate={handleNavigate}
+          onConfirmSingle={handleConfirmSingleItem}
         />
       </DialogContent>
     </Dialog>
