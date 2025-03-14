@@ -32,12 +32,10 @@ const ItemDisplaySection = ({
         className="flex-1 w-full h-full overflow-y-auto px-1 pb-1" 
         ref={scrollAreaRef}
         style={{ 
-          WebkitOverflowScrolling: 'touch',
-          overscrollBehavior: 'none', // Changed to 'none' to completely disable browser pull-to-refresh
-          touchAction: 'pan-y', 
-          scrollBehavior: 'auto',
+          overflowY: 'auto',
+          scrollbarWidth: 'thin',
           msOverflowStyle: 'none',
-          scrollbarWidth: 'thin'
+          scrollBehavior: 'auto'
         }}
       >
         <div className="space-y-6 py-2 pb-6">
@@ -49,7 +47,6 @@ const ItemDisplaySection = ({
             />
           </div>
           
-          {/* Show visual indication that an item has been confirmed */}
           {isConfirmed && (
             <div className="text-green-600 text-center text-sm mt-4">
               ✓ Questo articolo è stato confermato

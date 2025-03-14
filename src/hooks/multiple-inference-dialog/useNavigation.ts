@@ -8,10 +8,8 @@ export function useNavigation(
   scrollAreaRef: React.RefObject<HTMLDivElement>,
   isNavigating: React.MutableRefObject<boolean>
 ) {
-  // Track if we're in the middle of updating
   const isUpdating = useRef(false);
   
-  // Cleanup function to reset navigation state when component unmounts
   useEffect(() => {
     return () => {
       isNavigating.current = false;
@@ -20,54 +18,50 @@ export function useNavigation(
   }, [isNavigating]);
 
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
-    // Prevent rapid multiple navigation clicks
-    if (isNavigating.current) {
-      console.log("Navigation blocked: already navigating");
+    // Prevent navigation if already in progress
+    if (isNavigating.current || isUpdating.current) {
       return;
     }
     
+    // Set navigation lock
     isNavigating.current = true;
-    console.log(`Navigation started: ${typeof directionOrPage === 'number' ? `to page ${directionOrPage + 1}` : directionOrPage}`);
-
+    isUpdating.current = true;
+    
     let nextIndex: number;
     
-    // Handle direct page navigation vs prev/next
     if (typeof directionOrPage === 'number') {
-      // Direct page jump - bounds checking
+      // Direct page navigation
       nextIndex = Math.max(0, Math.min(totalItems - 1, directionOrPage));
-      console.log(`Direct navigation to page: ${nextIndex + 1}`);
     } else {
-      // Directional navigation
+      // Next/prev navigation
       if (directionOrPage === 'prev') {
         nextIndex = Math.max(0, currentIndex - 1);
       } else {
         nextIndex = Math.min(totalItems - 1, currentIndex + 1);
       }
-      console.log(`Directional navigation: ${directionOrPage}, from ${currentIndex + 1} to ${nextIndex + 1}`);
     }
     
-    // Only update if it's a valid index change
+    // Only update if we're changing to a different index
     if (nextIndex !== currentIndex) {
-      console.log(`Setting current index to ${nextIndex}`);
-      
-      // Force reset scroll position before changing pages
+      // Reset scroll position first
       if (scrollAreaRef.current) {
         scrollAreaRef.current.scrollTop = 0;
       }
       
-      // Use a cleaner approach for state updates to avoid potential race conditions
+      // Update state with small delay to ensure UI is ready
       setTimeout(() => {
         setCurrentIndex(nextIndex);
         
-        // Allow navigation again after a delay
+        // Release navigation lock after a delay
         setTimeout(() => {
           isNavigating.current = false;
-          console.log("Navigation cooldown complete, ready for next navigation");
-        }, 300);
+          isUpdating.current = false;
+        }, 500); // Longer cooldown to prevent rapid navigation
       }, 50);
     } else {
-      console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
+      // Release locks if no navigation needed
       isNavigating.current = false;
+      isUpdating.current = false;
     }
   }, [currentIndex, setCurrentIndex, totalItems, scrollAreaRef]);
 

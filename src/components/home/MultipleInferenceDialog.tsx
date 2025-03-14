@@ -62,8 +62,8 @@ const MultipleInferenceDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
         className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] flex flex-col p-3 sm:p-6 overflow-hidden"
-        enableDismissOnScroll={false} 
-        dismissThreshold={9999}
+        enableDismissOnScroll={false}
+        dismissThreshold={99999}
         showDismissIndicator={false}
       >
         <DialogHeaderSection totalItems={totalItems} />

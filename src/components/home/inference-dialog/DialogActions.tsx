@@ -21,7 +21,10 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  const handleConfirmAndNext = () => {
+  const handleConfirmAndNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (onConfirmSingle) {
       onConfirmSingle();
     }

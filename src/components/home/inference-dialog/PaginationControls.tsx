@@ -48,7 +48,8 @@ const PaginationControls = ({
   
   const handlePageClick = (pageIndex: number, e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
+    
     if (pageIndex !== currentIndex) {
       onPageChange(pageIndex);
     }
@@ -61,6 +62,7 @@ const PaginationControls = ({
           {showPageNumbers().map((pageIndex) => (
             <PaginationItem key={pageIndex}>
               <PaginationLink 
+                href="#"
                 onClick={(e) => handlePageClick(pageIndex, e)} 
                 isActive={currentIndex === pageIndex}
                 className={cn(
