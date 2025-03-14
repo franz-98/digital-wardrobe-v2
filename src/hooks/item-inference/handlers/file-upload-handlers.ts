@@ -26,7 +26,7 @@ export const createFileUploadHandlers = (
       
       const sharedImageUrl = URL.createObjectURL(file);
       
-      // Create fixed test data with guaranteed properties for consistent behavior
+      // Create test data with varying confidence levels to demonstrate threshold behavior
       const mockItems: ItemInference[] = [
         {
           id: `item-${Date.now()}-1`,
@@ -34,7 +34,7 @@ export const createFileUploadHandlers = (
           category: "Tops",
           color: "Blue",
           imageUrl: sharedImageUrl,
-          confidence: 0.95
+          confidence: 0.95 // High confidence - should go directly to wardrobe
         },
         {
           id: `item-${Date.now()}-2`,
@@ -42,7 +42,7 @@ export const createFileUploadHandlers = (
           category: "Bottoms",
           color: "Black",
           imageUrl: sharedImageUrl,
-          confidence: 0.92
+          confidence: 0.92 // High confidence - should go directly to wardrobe
         },
         {
           id: `item-${Date.now()}-3`,
@@ -50,7 +50,7 @@ export const createFileUploadHandlers = (
           category: "Outerwear", 
           color: "Green",
           imageUrl: sharedImageUrl,
-          confidence: 0.88
+          confidence: 0.68 // Below 75% - should go to recent uploads
         },
         {
           id: `item-${Date.now()}-4`,
@@ -58,7 +58,7 @@ export const createFileUploadHandlers = (
           category: "Footwear",
           color: "Brown", 
           imageUrl: sharedImageUrl,
-          confidence: 0.85
+          confidence: 0.65 // Below 75% - should go to recent uploads
         },
         {
           id: `item-${Date.now()}-5`,
@@ -66,11 +66,11 @@ export const createFileUploadHandlers = (
           category: "Accessories",
           color: "Red",
           imageUrl: sharedImageUrl, 
-          confidence: 0.82
+          confidence: 0.82 // High confidence - should go directly to wardrobe
         }
       ];
       
-      console.log(`Generated ${mockItems.length} fixed mock items for inference`);
+      console.log(`Generated ${mockItems.length} mock items for inference with varying confidence levels`);
       
       // Set the inferred items and open the multiple inference dialog
       setInferredItems(mockItems);

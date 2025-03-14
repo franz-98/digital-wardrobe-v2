@@ -10,10 +10,63 @@ export const createInferenceConfirmationHandlers = (
   setRecentUploadItems: React.Dispatch<React.SetStateAction<RecentUpload[]>>,
   setLastAddedItem: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
-  // Handle confirmation of multiple inferred items
-  const confirmMultipleInference = (items: ItemInference[]) => {
-    if (!items.length) return;
+  // Process items based on confidence threshold
+  const processItems = (items: ItemInference[]) => {
+    const CONFIDENCE_THRESHOLD = 0.75; // 75% confidence threshold
     
+    const highConfidenceItems: ItemInference[] = [];
+    const lowConfidenceItems: RecentUpload[] = [];
+    
+    // Split items based on confidence threshold
+    items.forEach(item => {
+      if (item.confidence >= CONFIDENCE_THRESHOLD) {
+        highConfidenceItems.push(item);
+      } else {
+        // Convert to RecentUpload format
+        lowConfidenceItems.push({
+          id: item.id,
+          name: item.name,
+          imageUrl: item.imageUrl,
+          category: item.category,
+          createdAt: new Date().toISOString()
+        });
+      }
+    });
+    
+    // Process high confidence items to add directly to wardrobe
+    if (highConfidenceItems.length > 0) {
+      addItemsToWardrobe(highConfidenceItems);
+    }
+    
+    // Process low confidence items to add to recent uploads
+    if (lowConfidenceItems.length > 0) {
+      addItemsToRecentUploads(lowConfidenceItems);
+    }
+    
+    // Show appropriate toast messages
+    if (highConfidenceItems.length > 0 && lowConfidenceItems.length > 0) {
+      toast({
+        title: "Articoli elaborati",
+        description: `${highConfidenceItems.length} articoli aggiunti al guardaroba e ${lowConfidenceItems.length} in attesa di conferma.`,
+        duration: 3000,
+      });
+    } else if (highConfidenceItems.length > 0) {
+      toast({
+        title: "Articoli aggiunti",
+        description: `${highConfidenceItems.length} articoli aggiunti direttamente al guardaroba.`,
+        duration: 1500,
+      });
+    } else if (lowConfidenceItems.length > 0) {
+      toast({
+        title: "Articoli in attesa",
+        description: `${lowConfidenceItems.length} articoli in attesa di conferma.`,
+        duration: 1500,
+      });
+    }
+  };
+  
+  // Add items to wardrobe
+  const addItemsToWardrobe = (items: ItemInference[]) => {
     const newClothingItems: ClothingItem[] = items.map(item => {
       // Generate a truly unique ID with timestamp and random string
       const uniqueId = `clothing-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
@@ -40,75 +93,36 @@ export const createInferenceConfirmationHandlers = (
     }
     
     // Add the items to the wardrobe - ensure it's prepended to the array
-    // Using functional update to ensure we have the latest state
     setClothingItems(prevItems => {
       console.log(`Adding ${newClothingItems.length} new items to wardrobe`);
       console.log("Previous items count:", prevItems.length);
       return [...newClothingItems, ...prevItems];
     });
-    
-    // Show success toast
-    toast({
-      title: "Articoli confermati",
-      description: `${newClothingItems.length} articoli sono stati aggiunti al tuo guardaroba.`,
-      duration: 1500,
-      className: "compact-toast top-toast",
+  };
+  
+  // Add items to recent uploads
+  const addItemsToRecentUploads = (items: RecentUpload[]) => {
+    // Add items to recent uploads for later confirmation
+    setRecentUploadItems(prevItems => {
+      console.log(`Adding ${items.length} new items to recent uploads`);
+      return [...items, ...prevItems];
     });
+  };
+
+  // Handle confirmation of multiple inferred items
+  const confirmMultipleInference = (items: ItemInference[]) => {
+    if (!items.length) return;
+    
+    // Use the new process that applies confidence threshold
+    processItems(items);
   };
   
   // Handle confirmation of single inferred item
   const confirmSingleInference = (selectedItem: ItemInference | null) => {
     if (!selectedItem) return;
     
-    // Generate a truly unique ID with timestamp and random string
-    const uniqueId = `clothing-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-    
-    // Create a new clothing item with unique ID
-    const newClothingItem: ClothingItem = {
-      id: uniqueId,
-      name: selectedItem.name,
-      category: selectedItem.category,
-      color: selectedItem.color || "Unknown", // Default if color is not provided
-      imageUrl: selectedItem.imageUrl,
-      metadata: {
-        dateTaken: new Date().toISOString().split('T')[0],
-        material: "",
-        brand: "",
-        season: ""
-      }
-    };
-    
-    // Store ID of the item we're adding for debugging
-    setLastAddedItem(uniqueId);
-    
-    // Add the item to the wardrobe - ensure it's prepended to the array
-    // Using functional update to ensure we have the latest state
-    setClothingItems(prevItems => {
-      console.log("Adding new item to wardrobe:", uniqueId);
-      console.log("Previous items count:", prevItems.length);
-      return [newClothingItem, ...prevItems];
-    });
-    
-    // If the selected item is from recent uploads, remove it from the list
-    setRecentUploadItems(prevItems => {
-      const isFromRecentUploads = prevItems.some(item => item.id === selectedItem.id);
-      if (isFromRecentUploads) {
-        const filteredItems = prevItems.filter(item => item.id !== selectedItem.id);
-        console.log(`Removed item ${selectedItem.id} from recent uploads`);
-        return filteredItems;
-      }
-      return prevItems;
-    });
-    
-    console.log(`Added item ${newClothingItem.id} to wardrobe`);
-    
-    // Show success toast
-    toast({
-      title: "Item confermato",
-      description: `"${selectedItem.name}" è stato aggiunto al tuo guardaroba.`,
-      duration: 1500,
-      className: "compact-toast top-toast",
-    });
+    // Process the single item using the same confidence threshold logic
+    processItems([selectedItem]);
   };
 
   return {

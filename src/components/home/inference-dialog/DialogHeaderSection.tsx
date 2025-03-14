@@ -18,7 +18,7 @@ const DialogHeaderSection = ({ totalItems, className }: DialogHeaderSectionProps
       <DialogTitle>Conferma Riconoscimento</DialogTitle>
       <DialogDescription>
         {totalItems > 1 
-          ? `Sono stati riconosciuti ${totalItems} articoli. Conferma o modifica le informazioni per ciascuno.` 
+          ? `Sono stati riconosciuti ${totalItems} articoli. Quelli con confidenza >75% saranno aggiunti automaticamente.` 
           : 'Conferma o modifica le informazioni per questo indumento.'}
       </DialogDescription>
     </DialogHeader>
