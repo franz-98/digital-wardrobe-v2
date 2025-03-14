@@ -25,8 +25,10 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  // Only handle confirmation - navigation will be handled in the parent component
-  const handleConfirmAndNext = () => {
+  // Only handle confirmation - navigation will be handled by the parent
+  const handleConfirmAndNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("Confirm and next clicked");
     if (onConfirmSingle) {
       onConfirmSingle();

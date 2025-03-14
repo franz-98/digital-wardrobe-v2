@@ -16,12 +16,16 @@ const NavigationControls = ({
 }: NavigationControlsProps) => {
   if (totalItems <= 1) return null;
   
-  const handlePrev = () => {
+  const handlePrev = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("Navigation: previous clicked");
     onNavigate('prev');
   };
   
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("Navigation: next clicked");
     onNavigate('next');
   };

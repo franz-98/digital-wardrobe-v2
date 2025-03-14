@@ -33,33 +33,31 @@ export function useMultipleInferenceDialog({
     }
   }, [open, inferredItems]);
 
-  const currentItem = itemsToAdd[currentIndex];
-  const totalItems = itemsToAdd.length;
+  const currentItem = itemsToAdd[currentIndex] || inferredItems[0];
+  const totalItems = itemsToAdd.length || inferredItems.length;
   
   const handleNavigate = (direction: 'prev' | 'next') => {
-    console.log(`Navigation triggered: ${direction}, current: ${currentIndex}, total: ${totalItems}`);
-    
     // Use functional updates to ensure we're using the latest state
-    if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex((prevIndex) => {
-        const newIndex = prevIndex - 1;
-        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
-        return newIndex;
-      });
-    } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex((prevIndex) => {
-        const newIndex = prevIndex + 1;
-        console.log(`Navigating from ${prevIndex} to ${newIndex}`);
-        return newIndex;
-      });
-    }
-    
-    // Reset scroll position on every navigation
-    setTimeout(() => {
-      if (scrollAreaRef.current) {
-        scrollAreaRef.current.scrollTop = 0;
+    setCurrentIndex(prevIndex => {
+      let newIndex = prevIndex;
+      
+      if (direction === 'prev' && prevIndex > 0) {
+        newIndex = prevIndex - 1;
+      } else if (direction === 'next' && prevIndex < totalItems - 1) {
+        newIndex = prevIndex + 1;
       }
-    }, 10);
+      
+      console.log(`Navigating from ${prevIndex} to ${newIndex}`);
+      
+      // Reset scroll position
+      setTimeout(() => {
+        if (scrollAreaRef.current) {
+          scrollAreaRef.current.scrollTop = 0;
+        }
+      }, 10);
+      
+      return newIndex;
+    });
   };
 
   const handleCancel = () => {
@@ -89,12 +87,11 @@ export function useMultipleInferenceDialog({
   };
 
   const handleConfirmSingleItem = () => {
-    console.log(`Confirming item at index ${currentIndex}`);
-    
     // Mark the current item as confirmed
     setConfirmedItems(prev => {
       const updated = new Set(prev);
       updated.add(currentIndex);
+      console.log(`Confirming item at index ${currentIndex}`);
       return updated;
     });
     
@@ -110,28 +107,32 @@ export function useMultipleInferenceDialog({
     if (currentIndex < totalItems - 1) {
       // Wait for state to update before navigating
       setTimeout(() => {
-        console.log(`Auto-navigating to next item from ${currentIndex} to ${currentIndex + 1}`);
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
+          console.log(`Auto-navigating to next item from ${prevIndex} to ${newIndex}`);
           
           // Reset scroll position
-          if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = 0;
-          }
+          setTimeout(() => {
+            if (scrollAreaRef.current) {
+              scrollAreaRef.current.scrollTop = 0;
+            }
+          }, 10);
           
           return newIndex;
         });
-      }, 50);
+      }, 100);
     }
   };
 
   const handleFieldChange = (field: keyof ItemInference, value: string) => {
     setItemsToAdd(prevItems => {
       const updated = [...prevItems];
-      updated[currentIndex] = {
-        ...updated[currentIndex],
-        [field]: value
-      };
+      if (updated[currentIndex]) {
+        updated[currentIndex] = {
+          ...updated[currentIndex],
+          [field]: value
+        };
+      }
       return updated;
     });
   };

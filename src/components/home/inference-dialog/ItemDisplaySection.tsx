@@ -19,6 +19,14 @@ const ItemDisplaySection = ({
   scrollAreaRef,
   isConfirmed
 }: ItemDisplaySectionProps) => {
+  if (!currentItem) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <p>No item data available</p>
+      </div>
+    );
+  }
+  
   return (
     <ScrollArea className="flex-1 max-h-[60vh] pr-4">
       <div className="space-y-4 py-2" ref={scrollAreaRef}>
