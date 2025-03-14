@@ -14,7 +14,7 @@ interface DialogHeaderSectionProps {
 
 const DialogHeaderSection = ({ totalItems, className }: DialogHeaderSectionProps) => {
   return (
-    <DialogHeader className={className}>
+    <DialogHeader className={cn("", className)}>
       <DialogTitle>Conferma Riconoscimento</DialogTitle>
       <DialogDescription>
         {totalItems > 1 
