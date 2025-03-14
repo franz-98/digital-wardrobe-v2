@@ -55,9 +55,9 @@ const MultipleInferenceDialog = ({
     console.log(`Navigation triggered: ${direction}, current: ${currentIndex}, total: ${totalItems}`);
     
     if (direction === 'prev' && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      setCurrentIndex(prevIndex => prevIndex - 1);
     } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      setCurrentIndex(currentIndex + 1);
+      setCurrentIndex(prevIndex => prevIndex + 1);
     }
   };
 
@@ -106,7 +106,8 @@ const MultipleInferenceDialog = ({
     // Automatically navigate to the next item if not on the last item
     if (currentIndex < totalItems - 1) {
       console.log(`Auto-navigating to next item: ${currentIndex + 1}`);
-      setCurrentIndex(currentIndex + 1);
+      // Use the functional update to ensure we're using the latest state
+      setCurrentIndex(prevIndex => prevIndex + 1);
     }
   };
 

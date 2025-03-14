@@ -25,21 +25,6 @@ const DialogActions = ({
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  // Handle confirmation and navigation to next item
-  const handleConfirmAndNext = () => {
-    if (onConfirmSingle) {
-      onConfirmSingle();
-    }
-    
-    // Always navigate to the next item after confirmation
-    if (onNavigate && currentIndex !== undefined && totalItems && currentIndex < totalItems - 1) {
-      onNavigate('next');
-    } else {
-      // If on the last item, save all
-      onSave();
-    }
-  };
-
   return (
     <DialogFooter className="gap-2">
       <Button variant="outline" onClick={onCancel} type="button" className="flex-1">
@@ -50,7 +35,7 @@ const DialogActions = ({
         <>
           {/* For multiple items, show appropriate button based on position */}
           {currentIndex !== undefined && totalItems && currentIndex < totalItems - 1 ? (
-            <Button onClick={handleConfirmAndNext} className="gap-1 flex-1 min-h-[44px]">
+            <Button onClick={onConfirmSingle} className="gap-1 flex-1 min-h-[44px]">
               <Check className="h-4 w-4" /> Conferma e Prossimo
               <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
