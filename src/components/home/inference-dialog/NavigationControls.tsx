@@ -31,7 +31,7 @@ const NavigationControls = ({
   };
   
   return (
-    <div className="flex items-center justify-between text-sm">
+    <div className="flex items-center justify-between text-sm py-2">
       <span>Articolo {currentIndex + 1} di {totalItems}</span>
       <div className="flex space-x-2">
         <Button 

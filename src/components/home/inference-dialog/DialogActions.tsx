@@ -20,12 +20,11 @@ const DialogActions = ({
   onSave, 
   currentIndex, 
   totalItems,
-  onNavigate,
   onConfirmSingle
 }: DialogActionsProps) => {
   const isMultipleItems = totalItems && totalItems > 1;
   
-  // Only handle confirmation - navigation will be handled by the parent
+  // Only handle confirmation - navigation will be handled automatically
   const handleConfirmAndNext = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -36,7 +35,7 @@ const DialogActions = ({
   };
 
   return (
-    <DialogFooter className="gap-2">
+    <DialogFooter className="gap-2 mt-4">
       <Button 
         variant="outline" 
         onClick={onCancel} 

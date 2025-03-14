@@ -7,11 +7,11 @@ import {
 import { ItemInference } from "./types";
 import { 
   NavigationControls, 
-  DialogActions 
+  DialogActions,
+  DialogHeaderSection,
+  ItemDisplaySection
 } from "./inference-dialog";
 import { useMultipleInferenceDialog } from "@/hooks/useMultipleInferenceDialog";
-import DialogHeaderSection from "./inference-dialog/DialogHeaderSection";
-import ItemDisplaySection from "./inference-dialog/ItemDisplaySection";
 
 interface MultipleInferenceDialogProps {
   open: boolean;
@@ -62,20 +62,15 @@ const MultipleInferenceDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-w-md max-h-[90vh] overflow-hidden flex flex-col"
-        enableDismissOnScroll={true}
-        dismissThreshold={60}
-        showDismissIndicator={true}
+        className="max-w-md md:max-w-lg max-h-[95vh] overflow-hidden flex flex-col gap-4"
       >
         <DialogHeaderSection totalItems={totalItems} />
 
-        <div className="mb-4">
-          <NavigationControls 
-            currentIndex={currentIndex}
-            totalItems={totalItems}
-            onNavigate={handleNavigate}
-          />
-        </div>
+        <NavigationControls 
+          currentIndex={currentIndex}
+          totalItems={totalItems}
+          onNavigate={handleNavigate}
+        />
 
         <ItemDisplaySection 
           currentItem={currentItem}
@@ -90,7 +85,6 @@ const MultipleInferenceDialog = ({
           onSave={handleSave}
           currentIndex={currentIndex}
           totalItems={totalItems}
-          onNavigate={handleNavigate}
           onConfirmSingle={handleConfirmSingleItem}
         />
       </DialogContent>

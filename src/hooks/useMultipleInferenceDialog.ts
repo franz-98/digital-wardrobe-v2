@@ -49,12 +49,12 @@ export function useMultipleInferenceDialog({
       
       console.log(`Navigating from ${prevIndex} to ${newIndex}`);
       
-      // Reset scroll position
+      // Reset scroll position after a small delay to ensure the component has updated
       setTimeout(() => {
         if (scrollAreaRef.current) {
           scrollAreaRef.current.scrollTop = 0;
         }
-      }, 10);
+      }, 50);
       
       return newIndex;
     });
@@ -98,9 +98,8 @@ export function useMultipleInferenceDialog({
     // Show a toast to confirm to the user
     toast({
       title: "Articolo confermato",
-      description: `Articolo ${currentIndex + 1} confermato. Passa al prossimo.`,
+      description: `Articolo ${currentIndex + 1} confermato.`,
       duration: 1500,
-      className: "compact-toast top-toast",
     });
     
     // Automatically navigate to the next item if not on the last item
@@ -112,15 +111,13 @@ export function useMultipleInferenceDialog({
           console.log(`Auto-navigating to next item from ${prevIndex} to ${newIndex}`);
           
           // Reset scroll position
-          setTimeout(() => {
-            if (scrollAreaRef.current) {
-              scrollAreaRef.current.scrollTop = 0;
-            }
-          }, 10);
+          if (scrollAreaRef.current) {
+            scrollAreaRef.current.scrollTop = 0;
+          }
           
           return newIndex;
         });
-      }, 100);
+      }, 200); // Slightly longer delay to ensure state updates fully
     }
   };
 
