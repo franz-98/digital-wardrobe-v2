@@ -59,8 +59,13 @@ export function useItemActions(
 
   const handleConfirmSingleItem = () => {
     // Prevent multiple rapid confirmations
-    if (isNavigating.current) return;
+    if (isNavigating.current) {
+      console.log("Confirm action blocked: already navigating");
+      return;
+    }
+    
     isNavigating.current = true;
+    console.log("Starting single item confirmation process");
     
     // Mark the current item as confirmed
     setConfirmedItems(prev => {
@@ -80,26 +85,29 @@ export function useItemActions(
     // Automatically navigate to the next item if not on the last item
     if (currentIndex < totalItems - 1) {
       // Wait a moment before navigating to next item
+      console.log("Waiting to navigate to next item...");
       setTimeout(() => {
+        // Make sure we're still navigating (not canceled)
+        if (!isNavigating.current) return;
+        
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
           console.log(`Auto-navigating to next item from ${prevIndex} to ${newIndex}`);
-          
-          // Reset scroll position
-          requestAnimationFrame(() => {
-            if (scrollAreaRef.current) {
-              scrollAreaRef.current.scrollTop = 0;
-            }
-            
-            // Allow navigation again after scrolling completes
-            setTimeout(() => {
-              isNavigating.current = false;
-            }, 300);
-          });
-          
           return newIndex;
         });
-      }, 300); // Slightly longer delay for a better user experience
+        
+        // Reset scroll position
+        if (scrollAreaRef.current) {
+          console.log("Resetting scroll position after navigation");
+          scrollAreaRef.current.scrollTop = 0;
+        }
+        
+        // Allow navigation again after another delay
+        setTimeout(() => {
+          isNavigating.current = false;
+          console.log("Navigation cooldown complete, ready for next navigation");
+        }, 400);
+      }, 300);
     } else {
       // If it's the last item, show a toast suggesting to save
       setTimeout(() => {
@@ -109,6 +117,7 @@ export function useItemActions(
           duration: 3000,
         });
         isNavigating.current = false;
+        console.log("Last item confirmed, navigation cooldown complete");
       }, 500);
     }
   };

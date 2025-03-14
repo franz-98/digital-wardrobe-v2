@@ -8,21 +8,26 @@ export function useNavigation(
   scrollAreaRef: React.RefObject<HTMLDivElement>,
   isNavigating: React.MutableRefObject<boolean>
 ) {
+  // Track if we're in the middle of updating
+  const isUpdating = useRef(false);
+  
   // Cleanup function to reset navigation state when component unmounts
   useEffect(() => {
     return () => {
       isNavigating.current = false;
+      isUpdating.current = false;
     };
   }, [isNavigating]);
 
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
-    // Prevent rapid multiple navigation clicks
-    if (isNavigating.current) {
-      console.log("Navigation blocked: already navigating");
+    // Prevent rapid multiple navigation clicks or processing while already updating
+    if (isNavigating.current || isUpdating.current) {
+      console.log("Navigation blocked: already navigating or updating");
       return;
     }
     
     isNavigating.current = true;
+    isUpdating.current = true;
     console.log(`Navigation started: ${typeof directionOrPage === 'number' ? `to page ${directionOrPage + 1}` : directionOrPage}`);
 
     let nextIndex: number;
@@ -48,21 +53,31 @@ export function useNavigation(
       // Reset scroll position when navigating
       if (scrollAreaRef.current) {
         console.log("Resetting scroll position");
+        // Set scroll position to top
         setTimeout(() => {
           if (scrollAreaRef.current) {
             scrollAreaRef.current.scrollTop = 0;
           }
-        }, 10);
+          
+          // Allow navigation again after scroll reset
+          setTimeout(() => {
+            isNavigating.current = false;
+            isUpdating.current = false;
+            console.log("Navigation cooldown complete, ready for next navigation");
+          }, 400);
+        }, 50);
+      } else {
+        // Reset flags if no scrollArea ref is available
+        setTimeout(() => {
+          isNavigating.current = false;
+          isUpdating.current = false;
+          console.log("Navigation cooldown complete (no scroll area), ready for next navigation");
+        }, 450);
       }
-      
-      // Allow navigation again after a short delay
-      setTimeout(() => {
-        isNavigating.current = false;
-        console.log("Navigation cooldown complete, ready for next navigation");
-      }, 300);
     } else {
       console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
       isNavigating.current = false;
+      isUpdating.current = false;
     }
   }, [currentIndex, setCurrentIndex, totalItems, scrollAreaRef, isNavigating]);
 
