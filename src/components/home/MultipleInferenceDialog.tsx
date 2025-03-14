@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Dialog, 
@@ -59,7 +60,7 @@ const MultipleInferenceDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent 
-        className="max-w-sm md:max-w-md max-h-[90vh] overflow-hidden flex flex-col"
+        className="max-w-md sm:max-w-lg md:max-w-xl overflow-visible flex flex-col p-4 sm:p-6"
       >
         <DialogHeaderSection totalItems={totalItems} />
 
