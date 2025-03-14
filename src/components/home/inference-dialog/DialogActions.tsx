@@ -29,7 +29,7 @@ const DialogActions = ({
   };
 
   return (
-    <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-3 border-t sticky bottom-0 bg-background pb-2 z-10">
+    <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-3 pt-3 border-t sticky bottom-0 bg-background pb-2 z-10">
       <Button 
         variant="outline" 
         onClick={onCancel} 

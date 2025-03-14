@@ -1,5 +1,5 @@
 
-import { ItemInference } from "@/components/home/types";
+import { useCallback } from "react";
 
 export function useNavigation(
   currentIndex: number,
@@ -8,45 +8,39 @@ export function useNavigation(
   scrollAreaRef: React.RefObject<HTMLDivElement>,
   isNavigating: React.MutableRefObject<boolean>
 ) {
-  const handleNavigate = (direction: 'prev' | 'next') => {
-    // Prevent multiple rapid navigations
-    if (isNavigating.current) {
-      console.log("Navigation blocked: already navigating");
-      return;
-    }
-    
+  const handleNavigate = useCallback((direction: 'prev' | 'next') => {
+    // Prevent rapid multiple navigation clicks
+    if (isNavigating.current) return;
     isNavigating.current = true;
-    console.log(`Navigation started: ${direction}, current index: ${currentIndex}`);
+
+    console.info(`Navigation started: ${direction}, current index: ${currentIndex}`);
     
-    // Calculate the new index based on direction
-    let newIndex = currentIndex;
-    if (direction === 'prev' && currentIndex > 0) {
-      newIndex = currentIndex - 1;
-    } else if (direction === 'next' && currentIndex < totalItems - 1) {
-      newIndex = currentIndex + 1;
+    // Calculate next index based on direction
+    const nextIndex = direction === 'prev' 
+      ? Math.max(0, currentIndex - 1)
+      : Math.min(totalItems - 1, currentIndex + 1);
+    
+    // Only update if it's a valid index change
+    if (nextIndex !== currentIndex) {
+      console.info(`Navigating from ${currentIndex} to ${nextIndex}`);
+      setCurrentIndex(nextIndex);
+      
+      // Reset scroll position when navigating
+      requestAnimationFrame(() => {
+        if (scrollAreaRef.current) {
+          scrollAreaRef.current.scrollTop = 0;
+        }
+        
+        // Allow navigation again after a short delay
+        setTimeout(() => {
+          isNavigating.current = false;
+          console.info(`Navigation completed, ready for next navigation`);
+        }, 150);
+      });
     } else {
-      // If no change needed, reset the navigating flag and return
-      console.log("Navigation canceled: no valid direction to navigate");
       isNavigating.current = false;
-      return;
     }
-    
-    console.log(`Navigating from ${currentIndex} to ${newIndex}`);
-    
-    // Update the current index
-    setCurrentIndex(newIndex);
-    
-    // Reset scroll position and allow navigation again after a short delay
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTop = 0;
-    }
-    
-    // Allow navigation again after a short delay
-    setTimeout(() => {
-      console.log("Navigation completed, ready for next navigation");
-      isNavigating.current = false;
-    }, 300);
-  };
+  }, [currentIndex, setCurrentIndex, totalItems, scrollAreaRef, isNavigating]);
 
   return { handleNavigate };
 }

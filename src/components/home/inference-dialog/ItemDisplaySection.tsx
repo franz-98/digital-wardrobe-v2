@@ -28,7 +28,7 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '240px' }}>
+    <div className="flex-1 overflow-hidden flex flex-col" style={{ minHeight: '280px' }}>
       <ScrollArea className="flex-1 pr-1" scrollHideDelay={100}>
         <div className="space-y-4 py-2" ref={scrollAreaRef}>
           <div className="opacity-100 transition-opacity duration-150">

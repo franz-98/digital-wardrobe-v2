@@ -48,8 +48,8 @@ const InferredItemDisplay = ({
   return (
     <div className="space-y-3 bg-secondary/10 p-3 rounded-md">
       <h4 className="font-medium">Indumento</h4>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="h-40 sm:h-48 sm:w-1/3 aspect-square overflow-hidden rounded-md border bg-white">
+      <div className="flex flex-col gap-3">
+        <div className="h-40 w-full overflow-hidden rounded-md border bg-white">
           <img 
             src={item.imageUrl} 
             alt={item.name || "Item preview"} 
@@ -58,7 +58,7 @@ const InferredItemDisplay = ({
           />
         </div>
         
-        <div className="space-y-2 sm:w-2/3">
+        <div className="space-y-2">
           <div>
             <Label htmlFor="name">Nome</Label>
             <Input 
