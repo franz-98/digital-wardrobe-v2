@@ -25,8 +25,8 @@ const ItemDisplaySection = ({
   }
   
   return (
-    <div className="flex-1 pb-4">
-      <div className="space-y-6 py-2">
+    <div className="flex-1 mb-4 overflow-y-auto">
+      <div className="space-y-4 py-2">
         <InferredItemDisplay 
           item={currentItem}
           onFieldChange={onFieldChange}
@@ -34,7 +34,7 @@ const ItemDisplaySection = ({
         />
         
         {isConfirmed && (
-          <div className="text-green-600 text-center text-sm mt-4">
+          <div className="text-green-600 text-center text-sm mt-2">
             ✓ Questo articolo è stato confermato
           </div>
         )}

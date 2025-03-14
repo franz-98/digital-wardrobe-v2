@@ -1,12 +1,22 @@
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 export function useNavigation(
   currentIndex: number,
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>,
   totalItems: number
 ) {
+  // Add a debounce mechanism to prevent rapid clicks
+  const lastNavigationTime = useRef<number>(0);
+  
   const handleNavigate = useCallback((directionOrPage: 'prev' | 'next' | number) => {
+    // Simple debounce to prevent multiple rapid clicks
+    const now = Date.now();
+    if (now - lastNavigationTime.current < 200) {
+      return; // Ignore rapid clicks
+    }
+    lastNavigationTime.current = now;
+    
     let nextIndex: number;
     
     if (typeof directionOrPage === 'number') {
