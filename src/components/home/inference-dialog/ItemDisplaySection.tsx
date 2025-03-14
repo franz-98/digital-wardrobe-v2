@@ -1,6 +1,5 @@
 
 import React from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemInference } from "../types";
 import { InferredItemDisplay } from "./index";
 
@@ -35,7 +34,8 @@ const ItemDisplaySection = ({
         style={{ 
           WebkitOverflowScrolling: 'touch',
           overscrollBehavior: 'contain',
-          touchAction: 'pan-y'
+          touchAction: 'pan-y',
+          scrollBehavior: 'smooth'
         }}
       >
         <div className="space-y-6 py-2 pb-6">

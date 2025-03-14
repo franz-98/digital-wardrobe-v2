@@ -50,30 +50,20 @@ export function useNavigation(
       console.log(`Setting current index to ${nextIndex}`);
       setCurrentIndex(nextIndex);
       
-      // Reset scroll position when navigating
-      if (scrollAreaRef.current) {
-        console.log("Resetting scroll position");
-        // Set scroll position to top
-        setTimeout(() => {
-          if (scrollAreaRef.current) {
-            scrollAreaRef.current.scrollTop = 0;
-          }
-          
-          // Allow navigation again after scroll reset
-          setTimeout(() => {
-            isNavigating.current = false;
-            isUpdating.current = false;
-            console.log("Navigation cooldown complete, ready for next navigation");
-          }, 400);
-        }, 50);
-      } else {
-        // Reset flags if no scrollArea ref is available
+      // Don't reset scroll immediately - wait until the new content is rendered
+      setTimeout(() => {
+        if (scrollAreaRef.current) {
+          // Don't programmatically scroll - let the user control scrolling
+          // We'll just make sure that any existing scroll handlers don't interfere
+        }
+        
+        // Allow navigation again after a delay
         setTimeout(() => {
           isNavigating.current = false;
           isUpdating.current = false;
-          console.log("Navigation cooldown complete (no scroll area), ready for next navigation");
-        }, 450);
-      }
+          console.log("Navigation cooldown complete, ready for next navigation");
+        }, 600); // Increased timeout to ensure all animations complete
+      }, 100);
     } else {
       console.log(`Navigation cancelled: already at ${nextIndex + 1}`);
       isNavigating.current = false;
