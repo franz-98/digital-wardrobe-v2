@@ -6,3 +6,5 @@ export { default as DialogHeaderSection } from './DialogHeaderSection';
 export { default as ItemDisplaySection } from './ItemDisplaySection';
 export { default as PaginationControls } from './PaginationControls';
 export { default as MultipleInferenceDialogContent } from './MultipleInferenceDialogContent';
+export { default as SingleInferenceDialogContent } from './SingleInferenceDialogContent';
+export { default as DialogFooterActions } from './DialogFooterActions';
