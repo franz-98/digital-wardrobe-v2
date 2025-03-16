@@ -118,17 +118,17 @@ const InferredItemDisplay = ({
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent 
-                className="touch-manipulation max-h-[240px]" 
+                className="touch-manipulation max-h-[300px]" 
                 position="popper" 
                 sideOffset={5}
                 align={isMobile ? "center" : "start"}
               >
-                <ScrollArea className="h-[240px] px-1">
+                <ScrollArea className="h-[300px] px-1">
                   {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
-                      className="py-3.5 px-3 touch-manipulation text-base cursor-pointer my-1 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors"
+                      className="py-4 px-3 touch-manipulation text-base cursor-pointer my-1.5 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors active:bg-accent"
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>

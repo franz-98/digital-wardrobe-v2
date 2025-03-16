@@ -30,9 +30,9 @@ const SingleInferenceDialogContent = ({
   return (
     <DialogContent 
       className="max-w-md max-h-[90vh] overflow-y-auto"
-      enableDismissOnScroll={false}
-      dismissThreshold={999999}
-      showDismissIndicator={false}
+      enableDismissOnScroll={true}
+      dismissThreshold={80}
+      showDismissIndicator={true}
     >
       <DialogHeader className="pb-2">
         <DialogTitle className="text-lg font-medium">Conferma Riconoscimento</DialogTitle>
