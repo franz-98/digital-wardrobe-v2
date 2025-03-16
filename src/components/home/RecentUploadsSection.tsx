@@ -25,11 +25,12 @@ const RecentUploadsSection = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
                 <button 
-                  className="flex items-center justify-center p-1.5 rounded-full hover:bg-muted transition-colors"
+                  type="button"
+                  className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   aria-label="Ulteriori informazioni"
                 >
                   <Info className="h-5 w-5 text-muted-foreground" />
@@ -37,7 +38,7 @@ const RecentUploadsSection = ({
               </TooltipTrigger>
               <TooltipContent 
                 side={isMobile ? "bottom" : "right"} 
-                className="max-w-xs"
+                className="max-w-xs bg-popover p-3"
                 sideOffset={5}
               >
                 <p>Gli indumenti di cui l'app è certa sono inseriti nel tuo armadio, gli indumenti in Upload Recenti hanno bisogno del tuo aiuto!</p>
