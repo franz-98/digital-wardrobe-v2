@@ -118,22 +118,27 @@ const InferredItemDisplay = ({
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent 
-                className="touch-manipulation max-h-[300px] overflow-hidden bg-popover" 
+                className="touch-manipulation overflow-hidden bg-popover" 
                 position="popper" 
                 sideOffset={5}
                 align={isMobile ? "center" : "start"}
+                style={{
+                  maxHeight: "min(300px, 60vh)", 
+                  WebkitOverflowScrolling: "touch"
+                }}
               >
-                <ScrollArea className="h-[300px] w-full px-1 touch-action-pan-y">
+                <div className="overflow-y-auto max-h-[min(300px,60vh)] overscroll-contain w-full">
                   {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
                       className="py-4 px-3 touch-manipulation text-base cursor-pointer my-1.5 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors active:bg-accent"
+                      style={{touchAction: "manipulation"}}
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>
                   ))}
-                </ScrollArea>
+                </div>
               </SelectContent>
             </Select>
           </div>
