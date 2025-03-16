@@ -25,8 +25,8 @@ const RecentUploadsSection = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
                 <Button 
                   variant="ghost" 
