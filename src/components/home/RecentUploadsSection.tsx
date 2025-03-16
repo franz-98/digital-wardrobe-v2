@@ -25,16 +25,17 @@ const RecentUploadsSection = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
-          <TooltipProvider delayDuration={0}>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button 
-                  type="button"
-                  className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-muted/80 active:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 p-0"
                   aria-label="Ulteriori informazioni"
                 >
-                  <Info className="h-6 w-6 text-muted-foreground" />
-                </button>
+                  <Info className="h-5 w-5" />
+                </Button>
               </TooltipTrigger>
               <TooltipContent 
                 side={isMobile ? "bottom" : "right"} 
