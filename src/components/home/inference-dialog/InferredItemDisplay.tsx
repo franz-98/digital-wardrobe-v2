@@ -117,7 +117,7 @@ const InferredItemDisplay = ({
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent 
-                className="max-h-[60vh] touch-manipulation" 
+                className="max-h-[70vh] touch-manipulation"
                 position="popper" 
                 sideOffset={5}
                 align="center"
@@ -126,9 +126,9 @@ const InferredItemDisplay = ({
                   <SelectItem 
                     key={category} 
                     value={category}
-                    className="py-3 px-2 touch-manipulation text-base"
+                    className="flex items-center justify-between py-3 px-3 touch-manipulation text-base"
                   >
-                    {translateCategoryToItalian(category)}
+                    <span>{translateCategoryToItalian(category)}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
