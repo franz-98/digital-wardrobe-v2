@@ -19,6 +19,13 @@ const RecentUploadsSection = ({
   onItemClick 
 }: RecentUploadsSectionProps) => {
   const isMobile = useIsMobile();
+  const [tooltipOpen, setTooltipOpen] = React.useState(false);
+  
+  const handleInfoClick = () => {
+    if (isMobile) {
+      setTooltipOpen(!tooltipOpen);
+    }
+  };
   
   return (
     <div className="mt-10">
@@ -26,13 +33,14 @@ const RecentUploadsSection = ({
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
           <TooltipProvider delayDuration={0}>
-            <Tooltip defaultOpen={false}>
+            <Tooltip open={tooltipOpen} onOpenChange={setTooltipOpen}>
               <TooltipTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   className="h-8 w-8 p-0"
                   aria-label="Ulteriori informazioni"
+                  onClick={handleInfoClick}
                 >
                   <Info className="h-5 w-5" />
                 </Button>
