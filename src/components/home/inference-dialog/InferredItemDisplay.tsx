@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemInference } from "../types";
 import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 import { translateColorToItalianFashion } from "@/components/wardrobe/utils/italianColorTranslations";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InferredItemDisplayProps {
   item: ItemInference;
@@ -60,6 +61,8 @@ const InferredItemDisplay = ({
   onFieldChange, 
   clothingCategories 
 }: InferredItemDisplayProps) => {
+  const isMobile = useIsMobile();
+  
   // Generate item name whenever category or color changes
   useEffect(() => {
     if (item && item.category && item.color) {
@@ -114,13 +117,18 @@ const InferredItemDisplay = ({
               <SelectTrigger id="category" className="touch-manipulation h-11 mt-1">
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
-              <SelectContent className="touch-manipulation max-h-[180px]" position="popper" sideOffset={5}>
-                <ScrollArea className="h-[180px]">
+              <SelectContent 
+                className="touch-manipulation max-h-[240px]" 
+                position="popper" 
+                sideOffset={5}
+                align={isMobile ? "center" : "start"}
+              >
+                <ScrollArea className="h-[240px] px-1">
                   {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
-                      className="py-3 px-3 touch-manipulation text-base cursor-pointer"
+                      className="py-3.5 px-3 touch-manipulation text-base cursor-pointer my-1 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors"
                     >
                       {translateCategoryToItalian(category)}
                     </SelectItem>

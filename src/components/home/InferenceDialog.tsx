@@ -20,7 +20,9 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ItemInference {
   id: string;
@@ -82,6 +84,8 @@ const InferenceDialog = ({
   onFieldChange,
   clothingCategories
 }: InferenceDialogProps) => {
+  const isMobile = useIsMobile();
+  
   if (!selectedItem) return null;
 
   // Enhanced cancel handler to properly close the dialog
@@ -109,7 +113,7 @@ const InferenceDialog = ({
         <DialogHeader className="pb-2">
           <DialogTitle className="text-lg font-medium">Conferma Riconoscimento</DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            Confer ma o modifica le informazioni per questo indumento.
+            Conferma o modifica le informazioni per questo indumento.
           </DialogDescription>
         </DialogHeader>
 
@@ -133,7 +137,7 @@ const InferenceDialog = ({
                     value={selectedItem.name}
                     onChange={(e) => onFieldChange('name', e.target.value)}
                     placeholder="Inserisci nome"
-                    className="mt-1"
+                    className="mt-1 touch-manipulation h-11"
                     autoFocus={false}
                   />
                 </div>
@@ -144,15 +148,24 @@ const InferenceDialog = ({
                     value={selectedItem.category}
                     onValueChange={(value) => onFieldChange('category', value)}
                   >
-                    <SelectTrigger id="category" className="mt-1">
+                    <SelectTrigger id="category" className="mt-1 touch-manipulation h-11">
                       <SelectValue placeholder="Seleziona categoria" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {translateCategoryToItalian(category)}
-                        </SelectItem>
-                      ))}
+                    <SelectContent 
+                      className="touch-manipulation max-h-[240px]"
+                      align={isMobile ? "center" : "start"}
+                    >
+                      <ScrollArea className="h-[240px] px-1">
+                        {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
+                          <SelectItem 
+                            key={category} 
+                            value={category}
+                            className="py-3.5 px-3 touch-manipulation text-base cursor-pointer my-1 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors"
+                          >
+                            {translateCategoryToItalian(category)}
+                          </SelectItem>
+                        ))}
+                      </ScrollArea>
                     </SelectContent>
                   </Select>
                 </div>
@@ -164,7 +177,7 @@ const InferenceDialog = ({
                     value={selectedItem.color}
                     onChange={(e) => onFieldChange('color', e.target.value)}
                     placeholder="Inserisci colore"
-                    className="mt-1"
+                    className="mt-1 touch-manipulation h-11"
                     autoFocus={false}
                   />
                 </div>
@@ -189,13 +202,13 @@ const InferenceDialog = ({
             variant="outline" 
             onClick={handleCancel} 
             type="button"
-            className="flex-1 text-gray-500 border-gray-300"
+            className="flex-1 text-gray-500 border-gray-300 h-11 touch-manipulation"
           >
             <X className="h-4 w-4 mr-1" /> Annulla
           </Button>
           <Button 
             onClick={handleConfirm} 
-            className="flex-1 bg-blue-500 hover:bg-blue-600"
+            className="flex-1 bg-blue-500 hover:bg-blue-600 h-11 touch-manipulation"
           >
             <Check className="h-4 w-4 mr-1" /> Conferma
           </Button>
