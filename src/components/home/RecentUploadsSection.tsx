@@ -40,7 +40,7 @@ const RecentUploadsSection = ({
                 className="max-w-xs"
                 sideOffset={5}
               >
-                <p>Indumenti che richiedono conferma</p>
+                <p>Gli indumenti di cui l'app è certa sono inseriti nel tuo armadio, gli indumenti in Upload Recenti hanno bisogno del tuo aiuto!</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
