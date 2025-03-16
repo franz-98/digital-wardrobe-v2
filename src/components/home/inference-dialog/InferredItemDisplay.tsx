@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ItemInference } from "../types";
 import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 import { translateColorToItalianFashion } from "@/components/wardrobe/utils/italianColorTranslations";
@@ -118,27 +117,20 @@ const InferredItemDisplay = ({
                 <SelectValue placeholder="Seleziona categoria" />
               </SelectTrigger>
               <SelectContent 
-                className="touch-manipulation overflow-hidden bg-popover" 
+                className="max-h-[60vh] touch-manipulation" 
                 position="popper" 
                 sideOffset={5}
-                align={isMobile ? "center" : "start"}
-                style={{
-                  maxHeight: "min(300px, 60vh)", 
-                  WebkitOverflowScrolling: "touch"
-                }}
+                align="center"
               >
-                <div className="overflow-y-auto max-h-[min(300px,60vh)] overscroll-contain w-full">
-                  {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
-                    <SelectItem 
-                      key={category} 
-                      value={category}
-                      className="py-4 px-3 touch-manipulation text-base cursor-pointer my-1.5 rounded-md hover:bg-accent/80 focus:bg-accent/80 transition-colors active:bg-accent"
-                      style={{touchAction: "manipulation"}}
-                    >
-                      {translateCategoryToItalian(category)}
-                    </SelectItem>
-                  ))}
-                </div>
+                {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
+                  <SelectItem 
+                    key={category} 
+                    value={category}
+                    className="py-3 px-2 touch-manipulation text-base"
+                  >
+                    {translateCategoryToItalian(category)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
