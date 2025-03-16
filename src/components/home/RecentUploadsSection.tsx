@@ -55,11 +55,6 @@ const RecentUploadsSection = ({
             </Tooltip>
           </TooltipProvider>
         </div>
-        {recentUploads.length > 0 && (
-          <Button variant="ghost" size="sm" className="text-primary">
-            See All
-          </Button>
-        )}
       </div>
 
       {isLoading ? (

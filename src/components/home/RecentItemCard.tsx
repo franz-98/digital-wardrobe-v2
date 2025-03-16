@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
+import { translateCategoryToItalian } from "@/components/wardrobe/utils/categoryTranslations";
 
 interface RecentUpload {
   id: string;
@@ -16,6 +17,9 @@ interface RecentItemCardProps {
 }
 
 const RecentItemCard = ({ item, onClick }: RecentItemCardProps) => {
+  // Translate the category from English to Italian
+  const translatedCategory = translateCategoryToItalian(item.category);
+  
   return (
     <Card 
       className="min-w-[160px] max-w-[160px] overflow-hidden card-shadow border interactive-scale cursor-pointer"
@@ -31,7 +35,7 @@ const RecentItemCard = ({ item, onClick }: RecentItemCardProps) => {
       </div>
       <div className="p-3">
         <p className="font-medium text-sm truncate">{item.name}</p>
-        <p className="text-xs text-muted-foreground">{item.category}</p>
+        <p className="text-xs text-muted-foreground">{translatedCategory}</p>
       </div>
     </Card>
   );
