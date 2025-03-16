@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import RecentItemCard from "./RecentItemCard";
 import { RecentUpload } from "@/components/home/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface RecentUploadsSectionProps {
   recentUploads: RecentUpload[];
@@ -17,6 +18,8 @@ const RecentUploadsSection = ({
   isLoading, 
   onItemClick 
 }: RecentUploadsSectionProps) => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="mt-10">
       <div className="flex items-center justify-between mb-4">
@@ -24,10 +27,19 @@ const RecentUploadsSection = ({
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger>
-                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+              <TooltipTrigger asChild>
+                <button 
+                  className="flex items-center justify-center p-1.5 rounded-full hover:bg-muted transition-colors"
+                  aria-label="Ulteriori informazioni"
+                >
+                  <Info className="h-5 w-5 text-muted-foreground" />
+                </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="max-w-xs">
+              <TooltipContent 
+                side={isMobile ? "bottom" : "right"} 
+                className="max-w-xs"
+                sideOffset={5}
+              >
                 <p>Indumenti che richiedono conferma</p>
               </TooltipContent>
             </Tooltip>
