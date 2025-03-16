@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Loader2, InfoIcon } from "lucide-react";
+import { Loader2, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RecentItemCard from "./RecentItemCard";
 import { RecentUpload } from "@/components/home/types";
@@ -24,8 +24,8 @@ const RecentUploadsSection = ({
           <h2 className="text-xl font-semibold">Upload Recenti</h2>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <InfoIcon className="h-4 w-4 text-muted-foreground cursor-help" />
+              <TooltipTrigger>
+                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
               </TooltipTrigger>
               <TooltipContent side="right" className="max-w-xs">
                 <p>Indumenti che richiedono conferma</p>
