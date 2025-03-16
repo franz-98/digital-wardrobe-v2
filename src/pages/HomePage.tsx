@@ -14,22 +14,6 @@ import InferenceDialog from "@/components/home/InferenceDialog";
 import MultipleInferenceDialog from "@/components/home/MultipleInferenceDialog";
 
 const CLOTHING_CATEGORIES = [
-  // General categories
-  "Tops",
-  "Bottoms",
-  "Dresses",
-  "Outerwear",
-  "Footwear",
-  "Accessories",
-  "Underwear",
-  "Swimwear",
-  "Sportswear",
-  "Sleepwear",
-  "Formal",
-  "Casual",
-  "Business",
-  
-  // Specific clothing items
   "T-shirt",
   "Shirt",
   "Sweater",

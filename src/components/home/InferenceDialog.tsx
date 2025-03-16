@@ -40,6 +40,40 @@ interface InferenceDialogProps {
   clothingCategories: string[];
 }
 
+// Define the specific clothing categories to show in the dropdown
+const SPECIFIC_CLOTHING_CATEGORIES = [
+  "T-shirt",
+  "Shirt",
+  "Sweater",
+  "Hoodie",
+  "Sweatshirt",
+  "Top",
+  "Jacket",
+  "Coat",
+  "Blazer",
+  "Pants",
+  "Jeans",
+  "Shorts",
+  "Skirt",
+  "Leggings",
+  "Dress",
+  "Suit",
+  "Shoes",
+  "Boots",
+  "Hat",
+  "Cap",
+  "Scarf",
+  "Tie",
+  "Belt",
+  "Handbag",
+  "Watch",
+  "Jewelry",
+  "Necklace",
+  "Bracelet",
+  "Sunglasses",
+  "Other"
+];
+
 const InferenceDialog = ({
   open,
   onOpenChange,
@@ -114,7 +148,7 @@ const InferenceDialog = ({
                       <SelectValue placeholder="Seleziona categoria" />
                     </SelectTrigger>
                     <SelectContent>
-                      {clothingCategories.map((category) => (
+                      {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
                         <SelectItem key={category} value={category}>
                           {translateCategoryToItalian(category)}
                         </SelectItem>

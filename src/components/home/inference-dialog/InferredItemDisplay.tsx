@@ -21,6 +21,40 @@ interface InferredItemDisplayProps {
   clothingCategories: string[];
 }
 
+// Define the specific clothing categories to show in the dropdown
+const SPECIFIC_CLOTHING_CATEGORIES = [
+  "T-shirt",
+  "Shirt",
+  "Sweater",
+  "Hoodie",
+  "Sweatshirt",
+  "Top",
+  "Jacket",
+  "Coat",
+  "Blazer",
+  "Pants",
+  "Jeans",
+  "Shorts",
+  "Skirt",
+  "Leggings",
+  "Dress",
+  "Suit",
+  "Shoes",
+  "Boots",
+  "Hat",
+  "Cap",
+  "Scarf",
+  "Tie",
+  "Belt",
+  "Handbag",
+  "Watch",
+  "Jewelry",
+  "Necklace",
+  "Bracelet",
+  "Sunglasses",
+  "Other"
+];
+
 const InferredItemDisplay = ({ 
   item, 
   onFieldChange, 
@@ -82,7 +116,7 @@ const InferredItemDisplay = ({
               </SelectTrigger>
               <SelectContent className="touch-manipulation max-h-[180px]" position="popper" sideOffset={5}>
                 <ScrollArea className="h-[180px]">
-                  {clothingCategories.map((category) => (
+                  {SPECIFIC_CLOTHING_CATEGORIES.map((category) => (
                     <SelectItem 
                       key={category} 
                       value={category}
